@@ -20,8 +20,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // RootのlayoutにはProviderなどを入れておく
   return (
-    <html lang="en">
+    <html lang="ja">
       <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
