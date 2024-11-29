@@ -37,7 +37,7 @@ export const MenuSheet = ({ menus }: Props) => {
             >
               <Link href={menu.href} className="flex items-center gap-3">
                 {menu.icon}
-                <span>{menu.label}</span>
+                <span className="text-sm">{menu.label}</span>
               </Link>
             </li>
           ))}
