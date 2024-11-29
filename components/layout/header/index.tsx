@@ -3,26 +3,27 @@ import { MenuSheet } from "../menu-sheet";
 import { Briefcase, Hotel, ListChecks, Plane } from "lucide-react";
 import { LoginLink } from "@/components/shared/login-link";
 import { RegisterLink } from "@/components/shared/register-link";
+import { paths } from "@/consts/common";
 
 const menus = [
   {
-    href: "/trips",
-    label: "旅行計画",
+    href: paths.trips.pathname,
+    label: paths.trips.label,
     icon: <Plane size={20} />,
   },
   {
-    href: "/todos",
-    label: "TODOリスト",
+    href: paths.todos.pathname,
+    label: paths.todos.label,
     icon: <ListChecks size={20} />,
   },
   {
-    href: "/packing-item-lists",
-    label: "持ち物リスト",
+    href: paths.packingItemLists.pathname,
+    label: paths.packingItemLists.label,
     icon: <Briefcase size={20} />,
   },
   {
-    href: "/accomodations",
-    label: "宿泊施設",
+    href: paths.accomodations.pathname,
+    label: paths.accomodations.label,
     icon: <Hotel size={20} />,
   },
 ];

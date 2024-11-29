@@ -5,7 +5,7 @@ import { paths } from "@/consts/common";
 export const LoginLink = () => {
   return (
     <Button variant="ghost" size="sm">
-      <Link href={paths.login}>ログイン</Link>
+      <Link href={paths.login.pathname}>{paths.login.label}</Link>
     </Button>
   );
 };
