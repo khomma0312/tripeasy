@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: "400",
-});
+import { inter, satoshi } from "@/styles/fonts";
+import { cn } from "@/utils/common";
 
 export const metadata: Metadata = {
   title: {
@@ -20,9 +16,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // RootのlayoutにはProviderなどを入れておく
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+    <html lang="ja" className={cn(inter.variable, satoshi.variable)}>
+      <body className="font-default antialiased">{children}</body>
     </html>
   );
 }
