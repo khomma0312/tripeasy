@@ -1,7 +1,11 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
-import { apiOutputSchema, apiInputSchema } from "@/lib/zod/schema/register";
+import {
+  apiOutputSchema,
+  apiInputSchema,
+  apiErrorSchema,
+} from "@/lib/zod/schema/register";
 import { db } from "@/lib/drizzle/db";
 import { users } from "@/schema/users";
 import { getHashedPassword } from "@/utils/auth";
@@ -20,7 +24,10 @@ const app = new Hono().post(
       .where(eq(users.email, values.email));
 
     if (foundUsers.length > 0) {
-      return c.json({ error: "すでに登録済みのメールアドレスです" }, 409);
+      return c.json(
+        apiErrorSchema.parse({ message: "すでに登録済みのメールアドレスです" }),
+        409
+      );
     }
 
     const [user] = await db
