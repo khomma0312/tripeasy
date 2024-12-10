@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { inter, satoshi } from "@/styles/fonts";
 import { cn } from "@/utils/common";
+import { RootProviders } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -16,10 +17,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // RootのlayoutにはProviderなどを入れておく
   return (
     <html lang="ja" className={cn(inter.variable, satoshi.variable)}>
-      <body className="font-default antialiased">{children}</body>
+      <body className="font-default antialiased">
+        <RootProviders>{children}</RootProviders>
+      </body>
     </html>
   );
 }
