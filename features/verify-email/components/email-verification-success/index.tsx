@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { TitleHeading } from "@/components/shared/title-heading";
 import { paths } from "@/consts/common";
-import { Link } from "lucide-react";
 
 export const EmailVerificationSuccess = () => {
   return (

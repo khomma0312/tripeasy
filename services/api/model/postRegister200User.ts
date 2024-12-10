@@ -8,5 +8,6 @@
 
 export type PostRegister200User = {
   id: number;
-  name: string;
+  /** @nullable */
+  name: string | null;
 };

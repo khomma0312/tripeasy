@@ -3,5 +3,5 @@ export * from "@/schema/todo-list-template-items";
 export * from "@/schema/todo-list-templates";
 export * from "@/schema/todo-lists";
 export * from "@/schema/trips";
-export * from "@/schema/users";
+export * from "@/schema/auth";
 export * from "@/schema/verification_tokens";

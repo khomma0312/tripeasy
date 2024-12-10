@@ -7,7 +7,7 @@ import {
   ApiOutputType,
 } from "@/lib/zod/schema/register";
 import { db } from "@/lib/drizzle/db";
-import { users } from "@/schema/users";
+import { users } from "@/schema";
 import { getHashedPassword } from "@/utils/auth";
 import { generateVerificationToken } from "@/lib/auth/token";
 import { sendVerificationEmail } from "@/lib/mail/sender";

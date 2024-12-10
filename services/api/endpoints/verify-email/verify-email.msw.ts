@@ -17,7 +17,7 @@ import type {
   PostVerifyEmail200
 } from '../../model'
 
-export const getPostVerifyEmailResponseMock = (overrideResponse: Partial< PostVerifyEmail200 > = {}): PostVerifyEmail200 => ({user: {email: faker.string.alpha(20)}, ...overrideResponse})
+export const getPostVerifyEmailResponseMock = (overrideResponse: Partial< PostVerifyEmail200 > = {}): PostVerifyEmail200 => ({user: {email: faker.helpers.arrayElement([faker.string.alpha(20), null])}, ...overrideResponse})
 
 
 export const getPostVerifyEmailMockHandler = (overrideResponse?: PostVerifyEmail200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostVerifyEmail200> | PostVerifyEmail200)) => {

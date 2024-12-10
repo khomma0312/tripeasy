@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/shadcn/button";
 import {
   Card,
@@ -10,7 +11,6 @@ import {
 } from "@/components/shadcn/card";
 import { Input } from "@/components/shadcn/input";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import Link from "next/link";
 import { useVerificationTokenRequest } from "../../hooks/use-verification-token-request";
 import {
   Form,
@@ -33,7 +33,7 @@ export const VerificationTokenRequest = () => {
             <AlertTriangle className="h-12 w-12 text-yellow-500" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            正しい認証トークンがありません
+            正しい認証トークンではありません
           </CardTitle>
         </CardHeader>
         <CardContent>

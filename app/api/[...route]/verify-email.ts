@@ -7,11 +7,11 @@ import {
   ApiOutputType,
 } from "@/lib/zod/schema/verify-email";
 import { db } from "@/lib/drizzle/db";
-import { users } from "@/schema/users";
+import { users } from "@/schema";
+import { verificationTokens } from "@/schema";
 import { getVerificationTokenByToken } from "@/lib/auth/token";
 import { getLogger } from "@/lib/logger";
 import { getUserbyEmail } from "@/lib/auth/user";
-import { verificationTokens } from "@/schema";
 
 const logger = getLogger("api/verify-email");
 
@@ -56,7 +56,7 @@ const app = new Hono().post(
 
     const [user] = await db
       .update(users)
-      .set({ email_verified: new Date() })
+      .set({ emailVerified: new Date() })
       .where(eq(users.id, exisitingUser.id))
       .returning({ email: users.email });
 

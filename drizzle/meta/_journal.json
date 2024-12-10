@@ -43,6 +43,13 @@
       "when": 1733699390922,
       "tag": "0005_add_not_null_constraints_to_verification_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1733870480773,
+      "tag": "0006_add_nextauth_auth_related_tables",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { TitleHeading } from "@/components/shared/title-heading";
 import { paths } from "@/consts/common";
 import { PostVerifyEmail400, PostVerifyEmail404 } from "@/services/api/model";

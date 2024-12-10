@@ -41,7 +41,7 @@ export type ApiInputType = z.infer<typeof apiInputSchema>;
 export const apiOutputSchema = z.object({
   user: z.object({
     id: z.number(),
-    name: z.string(),
+    name: z.string().nullable(),
   }),
 });
 

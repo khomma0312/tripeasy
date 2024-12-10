@@ -31,7 +31,7 @@ const app = new Hono().post(
       );
     }
 
-    if (exisitingUser.email_verified) {
+    if (exisitingUser.emailVerified) {
       logger.error("The email is already verified.");
       return c.json<ApiErrorType>(
         {

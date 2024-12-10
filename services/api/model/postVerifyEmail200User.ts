@@ -7,5 +7,6 @@
  */
 
 export type PostVerifyEmail200User = {
-  email: string;
+  /** @nullable */
+  email: string | null;
 };
