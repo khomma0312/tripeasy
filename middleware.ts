@@ -15,6 +15,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Next.js内部のファイル、ログイン、新規登録ページ、新規登録用APIなどはスキップ
-    "/((?!_next|login|register|api/auth|api/register|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/((?!_next|login|register|verify-email|api/auth|api/register|api/verify-email|api/request-token|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
   ],
 };
