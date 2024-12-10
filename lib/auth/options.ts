@@ -1,12 +1,14 @@
 import { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/lib/drizzle/db";
 import { eq } from "drizzle-orm";
 import { compare } from "bcryptjs";
 import { users } from "@/schema";
 
 export const authOptions: NextAuthConfig = {
+  adapter: DrizzleAdapter(db),
   trustHost: true,
   callbacks: {
     async session({ session, token }) {
@@ -45,6 +47,10 @@ export const authOptions: NextAuthConfig = {
           .from(users)
           .where(eq(users.email, email));
 
+        if (!user || !user.password) {
+          return null;
+        }
+
         const passwordCorrect = await compare(password, user.password);
 
         if (passwordCorrect) {
@@ -52,9 +58,9 @@ export const authOptions: NextAuthConfig = {
             id: user.id.toString(), // idをstring型に変換
             name: user.name,
           };
-        } else {
-          return null;
         }
+
+        return null;
       },
     }),
   ],
