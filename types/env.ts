@@ -6,6 +6,8 @@ declare global {
       DATABASE_URL: string;
       GOOGLE_CLIENT_ID: string;
       GOOGLE_CLIENT_SECRET: string;
+      RESEND_FROM: string;
+      RESEND_API_KEY: string;
     }
   }
 }
