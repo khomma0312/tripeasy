@@ -1,5 +1,4 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
-import { ComponentTypeOf } from "@asteasolutions/zod-to-openapi/dist/openapi-registry";
 import { z } from "zod";
 
 // フォームの入力項目のスキーマ
@@ -16,8 +15,18 @@ export const signUpSchema = z
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!-\/:-@[-`{-~])[!-~]+$/,
         "パスワードは半角英数字記号混合で入力してください"
       ),
+    confirmPassword: z.string(),
   })
-  .required();
+  .required()
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: "パスワードが一致しません",
+      });
+    }
+  });
 
 // APIのinputパラメータのスキーマ
 export const apiInputSchema = z.object({
@@ -26,14 +35,22 @@ export const apiInputSchema = z.object({
   password: z.string(),
 });
 
+export type ApiInputType = z.infer<typeof apiInputSchema>;
+
 // APIの成功時に返却されるoutputのスキーマ
 export const apiOutputSchema = z.object({
-  id: z.number(),
-  name: z.string(),
+  user: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
 });
+
+export type ApiOutputType = z.infer<typeof apiOutputSchema>;
 
 // APIのエラー時に返却されるoutputのスキーマ
 export const apiErrorSchema = z.object({ message: z.string() });
+
+export type ApiErrorType = z.infer<typeof apiErrorSchema>;
 
 // export const registerComponentSchemas = [
 //   {
@@ -77,17 +94,4 @@ export const registerPostApiSchema: RouteConfig = {
       },
     },
   },
-};
-
-export const registerComponentSchema = {
-  type: "object",
-  description: "新規ユーザー登録時項目",
-  properties: [
-    {
-      name: {
-        type: "string",
-        description: "ユーザー名",
-      },
-    },
-  ],
 };
