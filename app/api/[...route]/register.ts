@@ -2,30 +2,37 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import {
-  apiOutputSchema,
   apiInputSchema,
-  apiErrorSchema,
+  ApiErrorType,
+  ApiOutputType,
 } from "@/lib/zod/schema/register";
 import { db } from "@/lib/drizzle/db";
 import { users } from "@/schema/users";
 import { getHashedPassword } from "@/utils/auth";
+import { generateVerificationToken } from "@/lib/auth/token";
+import { sendVerificationEmail } from "@/lib/mail/sender";
+import { getLogger } from "@/lib/logger";
+
+const logger = getLogger("api/register");
 
 const app = new Hono().post(
   "/",
   zValidator("json", apiInputSchema),
   async (c) => {
     const values = c.req.valid("json");
-    const hashedPassword = await getHashedPassword(values.password);
+    const { email, password } = values;
+    const hashedPassword = await getHashedPassword(password);
 
     // メールアドレスに重複がないかを確認する
     const foundUsers = await db
       .select()
       .from(users)
-      .where(eq(users.email, values.email));
+      .where(eq(users.email, email));
 
     if (foundUsers.length > 0) {
-      return c.json(
-        apiErrorSchema.parse({ message: "すでに登録済みのメールアドレスです" }),
+      logger.error("The target email address is already registered.");
+      return c.json<ApiErrorType>(
+        { message: "すでに登録済みのメールアドレスです" },
         409
       );
     }
@@ -41,9 +48,26 @@ const app = new Hono().post(
         name: users.name,
       });
 
-    const data = apiOutputSchema.parse(user);
+    const verificationToken = await generateVerificationToken(email);
 
-    return c.json({ data });
+    if (!verificationToken) {
+      logger.error("verificationToken may be null or undefined.");
+      return c.json<ApiErrorType>(
+        {
+          message: "メール認証用トークンの生成に失敗しました",
+        },
+        500
+      );
+    }
+
+    const { error } = await sendVerificationEmail(email, verificationToken);
+
+    if (error) {
+      logger.error(error.message);
+      return c.json<ApiErrorType>({ message: "メール送信に失敗しました" }, 500);
+    }
+
+    return c.json<ApiOutputType>({ user });
   }
 );
 
