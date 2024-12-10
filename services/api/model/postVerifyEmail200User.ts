@@ -6,6 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostRegister409 = {
-  message: string;
+export type PostVerifyEmail200User = {
+  email: string;
 };

@@ -7,5 +7,11 @@
  */
 
 export * from './postRegister200';
+export * from './postRegister200User';
 export * from './postRegister409';
 export * from './postRegisterBody';
+export * from './postVerifyEmail200';
+export * from './postVerifyEmail200User';
+export * from './postVerifyEmail400';
+export * from './postVerifyEmail404';
+export * from './postVerifyEmailBody';

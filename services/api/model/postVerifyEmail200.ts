@@ -5,7 +5,8 @@
  * TripeasyのAPI仕様書
  * OpenAPI spec version: 1.0.0
  */
+import type { PostVerifyEmail200User } from './postVerifyEmail200User';
 
-export type PostRegister409 = {
-  message: string;
+export type PostVerifyEmail200 = {
+  user: PostVerifyEmail200User;
 };

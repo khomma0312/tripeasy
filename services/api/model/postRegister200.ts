@@ -5,8 +5,8 @@
  * TripeasyのAPI仕様書
  * OpenAPI spec version: 1.0.0
  */
+import type { PostRegister200User } from './postRegister200User';
 
 export type PostRegister200 = {
-  id: number;
-  name: string;
+  user: PostRegister200User;
 };

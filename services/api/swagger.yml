@@ -36,13 +36,18 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: number
-                  name:
-                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                    required:
+                      - id
+                      - name
                 required:
-                  - id
-                  - name
+                  - user
         "409":
           description: 登録済みのメールアドレスにつき登録失敗
           content:
@@ -50,7 +55,61 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  message:
                     type: string
                 required:
-                  - error
+                  - message
+  /verify-email:
+    post:
+      summary: メール検証API
+      tags:
+        - verify-email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: メール検証成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                    required:
+                      - email
+                required:
+                  - user
+        "400":
+          description: 有効なトークンでないので検証失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 対象のリソースが見つからないので検証失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message

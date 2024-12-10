@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostRegister409 = {
-  message: string;
+export type PostRegister200User = {
+  id: number;
+  name: string;
 };
