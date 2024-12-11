@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "account" (
-	"userId" integer NOT NULL,
+	"userId" text NOT NULL,
 	"type" text NOT NULL,
 	"provider" text NOT NULL,
 	"providerAccountId" text NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "account" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "authenticator" (
 	"credentialID" text NOT NULL,
-	"userId" integer NOT NULL,
+	"userId" text NOT NULL,
 	"providerAccountId" text NOT NULL,
 	"credentialPublicKey" text NOT NULL,
 	"counter" integer NOT NULL,
@@ -28,22 +28,28 @@ CREATE TABLE IF NOT EXISTS "authenticator" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"sessionToken" text PRIMARY KEY NOT NULL,
-	"userId" integer NOT NULL,
+	"userId" text NOT NULL,
 	"expires" timestamp NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "users" RENAME TO "user";--> statement-breakpoint
-ALTER TABLE "user" RENAME COLUMN "email_verified" TO "emailVerified";--> statement-breakpoint
-ALTER TABLE "user" DROP CONSTRAINT "users_email_unique";--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text,
+	"email" text,
+	"emailVerified" timestamp,
+	"password" varchar(256),
+	"image" text,
+	"updated_at" timestamp,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "user_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+ALTER TABLE "users" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+DROP TABLE "users" CASCADE;--> statement-breakpoint
 ALTER TABLE "trips" DROP CONSTRAINT "trips_user_id_users_id_fk";
 --> statement-breakpoint
+ALTER TABLE "trips" ALTER COLUMN "user_id" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "trips" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
-ALTER TABLE "user" ALTER COLUMN "name" SET DATA TYPE text;--> statement-breakpoint
-ALTER TABLE "user" ALTER COLUMN "name" DROP NOT NULL;--> statement-breakpoint
-ALTER TABLE "user" ALTER COLUMN "email" SET DATA TYPE text;--> statement-breakpoint
-ALTER TABLE "user" ALTER COLUMN "email" DROP NOT NULL;--> statement-breakpoint
-ALTER TABLE "user" ALTER COLUMN "password" DROP NOT NULL;--> statement-breakpoint
-ALTER TABLE "user" ADD COLUMN "image" text;--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
@@ -67,5 +73,3 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
---> statement-breakpoint
-ALTER TABLE "user" ADD CONSTRAINT "user_email_unique" UNIQUE("email");

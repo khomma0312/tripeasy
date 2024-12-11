@@ -4,7 +4,7 @@ import { users } from "./auth";
 
 export const trips = pgTable("trips", {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
-  user_id: integer()
+  user_id: text()
     .notNull()
     .references(() => users.id),
   title: varchar({ length: 256 }).notNull(),

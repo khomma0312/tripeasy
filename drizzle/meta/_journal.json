@@ -47,7 +47,7 @@
     {
       "idx": 6,
       "version": "7",
-      "when": 1733870480773,
+      "when": 1733957179604,
       "tag": "0006_add_nextauth_auth_related_tables",
       "breakpoints": true
     }
