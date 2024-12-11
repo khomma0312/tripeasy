@@ -8,6 +8,48 @@
       "when": 1732746005940,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1733265926305,
+      "tag": "0001_add_auth_columns_to_users",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733525487387,
+      "tag": "0002_add_unique_constraint_to_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1733557903431,
+      "tag": "0003_add_verification_tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1733557931654,
+      "tag": "0004_add_email_verified_to_users",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1733699390922,
+      "tag": "0005_add_not_null_constraints_to_verification_tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1733957179604,
+      "tag": "0006_add_nextauth_auth_related_tables",
+      "breakpoints": true
     }
   ]
 }

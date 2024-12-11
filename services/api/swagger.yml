@@ -1,0 +1,177 @@
+openapi: 3.1.0
+info:
+  title: tripeasy
+  version: 1.0.0
+  description: TripeasyのAPI仕様書
+components:
+  schemas: {}
+  parameters: {}
+paths:
+  /register:
+    post:
+      summary: 新規ユーザー登録API
+      tags:
+        - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+      responses:
+        "200":
+          description: 新規ユーザー登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                        nullable: true
+                    required:
+                      - id
+                      - name
+                required:
+                  - user
+        "409":
+          description: 登録済みのメールアドレスにつき登録失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /verify-email:
+    post:
+      summary: メール検証API
+      tags:
+        - verify-email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: メール検証成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        nullable: true
+                    required:
+                      - email
+                required:
+                  - user
+        "400":
+          description: 有効なトークンでないので検証失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 対象のリソースが見つからないので検証失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /request-token:
+    post:
+      summary: トークンの再発行API
+      tags:
+        - request-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        "200":
+          description: トークンの発行成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "400":
+          description: メールアドレスがすでに認証済みのため失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: メールアドレスが未登録のため失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: トークンの生成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
