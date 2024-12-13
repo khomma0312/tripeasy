@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { MenuSheet } from "../menu-sheet";
 import { Briefcase, Hotel, ListChecks, Plane } from "lucide-react";
-import { LoginLink } from "@/components/shared/login-link";
-import { RegisterLink } from "@/components/shared/register-link";
+import { LoginLinkButton } from "@/components/shared/login-link-button";
+import { RegisterLinkButton } from "@/components/shared/register-link-button";
 import { paths } from "@/consts/common";
 
 const menus = [
@@ -48,8 +48,8 @@ export const Header = () => {
         </div>
       </div>
       <div className="hidden md:flex items-center gap-2">
-        <LoginLink />
-        <RegisterLink />
+        <LoginLinkButton isLink />
+        <RegisterLinkButton isLink />
       </div>
     </div>
   );
