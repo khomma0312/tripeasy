@@ -3,12 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import { LoaderCircle } from "lucide-react";
-import { useSignInForm } from "../../hooks/use-signin-form";
 import { AuthForm } from "@/features/auth/components/auth-form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
 import { RHFPasswordField } from "@/components/shared/rhf-password-field";
 import { AlertDestructive } from "@/components/shared/alert-destructive";
 import { GoogleOAuthButton } from "@/features/auth/components/google-oauth-button";
+import { useSignInForm } from "@/features/login/hooks/use-signin-form";
 
 export const SignInForm = () => {
   const { form, signInByEmail, isEmailSignIning } = useSignInForm();

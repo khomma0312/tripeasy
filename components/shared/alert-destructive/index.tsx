@@ -1,7 +1,6 @@
-import { AlertCircle, X } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/shadcn/alert";
 import { useState } from "react";
+import { AlertCircle, X } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/shadcn/alert";
 import { Button } from "@/components/shadcn/button";
 
 type Props = {
