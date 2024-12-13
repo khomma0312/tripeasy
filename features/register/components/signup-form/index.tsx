@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/shadcn/button";
-import { FcGoogle } from "react-icons/fc";
 import { LoaderCircle } from "lucide-react";
-import { useSignUpForm } from "../../hooks/use-signup-form";
-import { AuthForm } from "@/components/auth/auth-form";
+import { Button } from "@/components/shadcn/button";
+import { useSignUpForm } from "@/features/register/hooks/use-signup-form";
+import { AuthForm } from "@/features/auth/components/auth-form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
 import { RHFPasswordField } from "@/components/shared/rhf-password-field";
+import { GoogleOAuthButton } from "@/features/auth/components/google-oauth-button";
 
 export const SignUpForm = () => {
-  const { form, mutation, onSubmit, signUpByOAuth } = useSignUpForm();
+  const { form, mutation, onSubmit } = useSignUpForm();
 
   return (
     <div>
@@ -43,14 +43,7 @@ export const SignUpForm = () => {
           アカウントを作成
         </Button>
       </AuthForm>
-      <Button
-        onClick={signUpByOAuth("google")}
-        variant="outline"
-        className="w-full bg-white text-gray-600 rounded-lg px-4 py-2 mt-3"
-      >
-        <FcGoogle />
-        Googleで新規登録
-      </Button>
+      <GoogleOAuthButton />
     </div>
   );
 };
