@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu } from "lucide-react";
 import {
   Sheet,
@@ -7,9 +9,11 @@ import {
   SheetTrigger,
 } from "@/components/shadcn/sheet";
 import Link from "next/link";
-import { ReactNode } from "react";
-import { LoginLink } from "@/components/shared/login-link";
-import { RegisterLink } from "@/components/shared/register-link";
+import { ReactNode, useState } from "react";
+import { LoginLinkButton } from "@/components/shared/login-link-button";
+import { RegisterLinkButton } from "@/components/shared/register-link-button";
+import { useRouter } from "next/navigation";
+import { paths } from "@/consts/common";
 
 type Props = {
   menus: {
@@ -20,8 +24,16 @@ type Props = {
 };
 
 export const MenuSheet = ({ menus }: Props) => {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    setOpen(false);
+    router.push(path);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="md:hidden">
         <Menu size={25} />
       </SheetTrigger>
@@ -43,8 +55,12 @@ export const MenuSheet = ({ menus }: Props) => {
           ))}
         </ul>
         <div className="flex flex-col gap-3">
-          <LoginLink />
-          <RegisterLink />
+          <LoginLinkButton
+            onClick={() => handleNavigation(paths.login.pathname)}
+          />
+          <RegisterLinkButton
+            onClick={() => handleNavigation(paths.register.pathname)}
+          />
         </div>
       </SheetContent>
     </Sheet>

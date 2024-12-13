@@ -1,25 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/shadcn/form";
+import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
-import { Input } from "@/components/shadcn/input";
-import { FcGoogle } from "react-icons/fc";
-import { EyeIcon, EyeOffIcon, LoaderCircle } from "lucide-react";
-import { useSignUpForm } from "../../hooks/use-signup-form";
-import { AuthForm } from "@/components/auth/auth-form";
+import { useSignUpForm } from "@/features/register/hooks/use-signup-form";
+import { AuthForm } from "@/features/auth/components/auth-form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
+import { RHFPasswordField } from "@/components/shared/rhf-password-field";
+import { GoogleOAuthButton } from "@/features/auth/components/google-oauth-button";
 
 export const SignUpForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { form, mutation, onSubmit, signUpByOAuth } = useSignUpForm();
+  const { form, mutation, onSubmit } = useSignUpForm();
 
   return (
     <div>
@@ -36,83 +26,24 @@ export const SignUpForm = () => {
           label="メールアドレス"
           placeholder="trippy@example.com"
         />
-        <FormField
+        <RHFPasswordField
           control={form.control}
           name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>パスワード</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="半角英数字記号で入力"
-                    {...field}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="パスワード"
+          placeholder="半角英数字記号で入力"
         />
-        <FormField
+        <RHFPasswordField
           control={form.control}
           name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>確認用パスワード</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="上と同じパスワードを入力"
-                    {...field}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOffIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="確認用パスワード"
+          placeholder="上と同じパスワードを入力"
         />
         <Button type="submit" disabled={mutation.isPending} className="w-full">
           {mutation.isPending && <LoaderCircle className="animate-spin" />}
           アカウントを作成
         </Button>
       </AuthForm>
-      <Button
-        onClick={signUpByOAuth("google")}
-        variant="outline"
-        className="w-full bg-white text-gray-600 rounded-lg px-4 py-2 mt-3"
-      >
-        <FcGoogle />
-        Googleでログイン
-      </Button>
+      <GoogleOAuthButton />
     </div>
   );
 };
