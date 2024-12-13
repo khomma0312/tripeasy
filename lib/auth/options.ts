@@ -10,18 +10,6 @@ import { users } from "@/schema";
 export const authOptions: NextAuthConfig = {
   adapter: DrizzleAdapter(db),
   trustHost: true,
-  callbacks: {
-    async session({ session, token }) {
-      session.userId = token.sub ?? "";
-      return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-      }
-      return token;
-    },
-  },
   session: {
     strategy: "jwt",
     maxAge: 3 * 60 * 60,
@@ -64,4 +52,7 @@ export const authOptions: NextAuthConfig = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
 };
