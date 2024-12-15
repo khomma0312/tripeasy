@@ -11,8 +11,8 @@ export const paths = {
     pathname: "/trips",
     label: "旅行計画",
   },
-  todos: {
-    pathname: "/todos",
+  todoLists: {
+    pathname: "/todo-lists",
     label: "TODOリスト",
   },
   packingItemLists: {

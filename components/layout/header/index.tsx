@@ -12,8 +12,8 @@ const menus = [
     icon: <Plane size={20} />,
   },
   {
-    href: paths.todos.pathname,
-    label: paths.todos.label,
+    href: paths.todoLists.pathname,
+    label: paths.todoLists.label,
     icon: <ListChecks size={20} />,
   },
   {
