@@ -40,7 +40,7 @@ export type ApiInputType = z.infer<typeof apiInputSchema>;
 // APIの成功時に返却されるoutputのスキーマ
 export const apiOutputSchema = z.object({
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string().nullable(),
   }),
 });
