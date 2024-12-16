@@ -24,3 +24,5 @@ export const paths = {
     label: "宿泊施設",
   },
 };
+
+export const dateFormatStr = "yyyy/MM/dd";
