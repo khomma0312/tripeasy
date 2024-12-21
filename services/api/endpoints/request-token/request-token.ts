@@ -13,12 +13,6 @@ import type {
   UseMutationOptions,
   UseMutationResult
 } from '@tanstack/react-query'
-import axios from 'axios'
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
 import type {
   PostRequestToken200,
   PostRequestToken400,
@@ -26,36 +20,44 @@ import type {
   PostRequestToken500,
   PostRequestTokenBody
 } from '../../model'
+import { customInstance } from '../../mutator/custom-instance';
+import type { ErrorType, BodyType } from '../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
 /**
  * @summary トークンの再発行API
  */
 export const postRequestToken = (
-    postRequestTokenBody: PostRequestTokenBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<PostRequestToken200>> => {
-    
-    return axios.post(
-      `/api/request-token`,
-      postRequestTokenBody,options
-    );
-  }
+    postRequestTokenBody: BodyType<PostRequestTokenBody>,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PostRequestToken200>(
+      {url: `/api/request-token`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postRequestTokenBody, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostRequestTokenMutationOptions = <TError = AxiosError<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: PostRequestTokenBody}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: PostRequestTokenBody}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPostRequestTokenMutationOptions = <TError = ErrorType<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: BodyType<PostRequestTokenBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: BodyType<PostRequestTokenBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRequestToken>>, {data: PostRequestTokenBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRequestToken>>, {data: BodyType<PostRequestTokenBody>}> = (props) => {
           const {data} = props ?? {};
 
-          return  postRequestToken(data,axiosOptions)
+          return  postRequestToken(data,requestOptions)
         }
 
         
@@ -64,18 +66,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PostRequestTokenMutationResult = NonNullable<Awaited<ReturnType<typeof postRequestToken>>>
-    export type PostRequestTokenMutationBody = PostRequestTokenBody
-    export type PostRequestTokenMutationError = AxiosError<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>
+    export type PostRequestTokenMutationBody = BodyType<PostRequestTokenBody>
+    export type PostRequestTokenMutationError = ErrorType<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>
 
     /**
  * @summary トークンの再発行API
  */
-export const usePostRequestToken = <TError = AxiosError<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: PostRequestTokenBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostRequestToken = <TError = ErrorType<PostRequestToken400 | PostRequestToken404 | PostRequestToken500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestToken>>, TError,{data: BodyType<PostRequestTokenBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof postRequestToken>>,
         TError,
-        {data: PostRequestTokenBody},
+        {data: BodyType<PostRequestTokenBody>},
         TContext
       > => {
 

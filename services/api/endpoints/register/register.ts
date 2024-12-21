@@ -13,47 +13,49 @@ import type {
   UseMutationOptions,
   UseMutationResult
 } from '@tanstack/react-query'
-import axios from 'axios'
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
 import type {
   PostRegister200,
   PostRegister409,
   PostRegisterBody
 } from '../../model'
+import { customInstance } from '../../mutator/custom-instance';
+import type { ErrorType, BodyType } from '../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
 /**
  * @summary 新規ユーザー登録API
  */
 export const postRegister = (
-    postRegisterBody: PostRegisterBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<PostRegister200>> => {
-    
-    return axios.post(
-      `/api/register`,
-      postRegisterBody,options
-    );
-  }
+    postRegisterBody: BodyType<PostRegisterBody>,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PostRegister200>(
+      {url: `/api/register`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postRegisterBody, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostRegisterMutationOptions = <TError = AxiosError<PostRegister409>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: PostRegisterBody}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: PostRegisterBody}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPostRegisterMutationOptions = <TError = ErrorType<PostRegister409>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: BodyType<PostRegisterBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: BodyType<PostRegisterBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRegister>>, {data: PostRegisterBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRegister>>, {data: BodyType<PostRegisterBody>}> = (props) => {
           const {data} = props ?? {};
 
-          return  postRegister(data,axiosOptions)
+          return  postRegister(data,requestOptions)
         }
 
         
@@ -62,18 +64,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PostRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postRegister>>>
-    export type PostRegisterMutationBody = PostRegisterBody
-    export type PostRegisterMutationError = AxiosError<PostRegister409>
+    export type PostRegisterMutationBody = BodyType<PostRegisterBody>
+    export type PostRegisterMutationError = ErrorType<PostRegister409>
 
     /**
  * @summary 新規ユーザー登録API
  */
-export const usePostRegister = <TError = AxiosError<PostRegister409>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: PostRegisterBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostRegister = <TError = ErrorType<PostRegister409>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: BodyType<PostRegisterBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof postRegister>>,
         TError,
-        {data: PostRegisterBody},
+        {data: BodyType<PostRegisterBody>},
         TContext
       > => {
 

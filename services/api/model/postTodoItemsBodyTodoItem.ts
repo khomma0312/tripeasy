@@ -6,8 +6,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostRegister200User = {
-  id: string;
+export type PostTodoItemsBodyTodoItem = {
+  dueDate?: string;
   /** @nullable */
-  name: string | null;
+  id: number | null;
+  isCompleted: boolean;
+  order: number;
+  title: string;
 };

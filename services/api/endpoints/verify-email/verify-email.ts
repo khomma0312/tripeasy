@@ -13,48 +13,50 @@ import type {
   UseMutationOptions,
   UseMutationResult
 } from '@tanstack/react-query'
-import axios from 'axios'
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
 import type {
   PostVerifyEmail200,
   PostVerifyEmail400,
   PostVerifyEmail404,
   PostVerifyEmailBody
 } from '../../model'
+import { customInstance } from '../../mutator/custom-instance';
+import type { ErrorType, BodyType } from '../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
 /**
  * @summary メール検証API
  */
 export const postVerifyEmail = (
-    postVerifyEmailBody: PostVerifyEmailBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<PostVerifyEmail200>> => {
-    
-    return axios.post(
-      `/api/verify-email`,
-      postVerifyEmailBody,options
-    );
-  }
+    postVerifyEmailBody: BodyType<PostVerifyEmailBody>,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PostVerifyEmail200>(
+      {url: `/api/verify-email`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postVerifyEmailBody, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostVerifyEmailMutationOptions = <TError = AxiosError<PostVerifyEmail400 | PostVerifyEmail404>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: PostVerifyEmailBody}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: PostVerifyEmailBody}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPostVerifyEmailMutationOptions = <TError = ErrorType<PostVerifyEmail400 | PostVerifyEmail404>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: BodyType<PostVerifyEmailBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: BodyType<PostVerifyEmailBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postVerifyEmail>>, {data: PostVerifyEmailBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postVerifyEmail>>, {data: BodyType<PostVerifyEmailBody>}> = (props) => {
           const {data} = props ?? {};
 
-          return  postVerifyEmail(data,axiosOptions)
+          return  postVerifyEmail(data,requestOptions)
         }
 
         
@@ -63,18 +65,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PostVerifyEmailMutationResult = NonNullable<Awaited<ReturnType<typeof postVerifyEmail>>>
-    export type PostVerifyEmailMutationBody = PostVerifyEmailBody
-    export type PostVerifyEmailMutationError = AxiosError<PostVerifyEmail400 | PostVerifyEmail404>
+    export type PostVerifyEmailMutationBody = BodyType<PostVerifyEmailBody>
+    export type PostVerifyEmailMutationError = ErrorType<PostVerifyEmail400 | PostVerifyEmail404>
 
     /**
  * @summary メール検証API
  */
-export const usePostVerifyEmail = <TError = AxiosError<PostVerifyEmail400 | PostVerifyEmail404>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: PostVerifyEmailBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostVerifyEmail = <TError = ErrorType<PostVerifyEmail400 | PostVerifyEmail404>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVerifyEmail>>, TError,{data: BodyType<PostVerifyEmailBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof postVerifyEmail>>,
         TError,
-        {data: PostVerifyEmailBody},
+        {data: BodyType<PostVerifyEmailBody>},
         TContext
       > => {
 
