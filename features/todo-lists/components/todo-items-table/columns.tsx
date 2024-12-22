@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/shadcn/dropdown-menu";
 import { format } from "date-fns";
-import { dateFormatStr } from "@/consts/common";
+import { dateFormatStrForFormat } from "@/consts/common";
 
 export const getColumns = (
   editingRow: number | null,
@@ -100,7 +100,7 @@ export const getColumns = (
           }
         />
       ) : (
-        todo.dueDate && format(todo.dueDate, dateFormatStr)
+        todo.dueDate && format(todo.dueDate, dateFormatStrForFormat)
       );
     },
   },

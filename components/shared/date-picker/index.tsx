@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/shadcn/popover";
-import { dateFormatStr } from "@/consts/common";
+import { dateFormatStrForFormat } from "@/consts/common";
 
 interface DatePickerProps {
   date: Date | undefined;
@@ -33,7 +33,11 @@ export const DatePicker = ({ date, setDate, className }: DatePickerProps) => {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, dateFormatStr) : <span>期限日を選択</span>}
+          {date ? (
+            format(date, dateFormatStrForFormat)
+          ) : (
+            <span>期限日を選択</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

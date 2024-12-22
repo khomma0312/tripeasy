@@ -25,4 +25,5 @@ export const paths = {
   },
 };
 
-export const dateFormatStr = "yyyy/MM/dd";
+export const dateFormatStrForFormat = "yyyy/MM/dd";
+export const dateFormatStrForParse = "yyyy-MM-dd";
