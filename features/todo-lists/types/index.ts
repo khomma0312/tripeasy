@@ -1,7 +1,9 @@
 export type TodoList = {
   id: number;
   title: string;
-  date: Date;
+  tripId: number;
+  tripTitle: string;
+  tripDate?: Date | undefined;
   items: TodoItem[];
 };
 
