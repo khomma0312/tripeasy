@@ -1,0 +1,1 @@
+ALTER TABLE "todo_items" ALTER COLUMN "dueDate" SET DATA TYPE date;
