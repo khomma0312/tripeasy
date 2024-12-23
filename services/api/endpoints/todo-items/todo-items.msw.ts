@@ -14,10 +14,16 @@ import {
   http
 } from 'msw'
 import type {
+  DeleteTodoItemsId200,
+  PatchTodoItemsId200,
   PostTodoItems200
 } from '../../model'
 
 export const getPostTodoItemsResponseMock = (overrideResponse: Partial< PostTodoItems200 > = {}): PostTodoItems200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
+
+export const getPatchTodoItemsIdResponseMock = (overrideResponse: Partial< PatchTodoItemsId200 > = {}): PatchTodoItemsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
+
+export const getDeleteTodoItemsIdResponseMock = (overrideResponse: Partial< DeleteTodoItemsId200 > = {}): DeleteTodoItemsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 
 export const getPostTodoItemsMockHandler = (overrideResponse?: PostTodoItems200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostTodoItems200> | PostTodoItems200)) => {
@@ -31,6 +37,32 @@ export const getPostTodoItemsMockHandler = (overrideResponse?: PostTodoItems200 
       })
   })
 }
+
+export const getPatchTodoItemsIdMockHandler = (overrideResponse?: PatchTodoItemsId200 | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<PatchTodoItemsId200> | PatchTodoItemsId200)) => {
+  return http.patch('*/todo-items/:id', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getPatchTodoItemsIdResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
+
+export const getDeleteTodoItemsIdMockHandler = (overrideResponse?: DeleteTodoItemsId200 | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<DeleteTodoItemsId200> | DeleteTodoItemsId200)) => {
+  return http.delete('*/todo-items/:id', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getDeleteTodoItemsIdResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
 export const getTodoItemsMock = () => [
-  getPostTodoItemsMockHandler()
+  getPostTodoItemsMockHandler(),
+  getPatchTodoItemsIdMockHandler(),
+  getDeleteTodoItemsIdMockHandler()
 ]

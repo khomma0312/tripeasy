@@ -23,11 +23,30 @@ export const apiPostInputSchema = z.object({
 });
 export type ApiPostInputType = z.infer<typeof apiPostInputSchema>;
 
+// PATCH APIのinputパラメータのスキーマ
+export const apiPatchInputSchema = todoItemSchema.pick({
+  title: true,
+  dueDate: true,
+});
+export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
+
 // POST APIの成功時に返却されるoutputのスキーマ
 export const apiPostOutputSchema = z.object({
   id: z.number(),
 });
 export type ApiPostOutputType = z.infer<typeof apiPostOutputSchema>;
+
+// PATCH APIの成功時に返却されるoutputのスキーマ
+export const apiPatchOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
+
+// DELETE APIの成功時に返却されるoutputのスキーマ
+export const apiDeleteOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiDeleteOutputType = z.infer<typeof apiDeleteOutputSchema>;
 
 // APIのエラー時に返却されるoutputのスキーマ
 export const apiErrorSchema = z.object({ message: z.string() });
@@ -37,7 +56,7 @@ export type ApiErrorType = z.infer<typeof apiErrorSchema>;
 export const todoItemsPostApiSchema: RouteConfig = {
   method: "post",
   path: "/todo-items",
-  summary: "TODOアイテム新規作成、更新API",
+  summary: "TODOアイテム新規作成API",
   tags: ["todo-items"],
   request: {
     body: {
@@ -48,13 +67,68 @@ export const todoItemsPostApiSchema: RouteConfig = {
   },
   responses: {
     200: {
-      description: "TODOアイテム作成、更新成功",
+      description: "TODOアイテム作成成功",
       content: {
         "application/json": { schema: apiPostOutputSchema },
       },
     },
     500: {
-      description: "TODOアイテム作成、更新に失敗",
+      description: "TODOアイテム作成に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// PATCH APIのスキーマ
+export const todoItemsPatchApiSchema: RouteConfig = {
+  method: "patch",
+  path: "/todo-items/{id}",
+  summary: "TODOアイテム更新API",
+  tags: ["todo-items"],
+  request: {
+    params: z.object({ id: z.number() }),
+    body: {
+      content: {
+        "application/json": { schema: apiPatchInputSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "TODOアイテム更新成功",
+      content: {
+        "application/json": { schema: apiPatchOutputSchema },
+      },
+    },
+    500: {
+      description: "TODOアイテム更新に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// DELETE APIのスキーマ
+export const todoItemsDeleteApiSchema: RouteConfig = {
+  method: "delete",
+  path: "/todo-items/{id}",
+  summary: "TODOアイテム削除API",
+  tags: ["todo-items"],
+  request: {
+    params: z.object({ id: z.number() }),
+  },
+  responses: {
+    200: {
+      description: "TODOアイテム削除成功",
+      content: {
+        "application/json": { schema: apiDeleteOutputSchema },
+      },
+    },
+    500: {
+      description: "TODOアイテム削除に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },

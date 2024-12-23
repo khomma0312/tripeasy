@@ -6,9 +6,14 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './deleteTodoItemsId200';
+export * from './deleteTodoItemsId500';
 export * from './getTodoListsId200';
 export * from './getTodoListsId200ItemsItem';
 export * from './getTodoListsId404';
+export * from './patchTodoItemsId200';
+export * from './patchTodoItemsId500';
+export * from './patchTodoItemsIdBody';
 export * from './postRegister200';
 export * from './postRegister200User';
 export * from './postRegister409';
