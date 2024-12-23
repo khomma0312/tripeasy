@@ -177,7 +177,7 @@ paths:
                   - message
   /todo-items:
     post:
-      summary: TODOアイテム新規作成、更新API
+      summary: TODOアイテム新規作成API
       tags:
         - todo-items
       requestBody:
@@ -208,7 +208,7 @@ paths:
                 - todoItem
       responses:
         "200":
-          description: TODOアイテム作成、更新成功
+          description: TODOアイテム作成成功
           content:
             application/json:
               schema:
@@ -219,7 +219,86 @@ paths:
                 required:
                   - id
         "500":
-          description: TODOアイテム作成、更新に失敗
+          description: TODOアイテム作成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-items/{id}:
+    patch:
+      summary: TODOアイテム更新API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                dueDate:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          description: TODOアイテム更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "500":
+          description: TODOアイテム更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    delete:
+      summary: TODOアイテム削除API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: TODOアイテム削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "500":
+          description: TODOアイテム削除に失敗
           content:
             application/json:
               schema:
