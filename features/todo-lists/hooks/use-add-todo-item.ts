@@ -8,8 +8,10 @@ import { format } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
 import { TodoItem } from "../types";
 import { todoItemAddSchema } from "@/lib/zod/schema/todo-items";
+import { useToast } from "@/hooks/shadcn/use-toast";
 
 export const useAddTodoItem = (todoListId: number, todos: TodoItem[]) => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof todoItemAddSchema>>({
     resolver: zodResolver(todoItemAddSchema),
     defaultValues: {
@@ -22,12 +24,13 @@ export const useAddTodoItem = (todoListId: number, todos: TodoItem[]) => {
   const { isPending, mutate } = usePostTodoItems({
     mutation: {
       onSuccess: () => {
+        toast({ title: "項目を追加しました" });
         queryClient.invalidateQueries({
           queryKey: [`/api/todo-lists/${todoListId}`],
         });
       },
       onError: () => {
-        errorToast("アイテムの追加に失敗しました");
+        errorToast("項目の追加に失敗しました");
       },
     },
   });
