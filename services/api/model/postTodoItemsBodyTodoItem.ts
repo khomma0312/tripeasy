@@ -8,8 +8,6 @@
 
 export type PostTodoItemsBodyTodoItem = {
   dueDate?: string;
-  /** @nullable */
-  id: number | null;
   isCompleted: boolean;
   order: number;
   title: string;

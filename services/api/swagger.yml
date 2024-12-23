@@ -40,7 +40,7 @@ paths:
                     type: object
                     properties:
                       id:
-                        type: number
+                        type: string
                       name:
                         type: string
                         nullable: true
@@ -166,6 +166,127 @@ paths:
                   - message
         "500":
           description: トークンの生成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-items:
+    post:
+      summary: TODOアイテム新規作成、更新API
+      tags:
+        - todo-items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todoListId:
+                  type: number
+                todoItem:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    dueDate:
+                      type: string
+                    isCompleted:
+                      type: boolean
+                    order:
+                      type: number
+                  required:
+                    - title
+                    - isCompleted
+                    - order
+              required:
+                - todoListId
+                - todoItem
+      responses:
+        "200":
+          description: TODOアイテム作成、更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "500":
+          description: TODOアイテム作成、更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-lists/{id}:
+    get:
+      summary: 単一のTODOリストの取得
+      tags:
+        - todo-lists
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: TODOリスト取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  title:
+                    type: string
+                  tripId:
+                    type: number
+                  tripTitle:
+                    type: string
+                  tripDate:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          nullable: true
+                        title:
+                          type: string
+                        dueDate:
+                          type: string
+                        isCompleted:
+                          type: boolean
+                        order:
+                          type: number
+                      required:
+                        - id
+                        - title
+                        - isCompleted
+                        - order
+                required:
+                  - id
+                  - title
+                  - tripId
+                  - tripTitle
+                  - items
+        "404":
+          description: TODOリストが存在しないので取得失敗
           content:
             application/json:
               schema:
