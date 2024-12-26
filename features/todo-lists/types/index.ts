@@ -8,7 +8,7 @@ export type TodoList = {
 };
 
 export type TodoItem = {
-  id: number | null;
+  id: number;
   title: string;
   dueDate?: Date | undefined;
   isCompleted: boolean;

@@ -1,7 +1,6 @@
 "use client";
 
 import { TodoItem, TodoList } from "@/features/todo-lists/types";
-import { useTodoItemsTable } from "@/features/todo-lists/hooks/use-todo-items-table";
 import { getColumns } from "./columns";
 import {
   useReactTable,
@@ -31,8 +30,10 @@ import {
   FormMessage,
 } from "@/components/shadcn/form";
 import { format } from "date-fns";
-import { useEffect } from "react";
-import { dateFormatStr } from "@/consts/common";
+import { dateFormatStrForFormat } from "@/consts/common";
+import { useAddTodoItem } from "../../hooks/use-add-todo-item";
+import { useDeleteTodoItem } from "../../hooks/use-delete-todo-item";
+import { useUpdateTodoItem } from "../../hooks/use-update-todo-item";
 
 type Props = {
   todoList: TodoList;
@@ -40,28 +41,18 @@ type Props = {
 
 export const TodoItemsTable = ({ todoList }: Props) => {
   const {
-    form,
-    todos,
-    editingRow,
-    setEditingRow,
+    form: formToAddTodo,
+    isPending: isAddingTodo,
     onSubmit,
-    toggleTodoStatus,
-    updateEditingTodo,
-    cancelEdit,
-    deleteTodo,
-  } = useTodoItemsTable(todoList.items);
+  } = useAddTodoItem(todoList.id, todoList.items);
 
-  const columns = getColumns(
-    editingRow,
-    setEditingRow,
-    toggleTodoStatus,
-    updateEditingTodo,
-    cancelEdit,
-    deleteTodo
-  );
+  const { deleteTodo } = useDeleteTodoItem(todoList.id);
+  const { mutate, toggleTodoStatus } = useUpdateTodoItem(todoList.id);
 
-  const table = useReactTable({
-    data: todos,
+  const columns = getColumns(toggleTodoStatus, deleteTodo, mutate);
+
+  const table = useReactTable<TodoItem>({
+    data: todoList.items,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -70,33 +61,38 @@ export const TodoItemsTable = ({ todoList }: Props) => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">{todoList.title}</h1>
         <div className="flex items-center text-sm text-muted-foreground">
           <CalendarDays className="mr-2 h-4 w-4" />
-          {format(todoList.date, dateFormatStr)}
+          {todoList.tripDate &&
+            format(todoList.tripDate, dateFormatStrForFormat)}
         </div>
       </div>
-      <Form {...form}>
+      <Form {...formToAddTodo}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={formToAddTodo.handleSubmit(onSubmit)}
           className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 mb-6"
         >
           <FormField
-            control={form.control}
+            control={formToAddTodo.control}
             name="title"
             render={({ field }) => (
               <FormItem className="flex-grow">
                 <FormControl>
-                  <Input placeholder="やることを入力" {...field} />
+                  <Input
+                    disabled={isAddingTodo}
+                    placeholder="やることを入力"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
-            control={form.control}
+            control={formToAddTodo.control}
             name="dueDate"
             render={({ field }) => (
               <FormItem className="w-full sm:w-auto">
@@ -111,7 +107,11 @@ export const TodoItemsTable = ({ todoList }: Props) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full sm:w-auto">
+          <Button
+            type="submit"
+            disabled={isAddingTodo}
+            className="w-full sm:w-auto"
+          >
             <Plus />
             TODOを追加
           </Button>
