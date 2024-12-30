@@ -71,6 +71,20 @@
       "when": 1734904752790,
       "tag": "0009_change_dueDate_data_type",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1735397816786,
+      "tag": "0010_add_userId_to_todo_lists_and_todo_items",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1735398242365,
+      "tag": "0011_add_tripId_to_todo_lists",
+      "breakpoints": true
     }
   ]
 }
