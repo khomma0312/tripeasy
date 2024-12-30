@@ -31,7 +31,6 @@ export const SaveCancelButtonGroup = ({ todo, mutate }: Props) => {
           format(editingRowData.dueDate, dateFormatStrForParse),
       };
 
-      console.log(data);
       mutate({ id: todoId, data });
     }
   };
