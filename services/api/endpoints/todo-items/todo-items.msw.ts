@@ -16,6 +16,7 @@ import {
 import type {
   DeleteTodoItemsId200,
   PatchTodoItemsId200,
+  PatchTodoItemsIsCompletedId200,
   PostTodoItems200
 } from '../../model'
 
@@ -24,6 +25,8 @@ export const getPostTodoItemsResponseMock = (overrideResponse: Partial< PostTodo
 export const getPatchTodoItemsIdResponseMock = (overrideResponse: Partial< PatchTodoItemsId200 > = {}): PatchTodoItemsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getDeleteTodoItemsIdResponseMock = (overrideResponse: Partial< DeleteTodoItemsId200 > = {}): DeleteTodoItemsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
+
+export const getPatchTodoItemsIsCompletedIdResponseMock = (overrideResponse: Partial< PatchTodoItemsIsCompletedId200 > = {}): PatchTodoItemsIsCompletedId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 
 export const getPostTodoItemsMockHandler = (overrideResponse?: PostTodoItems200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostTodoItems200> | PostTodoItems200)) => {
@@ -61,8 +64,21 @@ export const getDeleteTodoItemsIdMockHandler = (overrideResponse?: DeleteTodoIte
       })
   })
 }
+
+export const getPatchTodoItemsIsCompletedIdMockHandler = (overrideResponse?: PatchTodoItemsIsCompletedId200 | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<PatchTodoItemsIsCompletedId200> | PatchTodoItemsIsCompletedId200)) => {
+  return http.patch('*/todo-items/is-completed/:id', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getPatchTodoItemsIsCompletedIdResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
 export const getTodoItemsMock = () => [
   getPostTodoItemsMockHandler(),
   getPatchTodoItemsIdMockHandler(),
-  getDeleteTodoItemsIdMockHandler()
+  getDeleteTodoItemsIdMockHandler(),
+  getPatchTodoItemsIsCompletedIdMockHandler()
 ]

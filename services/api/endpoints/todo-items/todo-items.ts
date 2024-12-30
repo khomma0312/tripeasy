@@ -19,6 +19,9 @@ import type {
   PatchTodoItemsId200,
   PatchTodoItemsId500,
   PatchTodoItemsIdBody,
+  PatchTodoItemsIsCompletedId200,
+  PatchTodoItemsIsCompletedId500,
+  PatchTodoItemsIsCompletedIdBody,
   PostTodoItems200,
   PostTodoItems500,
   PostTodoItemsBody
@@ -198,6 +201,64 @@ export const useDeleteTodoItemsId = <TError = ErrorType<DeleteTodoItemsId500>,
       > => {
 
       const mutationOptions = getDeleteTodoItemsIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary TODOアイテムのisCompletedの更新API
+ */
+export const patchTodoItemsIsCompletedId = (
+    id: number,
+    patchTodoItemsIsCompletedIdBody: BodyType<PatchTodoItemsIsCompletedIdBody>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PatchTodoItemsIsCompletedId200>(
+      {url: `/api/todo-items/is-completed/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchTodoItemsIsCompletedIdBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchTodoItemsIsCompletedIdMutationOptions = <TError = ErrorType<PatchTodoItemsIsCompletedId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>, TError,{id: number;data: BodyType<PatchTodoItemsIsCompletedIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>, TError,{id: number;data: BodyType<PatchTodoItemsIsCompletedIdBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>, {id: number;data: BodyType<PatchTodoItemsIsCompletedIdBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchTodoItemsIsCompletedId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchTodoItemsIsCompletedIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>>
+    export type PatchTodoItemsIsCompletedIdMutationBody = BodyType<PatchTodoItemsIsCompletedIdBody>
+    export type PatchTodoItemsIsCompletedIdMutationError = ErrorType<PatchTodoItemsIsCompletedId500>
+
+    /**
+ * @summary TODOアイテムのisCompletedの更新API
+ */
+export const usePatchTodoItemsIsCompletedId = <TError = ErrorType<PatchTodoItemsIsCompletedId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>, TError,{id: number;data: BodyType<PatchTodoItemsIsCompletedIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchTodoItemsIsCompletedId>>,
+        TError,
+        {id: number;data: BodyType<PatchTodoItemsIsCompletedIdBody>},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchTodoItemsIsCompletedIdMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

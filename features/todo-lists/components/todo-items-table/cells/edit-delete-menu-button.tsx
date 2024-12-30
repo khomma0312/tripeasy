@@ -20,7 +20,7 @@ export const EditDeleteMenuButton = ({ todo, deleteTodo }: Props) => {
   const setEditingRowData = useEditingRowDataSetAtom();
 
   const initForEditingMode = (todo: TodoItem) => {
-    setEditingRow(todo.order);
+    setEditingRow(todo.id);
     setEditingRowData({ title: todo.title, dueDate: todo.dueDate });
   };
 

@@ -15,7 +15,7 @@ export const RowActionMenu = ({ todo, updateMutate, deleteTodo }: Props) => {
 
   return (
     <div className="relative flex justify-end">
-      {editingRow && editingRow === todo.order ? (
+      {editingRow && editingRow === todo.id ? (
         <SaveCancelButtonGroup todo={todo} mutate={updateMutate} />
       ) : (
         <EditDeleteMenuButton todo={todo} deleteTodo={deleteTodo} />

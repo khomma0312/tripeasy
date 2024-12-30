@@ -20,7 +20,7 @@ export const TitleCell = ({ todo }: Props) => {
     setEditingRowData((prev) => ({ ...prev, title: e.target.value }));
   };
 
-  return editingRow && editingRow === todo.order ? (
+  return editingRow && editingRow === todo.id ? (
     <Input
       ref={inputRef}
       value={inputRef.current?.value}

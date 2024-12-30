@@ -30,6 +30,14 @@ export const apiPatchInputSchema = todoItemSchema.pick({
 });
 export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
 
+// isCompletedを変更するPATCH APIのinputパラメータのスキーマ
+export const apiPatchIsCompletedInputSchema = todoItemSchema.pick({
+  isCompleted: true,
+});
+export type ApiPatchIsCompletedInputType = z.infer<
+  typeof apiPatchIsCompletedInputSchema
+>;
+
 // POST APIの成功時に返却されるoutputのスキーマ
 export const apiPostOutputSchema = z.object({
   id: z.number(),
@@ -92,6 +100,36 @@ export const todoItemsPatchApiSchema: RouteConfig = {
     body: {
       content: {
         "application/json": { schema: apiPatchInputSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "TODOアイテム更新成功",
+      content: {
+        "application/json": { schema: apiPatchOutputSchema },
+      },
+    },
+    500: {
+      description: "TODOアイテム更新に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// isCompletedを変更するPATCH APIのスキーマ
+export const todoItemsPatchIsCompletedApiSchema: RouteConfig = {
+  method: "patch",
+  path: "/todo-items/is-completed/{id}",
+  summary: "TODOアイテムのisCompletedの更新API",
+  tags: ["todo-items"],
+  request: {
+    params: z.object({ id: z.number() }),
+    body: {
+      content: {
+        "application/json": { schema: apiPatchIsCompletedInputSchema },
       },
     },
   },

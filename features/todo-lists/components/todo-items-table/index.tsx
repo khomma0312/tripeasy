@@ -47,9 +47,15 @@ export const TodoItemsTable = ({ todoList }: Props) => {
   } = useAddTodoItem(todoList.id, todoList.items);
 
   const { deleteTodo } = useDeleteTodoItem(todoList.id);
-  const { mutate, toggleTodoStatus } = useUpdateTodoItem(todoList.id);
+  const { updateTodoItemMutate, updateTodoStatusMutate } = useUpdateTodoItem(
+    todoList.id
+  );
 
-  const columns = getColumns(toggleTodoStatus, deleteTodo, mutate);
+  const columns = getColumns(
+    updateTodoStatusMutate,
+    updateTodoItemMutate,
+    deleteTodo
+  );
 
   const table = useReactTable<TodoItem>({
     data: todoList.items,

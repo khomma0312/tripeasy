@@ -4,6 +4,7 @@ import {
   ApiDeleteOutputType,
   ApiErrorType,
   apiPatchInputSchema,
+  apiPatchIsCompletedInputSchema,
   ApiPatchOutputType,
   apiPostInputSchema,
   ApiPostOutputType,
@@ -68,6 +69,39 @@ const app = new Hono()
 
     return c.json<ApiPatchOutputType>({ id: updatedTodo.id });
   })
+  .patch(
+    "/is-completed/:id",
+    zValidator("json", apiPatchIsCompletedInputSchema),
+    async (c) => {
+      const session = await auth();
+      const id = Number(c.req.param("id"));
+      const { isCompleted } = c.req.valid("json");
+
+      if (!session?.user) {
+        return c.json<ApiErrorType>(
+          { message: "ユーザー認証されていません" },
+          403
+        );
+      }
+
+      const userId = session.user.id ?? "";
+
+      const [updatedTodo] = await db
+        .update(todoItems)
+        .set({ isCompleted })
+        .where(and(eq(todoItems.id, id), eq(todoItems.userId, userId)))
+        .returning({ id: todoItems.id });
+
+      if (!updatedTodo) {
+        return c.json<ApiErrorType>(
+          { message: "更新対象の項目が見つかりませんでした" },
+          404
+        );
+      }
+
+      return c.json<ApiPatchOutputType>({ id: updatedTodo.id });
+    }
+  )
   .delete("/:id", async (c) => {
     const session = await auth();
     const id = Number(c.req.param("id"));

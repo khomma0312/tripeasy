@@ -308,6 +308,50 @@ paths:
                     type: string
                 required:
                   - message
+  /todo-items/is-completed/{id}:
+    patch:
+      summary: TODOアイテムのisCompletedの更新API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isCompleted:
+                  type: boolean
+              required:
+                - isCompleted
+      responses:
+        "200":
+          description: TODOアイテム更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "500":
+          description: TODOアイテム更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
   /todo-lists/{id}:
     get:
       summary: 単一のTODOリストの取得
