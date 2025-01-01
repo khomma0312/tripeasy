@@ -1,5 +1,6 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { apiErrorSchema, commonResponseConfig } from "./common";
 
 // TODOアイテム新規追加フォームの項目
 export const todoItemAddSchema = z.object({
@@ -56,10 +57,6 @@ export const apiDeleteOutputSchema = z.object({
 });
 export type ApiDeleteOutputType = z.infer<typeof apiDeleteOutputSchema>;
 
-// APIのエラー時に返却されるoutputのスキーマ
-export const apiErrorSchema = z.object({ message: z.string() });
-export type ApiErrorType = z.infer<typeof apiErrorSchema>;
-
 // POST APIのスキーマ
 export const todoItemsPostApiSchema: RouteConfig = {
   method: "post",
@@ -74,6 +71,7 @@ export const todoItemsPostApiSchema: RouteConfig = {
     },
   },
   responses: {
+    ...commonResponseConfig,
     200: {
       description: "TODOアイテム作成成功",
       content: {
@@ -104,6 +102,7 @@ export const todoItemsPatchApiSchema: RouteConfig = {
     },
   },
   responses: {
+    ...commonResponseConfig,
     200: {
       description: "TODOアイテム更新成功",
       content: {
@@ -134,6 +133,7 @@ export const todoItemsPatchIsCompletedApiSchema: RouteConfig = {
     },
   },
   responses: {
+    ...commonResponseConfig,
     200: {
       description: "TODOアイテム更新成功",
       content: {
@@ -159,6 +159,7 @@ export const todoItemsDeleteApiSchema: RouteConfig = {
     params: z.object({ id: z.number() }),
   },
   responses: {
+    ...commonResponseConfig,
     200: {
       description: "TODOアイテム削除成功",
       content: {
