@@ -1,5 +1,6 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { apiErrorSchema } from "./common";
 
 // フォームの入力項目のスキーマ
 export const signUpSchema = z
@@ -40,17 +41,12 @@ export type ApiInputType = z.infer<typeof apiInputSchema>;
 // APIの成功時に返却されるoutputのスキーマ
 export const apiOutputSchema = z.object({
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string().nullable(),
   }),
 });
 
 export type ApiOutputType = z.infer<typeof apiOutputSchema>;
-
-// APIのエラー時に返却されるoutputのスキーマ
-export const apiErrorSchema = z.object({ message: z.string() });
-
-export type ApiErrorType = z.infer<typeof apiErrorSchema>;
 
 // export const registerComponentSchemas = [
 //   {

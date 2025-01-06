@@ -1,11 +1,11 @@
-import { AuthLayout } from "@/components/layout/auth-layout";
+import { CenteredContentLayout } from "@/components/layout/centered-content-layout";
 import PageClient from "./page-client";
 
 const Register = () => {
   return (
-    <AuthLayout>
+    <CenteredContentLayout>
       <PageClient />
-    </AuthLayout>
+    </CenteredContentLayout>
   );
 };
 

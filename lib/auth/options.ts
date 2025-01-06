@@ -12,7 +12,13 @@ export const authOptions: NextAuthConfig = {
   trustHost: true,
   session: {
     strategy: "jwt",
-    maxAge: 3 * 60 * 60,
+    maxAge: 3 * 60 * 60 * 30,
+  },
+  callbacks: {
+    async session({ session, token }) {
+      session.user.id = token.sub ?? "";
+      return session;
+    },
   },
   providers: [
     GoogleProvider({
@@ -43,7 +49,7 @@ export const authOptions: NextAuthConfig = {
 
         if (passwordCorrect) {
           return {
-            id: user.id.toString(), // idをstring型に変換
+            id: user.id,
             name: user.name,
           };
         }

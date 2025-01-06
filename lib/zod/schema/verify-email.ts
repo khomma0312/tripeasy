@@ -1,5 +1,6 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+import { apiErrorSchema } from "./common";
 
 // APIのinputパラメータのスキーマ
 export const apiInputSchema = z.object({
@@ -16,11 +17,6 @@ export const apiOutputSchema = z.object({
 });
 
 export type ApiOutputType = z.infer<typeof apiOutputSchema>;
-
-// APIのエラー時に返却されるoutputのスキーマ
-export const apiErrorSchema = z.object({ message: z.string() });
-
-export type ApiErrorType = z.infer<typeof apiErrorSchema>;
 
 // POST APIのスキーマ
 export const verifyEmailPostApiSchema: RouteConfig = {

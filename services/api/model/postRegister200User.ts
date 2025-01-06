@@ -7,7 +7,7 @@
  */
 
 export type PostRegister200User = {
-  id: number;
+  id: string;
   /** @nullable */
   name: string | null;
 };

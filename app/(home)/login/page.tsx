@@ -1,13 +1,13 @@
 "use client";
 
-import { AuthLayout } from "@/components/layout/auth-layout";
+import { CenteredContentLayout } from "@/components/layout/centered-content-layout";
 import { SignInForm } from "@/features/login/components/signin-form";
 
 const Login = () => {
   return (
-    <AuthLayout>
+    <CenteredContentLayout>
       <SignInForm />
-    </AuthLayout>
+    </CenteredContentLayout>
   );
 };
 

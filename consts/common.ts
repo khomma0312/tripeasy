@@ -11,8 +11,8 @@ export const paths = {
     pathname: "/trips",
     label: "旅行計画",
   },
-  todos: {
-    pathname: "/todos",
+  todoLists: {
+    pathname: "/todo-lists",
     label: "TODOリスト",
   },
   packingItemLists: {
@@ -24,3 +24,6 @@ export const paths = {
     label: "宿泊施設",
   },
 };
+
+export const dateFormatStrForFormat = "yyyy/MM/dd";
+export const dateFormatStrForParse = "yyyy-MM-dd";

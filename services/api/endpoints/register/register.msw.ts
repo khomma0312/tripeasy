@@ -17,7 +17,7 @@ import type {
   PostRegister200
 } from '../../model'
 
-export const getPostRegisterResponseMock = (overrideResponse: Partial< PostRegister200 > = {}): PostRegister200 => ({user: {id: faker.number.int({min: undefined, max: undefined}), name: faker.helpers.arrayElement([faker.string.alpha(20), null])}, ...overrideResponse})
+export const getPostRegisterResponseMock = (overrideResponse: Partial< PostRegister200 > = {}): PostRegister200 => ({user: {id: faker.string.alpha(20), name: faker.helpers.arrayElement([faker.string.alpha(20), null])}, ...overrideResponse})
 
 
 export const getPostRegisterMockHandler = (overrideResponse?: PostRegister200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostRegister200> | PostRegister200)) => {

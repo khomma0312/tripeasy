@@ -50,6 +50,41 @@
       "when": 1733957179604,
       "tag": "0006_add_nextauth_auth_related_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1734299355103,
+      "tag": "0007_add_due_date_and_order_to_todo_items",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1734475148868,
+      "tag": "0008_add_todo_list_id_to_trips",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1734904752790,
+      "tag": "0009_change_dueDate_data_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1735397816786,
+      "tag": "0010_add_userId_to_todo_lists_and_todo_items",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1735398242365,
+      "tag": "0011_add_tripId_to_todo_lists",
+      "breakpoints": true
     }
   ]
 }

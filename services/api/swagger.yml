@@ -40,7 +40,7 @@ paths:
                     type: object
                     properties:
                       id:
-                        type: number
+                        type: string
                       name:
                         type: string
                         nullable: true
@@ -166,6 +166,364 @@ paths:
                   - message
         "500":
           description: トークンの生成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-items:
+    post:
+      summary: TODOアイテム新規作成API
+      tags:
+        - todo-items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                todoListId:
+                  type: number
+                todoItem:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    dueDate:
+                      type: string
+                    isCompleted:
+                      type: boolean
+                    order:
+                      type: number
+                  required:
+                    - title
+                    - isCompleted
+                    - order
+              required:
+                - todoListId
+                - todoItem
+      responses:
+        "200":
+          description: TODOアイテム作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: TODOアイテム作成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-items/{id}:
+    patch:
+      summary: TODOアイテム更新API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                dueDate:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          description: TODOアイテム更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: TODOアイテム更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    delete:
+      summary: TODOアイテム削除API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: TODOアイテム削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: TODOアイテム削除に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-items/is-completed/{id}:
+    patch:
+      summary: TODOアイテムのisCompletedの更新API
+      tags:
+        - todo-items
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isCompleted:
+                  type: boolean
+              required:
+                - isCompleted
+      responses:
+        "200":
+          description: TODOアイテム更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: TODOアイテム更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-lists:
+    get:
+      summary: ログイン中のユーザーに紐づく全てのTODOリストの取得(ページネーションもあり)
+      tags:
+        - todo-lists
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: page
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: perPage
+          in: query
+      responses:
+        "200":
+          description: TODOリスト取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  todoLists:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                        startDate:
+                          type: string
+                        totalTasks:
+                          type: number
+                        completedTasks:
+                          type: number
+                      required:
+                        - id
+                        - title
+                        - totalTasks
+                        - completedTasks
+                  totalPages:
+                    type: number
+                required:
+                  - todoLists
+                  - totalPages
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-lists/{id}:
+    get:
+      summary: 単一のTODOリストの取得
+      tags:
+        - todo-lists
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: TODOリスト取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  title:
+                    type: string
+                  tripId:
+                    type: number
+                  tripTitle:
+                    type: string
+                  tripDate:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                        dueDate:
+                          type: string
+                        isCompleted:
+                          type: boolean
+                        order:
+                          type: number
+                      required:
+                        - id
+                        - title
+                        - isCompleted
+                        - order
+                required:
+                  - id
+                  - title
+                  - tripId
+                  - tripTitle
+                  - items
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: TODOリストが存在しないので取得失敗
           content:
             application/json:
               schema:

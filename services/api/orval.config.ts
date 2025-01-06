@@ -9,6 +9,16 @@ module.exports = {
       mock: true,
       clean: true,
       prettier: true,
+      override: {
+        mutator: {
+          path: "./mutator/custom-instance.ts",
+          name: "customInstance",
+        },
+        query: {
+          useSuspenseQuery: true,
+          version: 5,
+        },
+      },
     },
     input: {
       target: "./swagger.yml",
