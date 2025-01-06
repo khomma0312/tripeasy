@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/drizzle/db";
+import { ApiErrorType } from "@/lib/zod/schema/common";
 import {
   ApiDeleteOutputType,
-  ApiErrorType,
   apiPatchInputSchema,
   apiPatchIsCompletedInputSchema,
   ApiPatchOutputType,
