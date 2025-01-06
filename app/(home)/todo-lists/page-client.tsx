@@ -12,7 +12,11 @@ const TodoListsContainer = dynamic(
     ),
   {
     ssr: false,
-    loading: () => <LoaderCircle className="size-10 animate-spin" />,
+    loading: () => (
+      <div className="w-full h-full grid place-items-center">
+        <LoaderCircle className="size-10 animate-spin" />
+      </div>
+    ),
   }
 );
 
