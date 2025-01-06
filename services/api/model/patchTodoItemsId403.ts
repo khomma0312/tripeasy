@@ -6,10 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetTodoListsId200ItemsItem = {
-  dueDate?: string;
-  id: number;
-  isCompleted: boolean;
-  order: number;
-  title: string;
+export type PatchTodoItemsId403 = {
+  message: string;
 };

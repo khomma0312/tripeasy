@@ -6,16 +6,21 @@ import { apiErrorSchema, commonResponseConfig } from "./common";
 // Todoリストを全て返すGET APIのinputパラメータのスキーマ
 export const apiAllGetInputSchema = z.object({
   page: z.number(),
-  limit: z.number(),
+  perPage: z.number().optional(),
 });
 
 // Todoリストを全て返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiAllGetOutputSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  startDate: z.string().optional(),
-  totalTasks: z.number(),
-  completedTasks: z.number(),
+  todoLists: z.array(
+    z.object({
+      id: z.number(),
+      title: z.string(),
+      startDate: z.string().optional(),
+      totalTasks: z.number(),
+      completedTasks: z.number(),
+    })
+  ),
+  totalPages: z.number(),
 });
 export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
 

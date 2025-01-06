@@ -10,7 +10,7 @@ export const todoItemAddSchema = z.object({
 
 // TODOアイテムが持つ項目
 export const todoItemSchema = z.object({
-  id: z.number().nullable(),
+  id: z.number(),
   title: z.string(),
   dueDate: z.string().optional(),
   isCompleted: z.boolean(),

@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetTodoListsId200ItemsItem = {
-  dueDate?: string;
+export type GetTodoLists200TodoListsItem = {
+  completedTasks: number;
   id: number;
-  isCompleted: boolean;
-  order: number;
+  startDate?: string;
   title: string;
+  totalTasks: number;
 };

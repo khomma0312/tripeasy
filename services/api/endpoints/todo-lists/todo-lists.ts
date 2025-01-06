@@ -22,14 +22,160 @@ import type {
   UseSuspenseQueryResult
 } from '@tanstack/react-query'
 import type {
+  GetTodoLists200,
+  GetTodoLists403,
   GetTodoListsId200,
-  GetTodoListsId404
+  GetTodoListsId403,
+  GetTodoListsId404,
+  GetTodoListsParams
 } from '../../model'
 import { customInstance } from '../../mutator/custom-instance';
 import type { ErrorType } from '../../mutator/custom-instance';
 
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
+
+/**
+ * @summary ログイン中のユーザーに紐づく全てのTODOリストの取得(ページネーションもあり)
+ */
+export const getTodoLists = (
+    params: GetTodoListsParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetTodoLists200>(
+      {url: `/api/todo-lists`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetTodoListsQueryKey = (params: GetTodoListsParams,) => {
+    return [`/api/todo-lists`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetTodoListsQueryOptions = <TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(params: GetTodoListsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTodoListsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodoLists>>> = ({ signal }) => getTodoLists(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetTodoListsQueryResult = NonNullable<Awaited<ReturnType<typeof getTodoLists>>>
+export type GetTodoListsQueryError = ErrorType<GetTodoLists403>
+
+
+export function useGetTodoLists<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTodoLists>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTodoLists<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTodoLists>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTodoLists<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary ログイン中のユーザーに紐づく全てのTODOリストの取得(ページネーションもあり)
+ */
+
+export function useGetTodoLists<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetTodoListsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const getGetTodoListsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(params: GetTodoListsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTodoListsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodoLists>>> = ({ signal }) => getTodoLists(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetTodoListsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getTodoLists>>>
+export type GetTodoListsSuspenseQueryError = ErrorType<GetTodoLists403>
+
+
+export function useGetTodoListsSuspense<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTodoListsSuspense<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTodoListsSuspense<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary ログイン中のユーザーに紐づく全てのTODOリストの取得(ページネーションもあり)
+ */
+
+export function useGetTodoListsSuspense<TData = Awaited<ReturnType<typeof getTodoLists>>, TError = ErrorType<GetTodoLists403>>(
+ params: GetTodoListsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoLists>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetTodoListsSuspenseQueryOptions(params,options)
+
+  const query = useSuspenseQuery(queryOptions) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
 
 
 /**
@@ -53,7 +199,7 @@ export const getGetTodoListsIdQueryKey = (id: number,) => {
     }
 
     
-export const getGetTodoListsIdQueryOptions = <TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetTodoListsIdQueryOptions = <TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -72,10 +218,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetTodoListsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getTodoListsId>>>
-export type GetTodoListsIdQueryError = ErrorType<GetTodoListsId404>
+export type GetTodoListsIdQueryError = ErrorType<GetTodoListsId403 | GetTodoListsId404>
 
 
-export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getTodoListsId>>,
@@ -85,7 +231,7 @@ export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoLists
       >, request?: SecondParameter<typeof customInstance>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getTodoListsId>>,
@@ -95,7 +241,7 @@ export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoLists
       >, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
@@ -103,7 +249,7 @@ export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoLists
  * @summary 単一のTODOリストの取得
  */
 
-export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
@@ -119,7 +265,7 @@ export function useGetTodoListsId<TData = Awaited<ReturnType<typeof getTodoLists
 
 
 
-export const getGetTodoListsIdSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetTodoListsIdSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -138,18 +284,18 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetTodoListsIdSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getTodoListsId>>>
-export type GetTodoListsIdSuspenseQueryError = ErrorType<GetTodoListsId404>
+export type GetTodoListsIdSuspenseQueryError = ErrorType<GetTodoListsId403 | GetTodoListsId404>
 
 
-export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
@@ -157,7 +303,7 @@ export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getT
  * @summary 単一のTODOリストの取得
  */
 
-export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId404>>(
+export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getTodoListsId>>, TError = ErrorType<GetTodoListsId403 | GetTodoListsId404>>(
  id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodoListsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {

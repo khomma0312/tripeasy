@@ -218,6 +218,17 @@ paths:
                     type: number
                 required:
                   - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
         "500":
           description: TODOアイテム作成に失敗
           content:
@@ -264,6 +275,17 @@ paths:
                     type: number
                 required:
                   - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
         "500":
           description: TODOアイテム更新に失敗
           content:
@@ -297,6 +319,17 @@ paths:
                     type: number
                 required:
                   - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
         "500":
           description: TODOアイテム削除に失敗
           content:
@@ -341,8 +374,79 @@ paths:
                     type: number
                 required:
                   - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
         "500":
           description: TODOアイテム更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /todo-lists:
+    get:
+      summary: ログイン中のユーザーに紐づく全てのTODOリストの取得(ページネーションもあり)
+      tags:
+        - todo-lists
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: page
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: perPage
+          in: query
+      responses:
+        "200":
+          description: TODOリスト取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  todoLists:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                        startDate:
+                          type: string
+                        totalTasks:
+                          type: number
+                        completedTasks:
+                          type: number
+                      required:
+                        - id
+                        - title
+                        - totalTasks
+                        - completedTasks
+                  totalPages:
+                    type: number
+                required:
+                  - todoLists
+                  - totalPages
+        "403":
+          description: ユーザー検証に失敗
           content:
             application/json:
               schema:
@@ -388,7 +492,6 @@ paths:
                       properties:
                         id:
                           type: number
-                          nullable: true
                         title:
                           type: string
                         dueDate:
@@ -408,6 +511,17 @@ paths:
                   - tripId
                   - tripTitle
                   - items
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
         "404":
           description: TODOリストが存在しないので取得失敗
           content:
