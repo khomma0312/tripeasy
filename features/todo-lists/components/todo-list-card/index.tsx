@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { format } from "date-fns";
 import { CalendarDays, ListChecks } from "lucide-react";
 import {
   Card,
@@ -7,12 +9,12 @@ import {
   CardTitle,
 } from "@/components/shadcn/card";
 import { Button } from "@/components/shadcn/button";
-import Link from "next/link";
+import { dateFormatStrForFormat } from "@/consts/common";
 
 type Props = {
   id: number;
   title: string;
-  date: string;
+  startDate: string | undefined;
   totalTasks: number;
   completedTasks: number;
 };
@@ -20,7 +22,7 @@ type Props = {
 export const TodoListCard = ({
   id,
   title,
-  date,
+  startDate,
   totalTasks,
   completedTasks,
 }: Props) => {
@@ -32,7 +34,8 @@ export const TodoListCard = ({
       <CardContent>
         <div className="flex items-center text-sm text-muted-foreground mb-2">
           <CalendarDays className="mr-2 h-4 w-4" />
-          期限: {date}
+          {startDate &&
+            `期限: ${format(new Date(startDate), dateFormatStrForFormat)}`}
         </div>
         <div className="flex items-center text-sm text-muted-foreground">
           <ListChecks className="mr-2 h-4 w-4" />
@@ -40,9 +43,11 @@ export const TodoListCard = ({
         </div>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full">
-          <Link href={`/todo-lists/${id}`}>詳細を見る</Link>
-        </Button>
+        <Link href={`/todo-lists/${id}`} className="w-full">
+          <Button variant="outline" className="w-full">
+            詳細を見る
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
