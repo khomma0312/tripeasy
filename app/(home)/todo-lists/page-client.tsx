@@ -5,10 +5,10 @@ import { HandleError } from "@/components/shared/handle-error";
 import { LoaderCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 
-const TodoListsContainer = dynamic(
+const TodoListsPageContainer = dynamic(
   () =>
-    import("@/features/todo-lists/components/todo-lists-container").then(
-      (mod) => mod.TodoListsContainer
+    import("@/features/todo-lists/components/todo-lists-page-container").then(
+      (mod) => mod.TodoListsPageContainer
     ),
   {
     ssr: false,
@@ -29,7 +29,7 @@ export function PageClient({ currentPage, perPage }: Props) {
   return (
     <HorizontallyCenteredContentLayout>
       <HandleError onReset={() => window.location.reload()}>
-        <TodoListsContainer currentPage={currentPage} perPage={perPage} />
+        <TodoListsPageContainer currentPage={currentPage} perPage={perPage} />
       </HandleError>
     </HorizontallyCenteredContentLayout>
   );
