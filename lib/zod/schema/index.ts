@@ -8,6 +8,7 @@ import {
 } from "./todo-items";
 import {
   todoListsAllGetApiSchema,
+  todoListsDeleteApiSchema,
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
 } from "./todo-lists";
@@ -27,4 +28,5 @@ export const pathSchemas = [
   todoListsAllGetApiSchema,
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
+  todoListsDeleteApiSchema,
 ];

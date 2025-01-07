@@ -48,6 +48,12 @@ export const apiPatchOutputSchema = z.object({
 });
 export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
 
+// DELETE APIの成功時に返却されるoutputのスキーマ
+export const apiDeleteOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiDeleteOutputType = z.infer<typeof apiDeleteOutputSchema>;
+
 // Todoリストを全て返すGET APIのスキーマ
 export const todoListsAllGetApiSchema: RouteConfig = {
   method: "get",
@@ -119,6 +125,32 @@ export const todoListsPatchApiSchema: RouteConfig = {
     },
     500: {
       description: "TODOリスト更新に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// DELETE APIのスキーマ
+export const todoListsDeleteApiSchema: RouteConfig = {
+  method: "delete",
+  path: "/todo-lists/{id}",
+  summary: "TODOリスト削除API",
+  tags: ["todo-lists"],
+  request: {
+    params: z.object({ id: z.number() }),
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "TODOリスト削除成功",
+      content: {
+        "application/json": { schema: apiDeleteOutputSchema },
+      },
+    },
+    500: {
+      description: "TODOリスト削除に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },
