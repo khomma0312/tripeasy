@@ -6,7 +6,12 @@ import {
   todoItemsDeleteApiSchema,
   todoItemsPatchIsCompletedApiSchema,
 } from "./todo-items";
-import { todoListAllGetApiSchema, todoListGetApiSchema } from "./todo-lists";
+import {
+  todoListsAllGetApiSchema,
+  todoListsDeleteApiSchema,
+  todoListsGetApiSchema,
+  todoListsPatchApiSchema,
+} from "./todo-lists";
 import { verifyEmailPostApiSchema } from "./verify-email";
 
 // NOTE: APIパスを追加するごとに、この変数にzodスキーマを追加する
@@ -19,6 +24,9 @@ export const pathSchemas = [
   todoItemsPatchApiSchema,
   todoItemsPatchIsCompletedApiSchema,
   todoItemsDeleteApiSchema,
-  todoListAllGetApiSchema,
-  todoListGetApiSchema,
+  // Todoリスト用API
+  todoListsAllGetApiSchema,
+  todoListsGetApiSchema,
+  todoListsPatchApiSchema,
+  todoListsDeleteApiSchema,
 ];

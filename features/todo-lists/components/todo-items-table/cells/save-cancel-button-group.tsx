@@ -45,10 +45,10 @@ export const SaveCancelButtonGroup = ({ todo, mutate }: Props) => {
           closeEditMode();
         }}
       >
-        <Check className="h-4 w-4" />
+        <Check className="size-4 text-emerald-500" />
       </Button>
       <Button size="icon" variant="ghost" onClick={() => closeEditMode()}>
-        <X className="h-4 w-4" />
+        <X className="size-4 text-rose-500" />
       </Button>
     </div>
   );

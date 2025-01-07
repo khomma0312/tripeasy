@@ -34,6 +34,10 @@ import { dateFormatStrForFormat } from "@/consts/common";
 import { useAddTodoItem } from "../../hooks/use-add-todo-item";
 import { useDeleteTodoItem } from "../../hooks/use-delete-todo-item";
 import { useUpdateTodoItem } from "../../hooks/use-update-todo-item";
+import { useUpdateTodoList } from "../../hooks/use-update-todo-list";
+import { EditableTitle } from "../editable-title";
+import { TodoListDeleteButton } from "../todo-list-delete-button";
+import { useDeleteTodoList } from "../../hooks/use-delete-todo-list";
 
 type Props = {
   todoList: TodoList;
@@ -50,6 +54,8 @@ export const TodoItemsTable = ({ todoList }: Props) => {
   const { updateTodoItemMutate, updateTodoStatusMutate } = useUpdateTodoItem(
     todoList.id
   );
+  const { updateTodoListMutate } = useUpdateTodoList(todoList.id);
+  const { deleteTodoListMutate } = useDeleteTodoList();
 
   const columns = getColumns(
     updateTodoStatusMutate,
@@ -68,13 +74,23 @@ export const TodoItemsTable = ({ todoList }: Props) => {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{todoList.title}</h1>
-        <div className="flex items-center text-sm text-muted-foreground">
-          <CalendarDays className="mr-2 h-4 w-4" />
-          {todoList.tripDate &&
-            format(todoList.tripDate, dateFormatStrForFormat)}
+      <div className="flex justify-between">
+        <div className="mb-8">
+          <EditableTitle
+            defaultTitle={todoList.title}
+            onSave={(title) =>
+              updateTodoListMutate({ id: todoList.id, data: { title } })
+            }
+          />
+          <div className="flex items-center text-sm text-muted-foreground">
+            <CalendarDays className="mr-2 h-4 w-4" />
+            {todoList.tripDate &&
+              format(todoList.tripDate, dateFormatStrForFormat)}
+          </div>
         </div>
+        <TodoListDeleteButton
+          onDelete={() => deleteTodoListMutate({ id: todoList.id })}
+        />
       </div>
       <Form {...formToAddTodo}>
         <form
@@ -119,7 +135,7 @@ export const TodoItemsTable = ({ todoList }: Props) => {
             className="w-full sm:w-auto"
           >
             <Plus />
-            TODOを追加
+            Todoを追加
           </Button>
         </form>
       </Form>

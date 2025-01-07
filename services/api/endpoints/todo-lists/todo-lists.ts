@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery,
   useSuspenseQuery
 } from '@tanstack/react-query'
@@ -13,24 +14,34 @@ import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult
 } from '@tanstack/react-query'
 import type {
+  DeleteTodoListsId200,
+  DeleteTodoListsId403,
+  DeleteTodoListsId500,
   GetTodoLists200,
   GetTodoLists403,
   GetTodoListsId200,
   GetTodoListsId403,
   GetTodoListsId404,
-  GetTodoListsParams
+  GetTodoListsParams,
+  PatchTodoListsId200,
+  PatchTodoListsId403,
+  PatchTodoListsId500,
+  PatchTodoListsIdBody
 } from '../../model'
 import { customInstance } from '../../mutator/custom-instance';
-import type { ErrorType } from '../../mutator/custom-instance';
+import type { ErrorType, BodyType } from '../../mutator/custom-instance';
 
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
@@ -319,3 +330,117 @@ export function useGetTodoListsIdSuspense<TData = Awaited<ReturnType<typeof getT
 
 
 
+/**
+ * @summary TODOリスト更新API
+ */
+export const patchTodoListsId = (
+    id: number,
+    patchTodoListsIdBody: BodyType<PatchTodoListsIdBody>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PatchTodoListsId200>(
+      {url: `/api/todo-lists/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchTodoListsIdBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchTodoListsIdMutationOptions = <TError = ErrorType<PatchTodoListsId403 | PatchTodoListsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTodoListsId>>, TError,{id: number;data: BodyType<PatchTodoListsIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchTodoListsId>>, TError,{id: number;data: BodyType<PatchTodoListsIdBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchTodoListsId>>, {id: number;data: BodyType<PatchTodoListsIdBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchTodoListsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchTodoListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchTodoListsId>>>
+    export type PatchTodoListsIdMutationBody = BodyType<PatchTodoListsIdBody>
+    export type PatchTodoListsIdMutationError = ErrorType<PatchTodoListsId403 | PatchTodoListsId500>
+
+    /**
+ * @summary TODOリスト更新API
+ */
+export const usePatchTodoListsId = <TError = ErrorType<PatchTodoListsId403 | PatchTodoListsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTodoListsId>>, TError,{id: number;data: BodyType<PatchTodoListsIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchTodoListsId>>,
+        TError,
+        {id: number;data: BodyType<PatchTodoListsIdBody>},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchTodoListsIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary TODOリスト削除API
+ */
+export const deleteTodoListsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<DeleteTodoListsId200>(
+      {url: `/api/todo-lists/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteTodoListsIdMutationOptions = <TError = ErrorType<DeleteTodoListsId403 | DeleteTodoListsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTodoListsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteTodoListsId>>, TError,{id: number}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTodoListsId>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteTodoListsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteTodoListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTodoListsId>>>
+    
+    export type DeleteTodoListsIdMutationError = ErrorType<DeleteTodoListsId403 | DeleteTodoListsId500>
+
+    /**
+ * @summary TODOリスト削除API
+ */
+export const useDeleteTodoListsId = <TError = ErrorType<DeleteTodoListsId403 | DeleteTodoListsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTodoListsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteTodoListsId>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteTodoListsIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
