@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import {
   ApiAllGetOutputType,
   ApiGetOutputType,
+  apiPatchInputSchema,
+  ApiPatchOutputType,
 } from "@/lib/zod/schema/todo-lists";
 import { db } from "@/lib/drizzle/db";
 import {
@@ -14,6 +16,7 @@ import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/todo-lists";
+import { zValidator } from "@hono/zod-validator";
 
 const logger = getLogger("api/todo-lists");
 
@@ -146,7 +149,35 @@ const app = new Hono()
     });
   })
   .post("/:id", async () => {})
-  .patch("/:id", async () => {})
+  .patch("/:id", zValidator("json", apiPatchInputSchema), async (c) => {
+    const session = await auth();
+    const id = Number(c.req.param("id"));
+    const { title } = c.req.valid("json");
+
+    if (!session?.user) {
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    const [updatedTodoList] = await db
+      .update(todoListsTable)
+      .set({ title })
+      .where(and(eq(todoListsTable.id, id), eq(todoListsTable.userId, userId)))
+      .returning({ id: todoListsTable.id });
+
+    if (!updatedTodoList) {
+      return c.json<ApiErrorType>(
+        { message: "更新対象の項目が見つかりませんでした" },
+        404
+      );
+    }
+
+    return c.json<ApiPatchOutputType>({ id: updatedTodoList.id });
+  })
   .delete("/:id", async () => {});
 
 export default app;
