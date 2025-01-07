@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { CalendarDays, Plus } from "lucide-react";
+import { CalendarDays, Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Input } from "@/components/shadcn/input";
 import { DatePicker } from "@/components/shared/date-picker";
@@ -34,6 +34,8 @@ import { dateFormatStrForFormat } from "@/consts/common";
 import { useAddTodoItem } from "../../hooks/use-add-todo-item";
 import { useDeleteTodoItem } from "../../hooks/use-delete-todo-item";
 import { useUpdateTodoItem } from "../../hooks/use-update-todo-item";
+import { EditableTitle } from "./editable-title";
+import { useUpdateTodoList } from "../../hooks/use-update-todo-list";
 
 type Props = {
   todoList: TodoList;
@@ -50,6 +52,8 @@ export const TodoItemsTable = ({ todoList }: Props) => {
   const { updateTodoItemMutate, updateTodoStatusMutate } = useUpdateTodoItem(
     todoList.id
   );
+
+  const { updateTodoListMutate } = useUpdateTodoList(todoList.id);
 
   const columns = getColumns(
     updateTodoStatusMutate,
@@ -69,7 +73,12 @@ export const TodoItemsTable = ({ todoList }: Props) => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{todoList.title}</h1>
+        <EditableTitle
+          defaultTitle={todoList.title}
+          onSave={(title) =>
+            updateTodoListMutate({ id: todoList.id, data: { title } })
+          }
+        />
         <div className="flex items-center text-sm text-muted-foreground">
           <CalendarDays className="mr-2 h-4 w-4" />
           {todoList.tripDate &&
