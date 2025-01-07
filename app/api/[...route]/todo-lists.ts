@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import {
   ApiAllGetOutputType,
+  ApiDeleteOutputType,
   ApiGetOutputType,
   apiPatchInputSchema,
   ApiPatchOutputType,
@@ -178,6 +179,32 @@ const app = new Hono()
 
     return c.json<ApiPatchOutputType>({ id: updatedTodoList.id });
   })
-  .delete("/:id", async () => {});
+  .delete("/:id", async (c) => {
+    const session = await auth();
+    const id = Number(c.req.param("id"));
+
+    if (!session?.user) {
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    const [deletedTodoList] = await db
+      .delete(todoListsTable)
+      .where(and(eq(todoListsTable.id, id), eq(todoListsTable.userId, userId)))
+      .returning({ id: todoListsTable.id });
+
+    if (!deletedTodoList) {
+      return c.json<ApiErrorType>(
+        { message: "削除対象の項目が見つかりませんでした" },
+        404
+      );
+    }
+
+    return c.json<ApiDeleteOutputType>({ id: deletedTodoList.id });
+  });
 
 export default app;
