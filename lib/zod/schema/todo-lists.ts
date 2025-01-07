@@ -9,6 +9,13 @@ export const apiAllGetInputSchema = z.object({
   perPage: z.number().optional(),
 });
 
+// 単一のTodoリストを返すGET APIのinputパラメータのスキーマ
+export const apiGetInputSchema = z.object({ id: z.number() });
+
+// PATCH APIのinputパラメータのスキーマ
+export const apiPatchInputSchema = z.object({ title: z.string() });
+export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
+
 // Todoリストを全て返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiAllGetOutputSchema = z.object({
   todoLists: z.array(
@@ -24,9 +31,6 @@ export const apiAllGetOutputSchema = z.object({
 });
 export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
 
-// 単一のTodoリストを返すGET APIのinputパラメータのスキーマ
-export const apiGetInputSchema = z.object({ id: z.number() });
-
 // 単一のTodoリストを返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiGetOutputSchema = z.object({
   id: z.number(),
@@ -38,8 +42,14 @@ export const apiGetOutputSchema = z.object({
 });
 export type ApiGetOutputType = z.infer<typeof apiGetOutputSchema>;
 
+// PATCH APIの成功時に返却されるoutputのスキーマ
+export const apiPatchOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
+
 // Todoリストを全て返すGET APIのスキーマ
-export const todoListAllGetApiSchema: RouteConfig = {
+export const todoListsAllGetApiSchema: RouteConfig = {
   method: "get",
   path: "/todo-lists",
   summary:
@@ -60,7 +70,7 @@ export const todoListAllGetApiSchema: RouteConfig = {
 };
 
 // 単一のTodoリストを返すGET APIのスキーマ
-export const todoListGetApiSchema: RouteConfig = {
+export const todoListsGetApiSchema: RouteConfig = {
   method: "get",
   path: "/todo-lists/{id}",
   summary: "単一のTODOリストの取得",
@@ -78,6 +88,37 @@ export const todoListGetApiSchema: RouteConfig = {
     },
     404: {
       description: "TODOリストが存在しないので取得失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// PATCH APIのスキーマ
+export const todoListsPatchApiSchema: RouteConfig = {
+  method: "patch",
+  path: "/todo-lists/{id}",
+  summary: "TODOリスト更新API",
+  tags: ["todo-lists"],
+  request: {
+    params: z.object({ id: z.number() }),
+    body: {
+      content: {
+        "application/json": { schema: apiPatchInputSchema },
+      },
+    },
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "TODOリスト更新成功",
+      content: {
+        "application/json": { schema: apiPatchOutputSchema },
+      },
+    },
+    500: {
+      description: "TODOリスト更新に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },
