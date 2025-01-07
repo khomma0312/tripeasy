@@ -1,17 +1,17 @@
 "use client";
 
 import { useGetTodoListsIdSuspense } from "@/services/api/endpoints/todo-lists/todo-lists";
-import { TodoItemsTable } from "../todo-items-table";
 import { convertDataTypesToMatchTodoList } from "../../utils";
+import { TodoListPage } from "../todo-list-page";
 
 type Props = {
   todoListId: number;
 };
 
-export const TodoItemsTableContainer = ({ todoListId }: Props) => {
+export const TodoListPageContainer = ({ todoListId }: Props) => {
   const { data } = useGetTodoListsIdSuspense(todoListId);
 
   const todoList = convertDataTypesToMatchTodoList(data);
 
-  return <TodoItemsTable todoList={todoList} />;
+  return <TodoListPage todoList={todoList} />;
 };

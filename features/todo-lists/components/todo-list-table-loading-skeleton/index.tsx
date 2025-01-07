@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/shadcn/skeleton";
 
-export const TodoItemsTableLoadingSkeleton = () => {
+export const TodoListTableLoadingSkeleton = () => {
   return (
     <div>
       <div className="flex flex-col mb-8">
