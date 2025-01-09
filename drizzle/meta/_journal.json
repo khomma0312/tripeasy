@@ -85,6 +85,13 @@
       "when": 1735398242365,
       "tag": "0011_add_tripId_to_todo_lists",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1736434494682,
+      "tag": "0012_add_accommodations",
+      "breakpoints": true
     }
   ]
 }
