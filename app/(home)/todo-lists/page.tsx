@@ -1,4 +1,4 @@
-import { paginationDefaultLimit } from "@/consts/todo-lists";
+import { paginationDefaultLimit } from "@/consts/common";
 import { PageClient } from "./page-client";
 
 type Props = {

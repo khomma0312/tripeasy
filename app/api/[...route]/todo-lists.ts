@@ -16,7 +16,7 @@ import { and, count, eq, sql } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
-import { paginationDefaultLimit } from "@/consts/todo-lists";
+import { paginationDefaultLimit } from "@/consts/common";
 import { zValidator } from "@hono/zod-validator";
 
 const logger = getLogger("api/todo-lists");

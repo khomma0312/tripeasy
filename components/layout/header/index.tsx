@@ -22,8 +22,8 @@ const menus = [
     icon: <Briefcase size={20} />,
   },
   {
-    href: paths.accomodations.pathname,
-    label: paths.accomodations.label,
+    href: paths.accommodations.pathname,
+    label: paths.accommodations.label,
     icon: <Hotel size={20} />,
   },
 ];
