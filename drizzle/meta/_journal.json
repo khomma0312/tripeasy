@@ -92,6 +92,13 @@
       "when": 1736434494682,
       "tag": "0012_add_accommodations",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1736434909264,
+      "tag": "0013_add_bookingId_to_accommodations",
+      "breakpoints": true
     }
   ]
 }

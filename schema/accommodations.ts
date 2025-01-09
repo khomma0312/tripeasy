@@ -19,6 +19,7 @@ export const accommodations = pgTable("accommodations", {
   checkOut: date().notNull(),
   reservationPrice: integer(),
   notes: text(),
+  bookingId: text(),
   bookingUrl: text(),
   tripAdvisorUrl: text(),
   phoneNumber: varchar({ length: 256 }),
