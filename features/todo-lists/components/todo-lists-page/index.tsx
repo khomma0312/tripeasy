@@ -1,5 +1,5 @@
 import { TodoListForCard } from "@/features/todo-lists/types";
-import { TodoListsHeader } from "@/features/todo-lists/components/todo-lists-header";
+import { ListPageHeader } from "@/components/shared/list-page-header";
 import { TodoListCardColumn } from "@/features/todo-lists/components/todo-list-card-column";
 import { PaginatedNavigation } from "@/components/shared/paginated-navigation";
 
@@ -17,7 +17,11 @@ export const TodoListsPage = ({
   return (
     <div className="h-full flex flex-col justify-between">
       <div>
-        <TodoListsHeader />
+        <ListPageHeader
+          title="TODOリスト一覧"
+          labelForButton="旅行計画を作成"
+          linkForButton="/trips/new"
+        />
         <TodoListCardColumn todoLists={todoLists} />
       </div>
       <PaginatedNavigation
