@@ -631,3 +631,70 @@ paths:
                     type: string
                 required:
                   - message
+  /accommodations:
+    get:
+      summary: ログイン中のユーザーに紐づく全ての予約した宿泊施設の取得(ページネーションもあり)
+      tags:
+        - accommodations
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: page
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: perPage
+          in: query
+      responses:
+        "200":
+          description: 予約した宿泊施設取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accommodations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        checkIn:
+                          type: string
+                        checkOut:
+                          type: string
+                        image:
+                          type: string
+                        bookingUrl:
+                          type: string
+                        bookingId:
+                          type: string
+                      required:
+                        - id
+                        - name
+                        - checkIn
+                        - checkOut
+                        - image
+                  totalPages:
+                    type: number
+                required:
+                  - accommodations
+                  - totalPages
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
