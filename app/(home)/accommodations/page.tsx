@@ -1,4 +1,5 @@
 import { PageClient } from "./page-client";
+import { paginationDefaultLimit } from "@/consts/common";
 
 type Props = {
   searchParams: Promise<{
@@ -9,8 +10,8 @@ type Props = {
 
 const Accommodations = async ({ searchParams }: Props) => {
   const { page: strPage, perPage: strPerPage } = await searchParams;
-  const page = Number(strPage) ?? 1;
-  const perPage = strPerPage ? Number(strPerPage) : undefined;
+  const page = strPage ? Number(strPage) : 1;
+  const perPage = strPerPage ? Number(strPerPage) : paginationDefaultLimit;
   return <PageClient currentPage={page} perPage={perPage} />;
 };
 
