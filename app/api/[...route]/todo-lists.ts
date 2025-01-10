@@ -32,6 +32,7 @@ const app = new Hono()
     const offset = limit * (page - 1);
 
     if (!session?.user) {
+      logger.error("User verification failed.");
       return c.json<ApiErrorType>(
         { message: "ユーザー認証されていません" },
         403
@@ -69,7 +70,7 @@ const app = new Hono()
         completedTasks: subquery.completedTasks,
       })
       .from(trips)
-      .innerJoin(subquery, eq(subquery.tripId, trips.id))
+      .innerJoin(subquery, eq(subquery.tripId, trips.id)) // TODO: こっちにもuserIdのwhere条件を入れた方がいいかも？
       .offset(offset)
       .limit(limit);
 
