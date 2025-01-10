@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const TodoListsPageContainer = ({ currentPage, perPage }: Props) => {
-  const { data } = useGetTodoListsSuspense({ page: currentPage });
+  const { data } = useGetTodoListsSuspense({ page: currentPage, perPage });
   return (
     <TodoListsPage
       todoLists={data.todoLists}
