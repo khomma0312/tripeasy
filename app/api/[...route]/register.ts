@@ -1,11 +1,8 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
-import {
-  apiInputSchema,
-  ApiErrorType,
-  ApiOutputType,
-} from "@/lib/zod/schema/register";
+import { apiInputSchema, ApiOutputType } from "@/lib/zod/schema/register";
+import { ApiErrorType } from "@/lib/zod/schema/common";
 import { db } from "@/lib/drizzle/db";
 import { users } from "@/schema";
 import { getHashedPassword } from "@/utils/auth";
