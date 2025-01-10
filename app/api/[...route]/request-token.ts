@@ -1,10 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import {
-  apiInputSchema,
-  ApiErrorType,
-  ApiOutputType,
-} from "@/lib/zod/schema/request-token";
+import { apiInputSchema, ApiOutputType } from "@/lib/zod/schema/request-token";
+import { ApiErrorType } from "@/lib/zod/schema/common";
 import { getLogger } from "@/lib/logger";
 import { getUserbyEmail } from "@/lib/auth/user";
 import { generateVerificationToken } from "@/lib/auth/token";
