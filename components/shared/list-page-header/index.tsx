@@ -1,17 +1,26 @@
-import { TodoList } from "@/features/todo-lists/types";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { TitleHeading } from "@/components/shared/title-heading";
 
-export const TodoListsHeader = () => {
+type Props = {
+  title: string;
+  labelForButton: string;
+  linkForButton: string;
+};
+
+export const ListPageHeader = ({
+  title,
+  labelForButton,
+  linkForButton,
+}: Props) => {
   return (
     <div className="flex justify-between items-center mb-8">
-      <TitleHeading>TODOリスト一覧</TitleHeading>
-      <Link href="/trips/new">
+      <TitleHeading>{title}</TitleHeading>
+      <Link href={linkForButton}>
         <Button className="flex items-center gap-2">
           <Plus />
-          旅行計画を作成
+          {labelForButton}
         </Button>
       </Link>
     </div>

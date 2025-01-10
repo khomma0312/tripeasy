@@ -19,11 +19,13 @@ export const paths = {
     pathname: "/packing-item-lists",
     label: "持ち物リスト",
   },
-  accomodations: {
-    pathname: "/accomodations",
+  accommodations: {
+    pathname: "/accommodations",
     label: "宿泊施設",
   },
 };
 
 export const dateFormatStrForFormat = "yyyy/MM/dd";
 export const dateFormatStrForParse = "yyyy-MM-dd";
+
+export const paginationDefaultLimit = 10;

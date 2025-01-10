@@ -8,6 +8,7 @@ declare global {
       GOOGLE_CLIENT_SECRET: string;
       RESEND_FROM: string;
       RESEND_API_KEY: string;
+      TRIP_ADVISOR_API_KEY: string;
     }
   }
 }

@@ -5,3 +5,4 @@ export * from "@/schema/todo-lists";
 export * from "@/schema/trips";
 export * from "@/schema/auth";
 export * from "@/schema/verification_tokens";
+export * from "@/schema/accommodations";

@@ -1,3 +1,4 @@
+import { accommodationsAllGetApiSchema } from "./accommodations";
 import { registerPostApiSchema } from "./register";
 import { requestTokenPostApiSchema } from "./request-token";
 import {
@@ -29,4 +30,6 @@ export const pathSchemas = [
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
   todoListsDeleteApiSchema,
+  // 宿泊施設予約情報用API
+  accommodationsAllGetApiSchema,
 ];

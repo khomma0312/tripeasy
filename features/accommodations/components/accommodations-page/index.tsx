@@ -1,16 +1,18 @@
-import { TodoListForCard } from "@/features/todo-lists/types";
+"use client";
+
+import { AccommodationForCard } from "@/features/accommodations/types";
 import { ListPageHeader } from "@/components/shared/list-page-header";
-import { TodoListCardColumn } from "@/features/todo-lists/components/todo-list-card-column";
+import { AccommodationCardColumn } from "../accommodation-card-column";
 import { PaginatedNavigation } from "@/components/shared/paginated-navigation";
 
 type Props = {
-  todoLists: TodoListForCard[];
+  accommodations: AccommodationForCard[];
   currentPage: number;
   totalPages: number;
 };
 
-export const TodoListsPage = ({
-  todoLists,
+export const AccommodationsPage = ({
+  accommodations,
   currentPage,
   totalPages,
 }: Props) => {
@@ -18,14 +20,14 @@ export const TodoListsPage = ({
     <div className="h-full flex flex-col justify-between">
       <div>
         <ListPageHeader
-          title="TODOリスト一覧"
-          labelForButton="旅行計画を作成"
-          linkForButton="/trips/new"
+          title="宿泊施設一覧"
+          labelForButton="宿泊施設の予約情報を登録"
+          linkForButton="/accommodations/new"
         />
-        <TodoListCardColumn todoLists={todoLists} />
+        <AccommodationCardColumn accommodations={accommodations} />
       </div>
       <PaginatedNavigation
-        basedUrl="/todo-lists"
+        basedUrl="/accommodations"
         currentPage={currentPage}
         totalPages={totalPages}
       />

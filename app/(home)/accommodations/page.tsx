@@ -1,5 +1,5 @@
-import { paginationDefaultLimit } from "@/consts/common";
 import { PageClient } from "./page-client";
+import { paginationDefaultLimit } from "@/consts/common";
 
 type Props = {
   searchParams: Promise<{
@@ -8,11 +8,11 @@ type Props = {
   }>;
 };
 
-const TodoLists = async ({ searchParams }: Props) => {
+const Accommodations = async ({ searchParams }: Props) => {
   const { page: strPage, perPage: strPerPage } = await searchParams;
-  const page = Number(strPage) ?? 1;
-  const perPage = Number(strPerPage) ?? paginationDefaultLimit;
+  const page = strPage ? Number(strPage) : 1;
+  const perPage = strPerPage ? Number(strPerPage) : paginationDefaultLimit;
   return <PageClient currentPage={page} perPage={perPage} />;
 };
 
-export default TodoLists;
+export default Accommodations;
