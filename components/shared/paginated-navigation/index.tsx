@@ -73,7 +73,7 @@ export const PaginatedNavigation = ({
           </PaginationItem>
         )}
 
-        {/* pageNumbersにtotalPagesが含まれていない場合は、省略記号のアイコンを出力 */}
+        {/* pageNumbersに1が含まれていない場合は、省略記号のアイコンを出力 */}
         {!pageNumbers.includes(1) && (
           <PaginationItem>
             <PaginationEllipsis />
