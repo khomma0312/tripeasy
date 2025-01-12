@@ -1,16 +1,11 @@
-import { useMemo } from "react";
 import type { Preview } from "@storybook/react";
 import { initialize, mswLoader } from "msw-storybook-addon";
-import {
-  getRouter,
-  ReadonlyURLSearchParams,
-  useSearchParams,
-} from "@storybook/nextjs/navigation.mock";
+import { getRouter } from "@storybook/nextjs/navigation.mock";
 import mockRouter from "next-router-mock";
 import { handlers } from "../mocks/api/handlers";
 import "../styles/globals.css";
 
-initialize({ onUnhandledRequest: "warn" });
+initialize({ onUnhandledRequest: "bypass" });
 
 const preview: Preview = {
   parameters: {
@@ -34,16 +29,6 @@ const preview: Preview = {
       (...args: Parameters<typeof mockRouter.replace>) =>
         mockRouter.replace(...args)
     );
-    useSearchParams.mockImplementation(() => {
-      const searchParams = useMemo(
-        () =>
-          new ReadonlyURLSearchParams(
-            new URLSearchParams(mockRouter.query as Record<string, string>)
-          ),
-        [mockRouter.query]
-      );
-      return searchParams;
-    });
   },
 };
 
