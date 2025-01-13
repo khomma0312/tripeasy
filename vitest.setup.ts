@@ -1,6 +1,7 @@
 import { beforeAll, afterEach, afterAll } from "vitest";
-import { server } from "@/mocks/api/server";
+import { setProjectAnnotations } from "@storybook/nextjs";
+import * as previewAnnotations from "./.storybook/preview";
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const annotations = setProjectAnnotations([previewAnnotations]);
+// Run Storybook's beforeAll hook
+beforeAll(annotations.beforeAll);
