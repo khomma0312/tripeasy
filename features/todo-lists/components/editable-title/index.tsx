@@ -33,6 +33,7 @@ export const EditableTitle = ({ defaultTitle, onSave }: Props) => {
               closeEditMode();
             }}
             className="px-2"
+            aria-label="タイトルを保存"
           >
             <Check className="size-4 text-emerald-500" />
           </Button>
@@ -41,6 +42,7 @@ export const EditableTitle = ({ defaultTitle, onSave }: Props) => {
             variant="ghost"
             onClick={() => closeEditMode()}
             className="px-2"
+            aria-label="タイトルの編集をキャンセル"
           >
             <X className="size-4 text-rose-500" />
           </Button>
@@ -52,6 +54,7 @@ export const EditableTitle = ({ defaultTitle, onSave }: Props) => {
             variant="ghost"
             onClick={() => setIsEditing(true)}
             className="px-2 py-1"
+            aria-label="タイトルを編集"
           >
             <Pencil className="size-4 text-muted-foreground" />
           </Button>

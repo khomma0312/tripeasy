@@ -44,10 +44,16 @@ export const SaveCancelButtonGroup = ({ todo, mutate }: Props) => {
           updateTodo(todo.id);
           closeEditMode();
         }}
+        aria-label="Todoアイテムを保存"
       >
         <Check className="size-4 text-emerald-500" />
       </Button>
-      <Button size="icon" variant="ghost" onClick={() => closeEditMode()}>
+      <Button
+        size="icon"
+        variant="ghost"
+        onClick={() => closeEditMode()}
+        aria-label="Todoアイテムの保存をキャンセル"
+      >
         <X className="size-4 text-rose-500" />
       </Button>
     </div>
