@@ -8,5 +8,5 @@ export default meta;
 
 export const Default: StoryObj<typeof ErrorDisplay> = {
   args: {},
-  name: "表示",
+  name: "デフォルト表示",
 };

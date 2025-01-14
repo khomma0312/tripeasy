@@ -12,5 +12,5 @@ export const Default: StoryObj<typeof ListPageHeader> = {
     labelForButton: "宿泊予約情報を追加",
     linkForButton: "/",
   },
-  name: "表示",
+  name: "デフォルト表示",
 };

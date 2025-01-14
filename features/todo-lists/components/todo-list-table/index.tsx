@@ -1,7 +1,10 @@
 "use client";
 
 import { TodoItem, TodoList } from "@/features/todo-lists/types";
-import { getColumns } from "./columns";
+import {
+  UpdateTodoItemMutator,
+  UpdateTodoStatusMutator,
+} from "@/services/api/types/mutate";
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,19 +21,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/shadcn/table";
-import { useDeleteTodoItem } from "../../hooks/use-delete-todo-item";
-import { useUpdateTodoItem } from "../../hooks/use-update-todo-item";
+import { getColumns } from "./columns";
 
 type Props = {
   todoList: TodoList;
+  deleteTodo: (todoId: number) => void;
+  updateTodoStatusMutate: UpdateTodoStatusMutator;
+  updateTodoItemMutate: UpdateTodoItemMutator;
 };
 
-export const TodoListTable = ({ todoList }: Props) => {
-  const { deleteTodo } = useDeleteTodoItem(todoList.id);
-  const { updateTodoItemMutate, updateTodoStatusMutate } = useUpdateTodoItem(
-    todoList.id
-  );
-
+export const TodoListTable = ({
+  todoList,
+  deleteTodo,
+  updateTodoStatusMutate,
+  updateTodoItemMutate,
+}: Props) => {
   const columns = getColumns(
     updateTodoStatusMutate,
     updateTodoItemMutate,

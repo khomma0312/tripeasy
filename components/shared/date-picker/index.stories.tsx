@@ -11,5 +11,5 @@ export const Default: StoryObj<typeof DatePicker> = {
     date: new Date(),
     setDate: () => {},
   },
-  name: "表示",
+  name: "デフォルト表示",
 };

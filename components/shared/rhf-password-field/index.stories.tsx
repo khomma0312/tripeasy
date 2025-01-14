@@ -13,5 +13,5 @@ export const Default: StoryObj<typeof RHFPasswordField> = {
     name: "password",
     label: "パスワード",
   },
-  name: "表示",
+  name: "デフォルト表示",
 };

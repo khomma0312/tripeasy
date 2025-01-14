@@ -17,7 +17,7 @@ export const Default: StoryObj<typeof PaginatedNavigation> = {
     currentPage: 1,
     totalPages: 10,
   },
-  name: "表示",
+  name: "デフォルト表示",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(mockRouter).toMatchObject({ pathname: "/todo-lists" });

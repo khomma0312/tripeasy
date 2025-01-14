@@ -1,9 +1,9 @@
 "use client";
 
 import { TodoList } from "@/features/todo-lists/types";
-import { TodoListTable } from "../todo-list-table";
-import { TodoItemAddForm } from "../todo-item-add-form";
-import { TodoListHeader } from "../todo-list-header";
+import { TodoListHeaderContainer } from "../todo-list-header-container";
+import { TodoItemAddFormContainer } from "../todo-item-add-form-container";
+import { TodoListTableContainer } from "../todo-list-table-container";
 
 type Props = {
   todoList: TodoList;
@@ -12,9 +12,9 @@ type Props = {
 export const TodoListPage = ({ todoList }: Props) => {
   return (
     <div>
-      <TodoListHeader todoList={todoList} />
-      <TodoItemAddForm todoList={todoList} />
-      <TodoListTable todoList={todoList} />
+      <TodoListHeaderContainer todoList={todoList} />
+      <TodoItemAddFormContainer todoList={todoList} />
+      <TodoListTableContainer todoList={todoList} />
     </div>
   );
 };

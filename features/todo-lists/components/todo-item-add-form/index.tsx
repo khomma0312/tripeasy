@@ -1,4 +1,3 @@
-import { TodoList } from "@/features/todo-lists/types";
 import { Plus } from "lucide-react";
 import {
   Form,
@@ -10,33 +9,38 @@ import {
 import { Input } from "@/components/shadcn/input";
 import { Button } from "@/components/shadcn/button";
 import { DatePicker } from "@/components/shared/date-picker";
-import { useAddTodoItem } from "@/features/todo-lists/hooks/use-add-todo-item";
+import { UseFormReturn } from "react-hook-form";
+import { TypeOf } from "zod";
+import { todoItemAddSchema } from "@/lib/zod/schema/todo-items";
 
 type Props = {
-  todoList: TodoList;
+  form: UseFormReturn<
+    {
+      title: string;
+      dueDate?: Date | undefined;
+    },
+    any,
+    undefined
+  >;
+  isPending: boolean;
+  onSubmit: (data: TypeOf<typeof todoItemAddSchema>) => void;
 };
 
-export const TodoItemAddForm = ({ todoList }: Props) => {
-  const {
-    form: formToAddTodo,
-    isPending: isAddingTodo,
-    onSubmit,
-  } = useAddTodoItem(todoList.id, todoList.items);
-
+export const TodoItemAddForm = ({ form, isPending, onSubmit }: Props) => {
   return (
-    <Form {...formToAddTodo}>
+    <Form {...form}>
       <form
-        onSubmit={formToAddTodo.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 mb-6"
       >
         <FormField
-          control={formToAddTodo.control}
+          control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem className="flex-grow">
               <FormControl>
                 <Input
-                  disabled={isAddingTodo}
+                  disabled={isPending}
                   placeholder="やることを入力"
                   {...field}
                 />
@@ -46,7 +50,7 @@ export const TodoItemAddForm = ({ todoList }: Props) => {
           )}
         />
         <FormField
-          control={formToAddTodo.control}
+          control={form.control}
           name="dueDate"
           render={({ field }) => (
             <FormItem className="w-full sm:w-auto">
@@ -61,11 +65,7 @@ export const TodoItemAddForm = ({ todoList }: Props) => {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isAddingTodo}
-          className="w-full sm:w-auto"
-        >
+        <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
           <Plus />
           Todoを追加
         </Button>
