@@ -13,5 +13,5 @@ export const Default: StoryObj<typeof RHFInputField> = {
     name: "name",
     label: "名前",
   },
-  name: "表示",
+  name: "デフォルト表示",
 };

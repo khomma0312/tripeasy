@@ -10,5 +10,5 @@ export const Default: StoryObj<typeof TitleHeading> = {
   args: {
     children: "タイトル",
   },
-  name: "表示",
+  name: "デフォルト表示",
 };

@@ -11,5 +11,5 @@ export const Default: StoryObj<typeof AlertDestructive> = {
     title: "ログインに失敗しました。",
     description: "もう一度お試しいただくか、別の方法をお試しください。",
   },
-  name: "表示",
+  name: "デフォルト表示",
 };
