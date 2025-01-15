@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Phone,
   FileText,
+  Tickets,
 } from "lucide-react";
 import { formatDateWithSlash } from "@/utils/common";
 
@@ -66,27 +67,34 @@ export const AccommodationDetailCard = ({ accommodation }: Props) => {
             <p>
               <strong>備考:</strong> {accommodation.notes}
             </p>
+            <p>
+              <strong>予約番号:</strong> {accommodation.bookingId}
+            </p>
           </div>
         </div>
         <div className="mt-8 space-y-4">
-          <a
-            href={accommodation.bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            <FileText className="mr-2 h-5 w-5" />
-            予約内容を確認する
-          </a>
-          <a
-            href={accommodation.tripAdvisorUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <ExternalLink className="mr-2 h-5 w-5" />
-            TripAdvisorでレビューを見る
-          </a>
+          {accommodation.bookingUrl && (
+            <a
+              href={accommodation.bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <FileText className="mr-2 h-5 w-5" />
+              予約内容を確認する
+            </a>
+          )}
+          {accommodation.tripAdvisorUrl && (
+            <a
+              href={accommodation.tripAdvisorUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              <ExternalLink className="mr-2 h-5 w-5" />
+              TripAdvisorでレビューを見る
+            </a>
+          )}
         </div>
       </CardContent>
     </Card>
