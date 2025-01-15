@@ -10,7 +10,7 @@ type Props = {
   accommodation: AccommodationForCard;
 };
 
-export function AccommodationCard({ accommodation }: Props) {
+export const AccommodationCard = ({ accommodation }: Props) => {
   return (
     <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-gradient-to-br from-white to-gray-100">
       <div className="relative">
@@ -67,4 +67,4 @@ export function AccommodationCard({ accommodation }: Props) {
       <div className="absolute top-1/2 -right-2 w-4 h-8 bg-background rounded-l-full"></div>
     </Card>
   );
-}
+};

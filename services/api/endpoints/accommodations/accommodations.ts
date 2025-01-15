@@ -24,6 +24,9 @@ import type {
 import type {
   GetAccommodations200,
   GetAccommodations403,
+  GetAccommodationsId200,
+  GetAccommodationsId403,
+  GetAccommodationsId404,
   GetAccommodationsParams
 } from '../../model'
 import { customInstance } from '../../mutator/custom-instance';
@@ -165,6 +168,147 @@ export function useGetAccommodationsSuspense<TData = Awaited<ReturnType<typeof g
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
   const queryOptions = getGetAccommodationsSuspenseQueryOptions(params,options)
+
+  const query = useSuspenseQuery(queryOptions) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * @summary 単一の宿泊施設の取得
+ */
+export const getAccommodationsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetAccommodationsId200>(
+      {url: `/api/accommodations/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetAccommodationsIdQueryKey = (id: number,) => {
+    return [`/api/accommodations/${id}`] as const;
+    }
+
+    
+export const getGetAccommodationsIdQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAccommodationsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAccommodationsId>>> = ({ signal }) => getAccommodationsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetAccommodationsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAccommodationsId>>>
+export type GetAccommodationsIdQueryError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>
+
+
+export function useGetAccommodationsId<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAccommodationsId>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetAccommodationsId<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAccommodationsId>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetAccommodationsId<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary 単一の宿泊施設の取得
+ */
+
+export function useGetAccommodationsId<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetAccommodationsIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const getGetAccommodationsIdSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAccommodationsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAccommodationsId>>> = ({ signal }) => getAccommodationsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetAccommodationsIdSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getAccommodationsId>>>
+export type GetAccommodationsIdSuspenseQueryError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>
+
+
+export function useGetAccommodationsIdSuspense<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetAccommodationsIdSuspense<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetAccommodationsIdSuspense<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary 単一の宿泊施設の取得
+ */
+
+export function useGetAccommodationsIdSuspense<TData = Awaited<ReturnType<typeof getAccommodationsId>>, TError = ErrorType<GetAccommodationsId403 | GetAccommodationsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetAccommodationsIdSuspenseQueryOptions(id,options)
 
   const query = useSuspenseQuery(queryOptions) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
