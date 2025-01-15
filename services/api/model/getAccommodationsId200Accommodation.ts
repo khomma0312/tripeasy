@@ -8,6 +8,7 @@
 
 export type GetAccommodationsId200Accommodation = {
   address?: string;
+  bookingId?: string;
   bookingUrl?: string;
   checkIn: string;
   checkOut: string;

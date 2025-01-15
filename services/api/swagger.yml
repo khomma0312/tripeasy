@@ -744,6 +744,8 @@ paths:
                         type: string
                       phoneNumber:
                         type: string
+                      bookingId:
+                        type: string
                     required:
                       - id
                       - tripId
