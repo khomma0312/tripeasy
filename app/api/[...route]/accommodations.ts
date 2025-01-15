@@ -109,6 +109,7 @@ const app = new Hono()
         bookingUrl: accommodation.bookingUrl ?? undefined,
         tripAdvisorUrl: accommodation.tripAdvisorUrl ?? undefined,
         phoneNumber: accommodation.phoneNumber ?? undefined,
+        bookingId: accommodation.bookingId ?? undefined,
       },
     });
   });

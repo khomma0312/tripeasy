@@ -26,6 +26,7 @@ export const accommodationForDetailSchema = z.object({
   bookingUrl: z.string().optional(),
   tripAdvisorUrl: z.string().optional(),
   phoneNumber: z.string().optional(),
+  bookingId: z.string().optional(),
 });
 
 // 宿泊施設を全て返すGET APIのinputパラメータのスキーマ
