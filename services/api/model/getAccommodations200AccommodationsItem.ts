@@ -13,6 +13,6 @@ export type GetAccommodations200AccommodationsItem = {
   checkIn: string;
   checkOut: string;
   id: number;
-  image: string;
+  image?: string;
   name: string;
 };

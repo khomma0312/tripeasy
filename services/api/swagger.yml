@@ -657,7 +657,6 @@ paths:
                       type: string
                     reservationPrice:
                       type: string
-                      pattern: ^-?\d+(\.\d+)?$
                     notes:
                       type: string
                     image: {}
@@ -754,7 +753,6 @@ paths:
                       required:
                         - id
                         - name
-                        - image
                         - checkIn
                         - checkOut
                   totalPages:
@@ -823,9 +821,7 @@ paths:
                         type: string
                     required:
                       - id
-                      - tripId
                       - name
-                      - image
                       - checkIn
                       - checkOut
                 required:
