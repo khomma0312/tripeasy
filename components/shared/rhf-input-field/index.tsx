@@ -13,6 +13,9 @@ type Props<T extends FieldValues> = {
   name: Path<T>;
   label: string;
   placeholder?: string;
+  type?: string;
+  disabled?: boolean;
+  Icon?: React.ComponentType<any>;
 };
 
 export const RHFInputField = <T extends FieldValues>({
@@ -20,6 +23,9 @@ export const RHFInputField = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  type,
+  disabled,
+  Icon,
 }: Props<T>) => {
   return (
     <FormField
@@ -27,9 +33,24 @@ export const RHFInputField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel htmlFor={name}>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <div className="relative">
+              {Icon && (
+                <Icon
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+              )}
+              <Input
+                {...field}
+                id={name}
+                placeholder={placeholder}
+                type={type ? type : "text"}
+                disabled={disabled}
+                className={Icon && "pl-10"}
+              />
+            </div>
           </FormControl>
           <FormMessage />
         </FormItem>
