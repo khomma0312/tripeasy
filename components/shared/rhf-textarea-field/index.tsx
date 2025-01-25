@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/shadcn/form";
 import { Textarea } from "@/components/shadcn/textarea";
+import { RHFFieldLabel } from "../rhf-field-label";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -14,6 +15,7 @@ type Props<T extends FieldValues> = {
   label: string;
   placeholder?: string;
   rows?: number;
+  isRequired?: boolean;
 };
 
 export const RHFTextareaField = <T extends FieldValues>({
@@ -22,6 +24,7 @@ export const RHFTextareaField = <T extends FieldValues>({
   label,
   placeholder,
   rows,
+  isRequired,
 }: Props<T>) => {
   return (
     <FormField
@@ -29,7 +32,7 @@ export const RHFTextareaField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel htmlFor={name}>{label}</FormLabel>
+          <RHFFieldLabel label={label} htmlFor={name} isRequired={isRequired} />
           <FormControl>
             <Textarea
               {...field}

@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/shadcn/form";
 import { Input } from "@/components/shadcn/input";
+import { RHFFieldLabel } from "../rhf-field-label";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -15,6 +16,7 @@ type Props<T extends FieldValues> = {
   placeholder?: string;
   type?: string;
   disabled?: boolean;
+  isRequired?: boolean;
   Icon?: React.ComponentType<any>;
 };
 
@@ -25,6 +27,7 @@ export const RHFInputField = <T extends FieldValues>({
   placeholder,
   type,
   disabled,
+  isRequired,
   Icon,
 }: Props<T>) => {
   return (
@@ -33,7 +36,7 @@ export const RHFInputField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel htmlFor={name}>{label}</FormLabel>
+          <RHFFieldLabel label={label} htmlFor={name} isRequired={isRequired} />
           <FormControl>
             <div className="relative">
               {Icon && (

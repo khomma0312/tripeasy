@@ -3,18 +3,20 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/shadcn/form";
 import { Input } from "@/components/shadcn/input";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { RHFFieldLabel } from "../rhf-field-label";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
+  currentValue: "" | FileList | null | undefined;
   placeholder?: string;
   disabled?: boolean;
+  isRequired?: boolean;
 };
 
 const getImageData = (event: ChangeEvent<HTMLInputElement>) => {
@@ -34,19 +36,42 @@ export const RHFFileField = <T extends FieldValues>({
   control,
   name,
   label,
+  currentValue,
   placeholder,
   disabled,
+  isRequired,
 }: Props<T>) => {
   const [preview, setPreview] = useState("");
+  const [key, setKey] = useState("");
+
+  useEffect(() => {
+    // RHFのform.resetではvalueをリセットするだけなので、valueが変更された時にkeyをリセットして再レンダリングさせる
+    const randomKey = Math.random().toString(36);
+    if (!(currentValue instanceof FileList)) {
+      setKey(randomKey);
+      setPreview("");
+    }
+  }, [currentValue]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div key={key} className="flex flex-col gap-3">
       <FormField
         control={control}
         name={name}
-        render={({ field: { onChange, value, ...rest } }) => (
+        render={({
+          field: {
+            onChange,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            value,
+            ...rest
+          },
+        }) => (
           <FormItem>
-            <FormLabel htmlFor={name}>{label}</FormLabel>
+            <RHFFieldLabel
+              label={label}
+              htmlFor={name}
+              isRequired={isRequired}
+            />
             <FormControl>
               <div className="relative">
                 <Input
