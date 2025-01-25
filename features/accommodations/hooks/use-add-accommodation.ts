@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
 import { accommodationFormSchema } from "@/lib/zod/schema/accommodations";
@@ -22,8 +22,10 @@ export const useAddAccommodation = () => {
       notes: "",
       image: "",
       phoneNumber: "",
+      bookingId: "",
       bookingUrl: "",
       tripAdvisorUrl: "",
+      tripId: undefined,
     },
   });
   const { errorToast } = useErrorToast();
@@ -35,8 +37,7 @@ export const useAddAccommodation = () => {
         queryClient.invalidateQueries({
           queryKey: [`/api/accommodations`],
         });
-        // form.resetでやるのも手だが、ファイルタイプのinputフィールドがうまくリセットできないためreloadで回避
-        window.location.reload();
+        form.reset();
       },
       onError: () => {
         errorToast("宿泊施設情報の追加に失敗しました");
