@@ -1,7 +1,7 @@
-import { AccommodationRegisterForm } from "@/features/accommodations/accommodation-register-form";
+import { PageClient } from "./page-client";
 
 const AccommodationNew = () => {
-  return <AccommodationRegisterForm />;
+  return <PageClient />;
 };
 
 export default AccommodationNew;

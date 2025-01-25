@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { Trip } from "@/features/trips/types";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import {
@@ -15,11 +17,23 @@ import { RHFInputField } from "@/components/shared/rhf-input-field";
 import { RHFTextareaField } from "@/components/shared/rhf-textarea-field";
 import { RHFDatePickerField } from "@/components/shared/rhf-date-picker-field";
 import { RHFFileField } from "@/components/shared/rhf-file-field";
-import { useAddAccommodation } from "../hooks/use-add-accommodation";
+import { useAddAccommodation } from "@/features/accommodations/hooks/use-add-accommodation";
+import {
+  RHFSelectField,
+  SelectItem,
+} from "@/components/shared/rhf-select-field";
 
-export const AccommodationRegisterForm = () => {
+type Props = {
+  trips: Trip[];
+};
+
+export const AccommodationRegisterForm = ({ trips }: Props) => {
   const { form, isPending, onSubmit } = useAddAccommodation();
   const router = useRouter();
+  const tripItems: SelectItem[] = useMemo(() => {
+    return trips.map((trip) => ({ value: String(trip.id), label: trip.title }));
+  }, [trips]);
+  const currentValues = form.getValues();
 
   return (
     <div className="max-w-screen-lg h-full mx-auto px-6 pt-12 pb-12">
@@ -35,6 +49,7 @@ export const AccommodationRegisterForm = () => {
                 control={form.control}
                 name="name"
                 label="施設名"
+                isRequired
               />
             </div>
             <div className="space-y-2">
@@ -50,6 +65,7 @@ export const AccommodationRegisterForm = () => {
                 control={form.control}
                 name="checkIn"
                 label="チェックイン日"
+                isRequired
               />
             </div>
             <div className="space-y-2">
@@ -57,6 +73,7 @@ export const AccommodationRegisterForm = () => {
                 control={form.control}
                 name="checkOut"
                 label="チェックアウト日"
+                isRequired
               />
             </div>
             <div className="space-y-2">
@@ -89,14 +106,35 @@ export const AccommodationRegisterForm = () => {
               <RHFInputField
                 control={form.control}
                 name="tripAdvisorUrl"
-                label="TripAdvisor URL"
+                label="TripAdvisorの宿泊先情報URL"
                 type="url"
                 Icon={Globe}
               />
             </div>
+            <div className="space-y-2">
+              <RHFInputField
+                control={form.control}
+                name="bookingId"
+                label="予約サイトの予約ID"
+                placeholder="ABC-001"
+              />
+            </div>
+            <div className="space-y-2">
+              <RHFFileField
+                control={form.control}
+                name="image"
+                label="画像"
+                currentValue={currentValues.image}
+              />
+            </div>
           </div>
           <div className="space-y-2">
-            <RHFFileField control={form.control} name="image" label="画像" />
+            <RHFSelectField
+              control={form.control}
+              label="紐づく旅行予定"
+              name="tripId"
+              items={tripItems}
+            />
           </div>
           <div className="space-y-2">
             <RHFTextareaField
