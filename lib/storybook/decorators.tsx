@@ -15,9 +15,12 @@ const StorybookFormProvider = ({ children }: Props) => {
   );
 };
 
-export const withRHFDecorator = () => (Story: FC) =>
-  (
+export const withRHFDecorator = () => {
+  const WrappedStory = (Story: FC) => (
     <StorybookFormProvider>
       <Story />
     </StorybookFormProvider>
   );
+  WrappedStory.displayName = "WithRHFDecorator";
+  return WrappedStory;
+};

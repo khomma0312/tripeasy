@@ -1,12 +1,10 @@
-"use client";
-
 import { CenteredContentLayout } from "@/components/layout/centered-content-layout";
-import { SignInForm } from "@/features/login/components/signin-form";
+import { PageClient } from "./page-client";
 
 const Login = () => {
   return (
     <CenteredContentLayout>
-      <SignInForm />
+      <PageClient />
     </CenteredContentLayout>
   );
 };

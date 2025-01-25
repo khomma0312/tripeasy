@@ -3,11 +3,11 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/shadcn/form";
 import { Input } from "@/components/shadcn/input";
 import { RHFFieldLabel } from "../rhf-field-label";
+import { LucideProps } from "lucide-react";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -17,7 +17,7 @@ type Props<T extends FieldValues> = {
   type?: string;
   disabled?: boolean;
   isRequired?: boolean;
-  Icon?: React.ComponentType<any>;
+  Icon?: React.ComponentType<LucideProps>;
 };
 
 export const RHFInputField = <T extends FieldValues>({
