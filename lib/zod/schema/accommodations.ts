@@ -32,10 +32,13 @@ export const accommodationFormSchema = z.object({
         Array.from(files).every((file) => imageTypes.includes(file.type)),
       { message: "添付できる画像ファイルはjpegかpngです" }
     )
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .nullable(),
   phoneNumber: z.string().optional(),
+  bookingId: z.string().optional(),
   bookingUrl: z.string().url("URL形式で入力してください").or(z.literal("")),
   tripAdvisorUrl: z.string().url("URL形式で入力してください").or(z.literal("")),
+  tripId: z.string().optional(),
 });
 
 export const accommodationInputSchema = accommodationFormSchema.extend({
