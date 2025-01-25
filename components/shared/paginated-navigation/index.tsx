@@ -12,13 +12,13 @@ import {
 import { useSearchParams } from "next/navigation";
 
 type Props = {
-  basedUrl: string;
+  baseUrl: string;
   currentPage: number;
   totalPages: number;
 };
 
 export const PaginatedNavigation = ({
-  basedUrl,
+  baseUrl,
   currentPage,
   totalPages,
 }: Props) => {
@@ -68,7 +68,7 @@ export const PaginatedNavigation = ({
         {currentPage > 1 && (
           <PaginationItem>
             <PaginationPrevious
-              href={`${basedUrl}?${generateParams(currentPage - 1)}`}
+              href={`${baseUrl}?${generateParams(currentPage - 1)}`}
             />
           </PaginationItem>
         )}
@@ -84,7 +84,7 @@ export const PaginatedNavigation = ({
         {pageNumbers.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
-              href={`${basedUrl}?${generateParams(page)}`}
+              href={`${baseUrl}?${generateParams(page)}`}
               isActive={page === currentPage}
             >
               {page}
@@ -102,7 +102,7 @@ export const PaginatedNavigation = ({
         {currentPage !== totalPages && (
           <PaginationItem>
             <PaginationNext
-              href={`${basedUrl}?${generateParams(currentPage + 1)}`}
+              href={`${baseUrl}?${generateParams(currentPage + 1)}`}
             />
           </PaginationItem>
         )}

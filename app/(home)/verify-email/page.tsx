@@ -1,9 +1,9 @@
-import { EmailVerification } from "@/features/verify-email/components/email-verification";
+import { PageClient } from "./page-client";
 
 const VerifyEmail = () => {
   return (
     <div className="h-full pt-5 max-w-xl mx-auto">
-      <EmailVerification />
+      <PageClient />
     </div>
   );
 };

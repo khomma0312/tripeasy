@@ -17,10 +17,16 @@ import { dateFormatStrForFormat } from "@/consts/common";
 interface DatePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
+  placeholder?: string;
   className?: string;
 }
 
-export const DatePicker = ({ date, setDate, className }: DatePickerProps) => {
+export const DatePicker = ({
+  date,
+  setDate,
+  placeholder,
+  className,
+}: DatePickerProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -36,7 +42,7 @@ export const DatePicker = ({ date, setDate, className }: DatePickerProps) => {
           {date ? (
             format(date, dateFormatStrForFormat)
           ) : (
-            <span>期限日を選択</span>
+            <span>{placeholder ? placeholder : "日付を選択"}</span>
           )}
         </Button>
       </PopoverTrigger>

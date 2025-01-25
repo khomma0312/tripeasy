@@ -632,6 +632,90 @@ paths:
                 required:
                   - message
   /accommodations:
+    post:
+      summary: 宿泊施設新規作成API
+      tags:
+        - accommodations
+        - orval-exclude
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                accommodation:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    address:
+                      type: string
+                    checkIn:
+                      type: string
+                    checkOut:
+                      type: string
+                    reservationPrice:
+                      type: string
+                    notes:
+                      type: string
+                    image:
+                      anyOf:
+                        - {}
+                        - type: string
+                          enum:
+                            - ""
+                    phoneNumber:
+                      type: string
+                    bookingId:
+                      type: string
+                    bookingUrl:
+                      type: string
+                    tripAdvisorUrl:
+                      type: string
+                    tripId:
+                      type: string
+                  required:
+                    - name
+                    - checkIn
+                    - checkOut
+                    - image
+              required:
+                - accommodation
+      responses:
+        "200":
+          description: 宿泊施設作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 宿泊施設作成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
     get:
       summary: ログイン中のユーザーに紐づく全ての予約した宿泊施設の取得(ページネーションもあり)
       tags:
@@ -679,7 +763,6 @@ paths:
                       required:
                         - id
                         - name
-                        - image
                         - checkIn
                         - checkOut
                   totalPages:
@@ -748,9 +831,7 @@ paths:
                         type: string
                     required:
                       - id
-                      - tripId
                       - name
-                      - image
                       - checkIn
                       - checkOut
                 required:
@@ -768,6 +849,64 @@ paths:
                   - message
         "404":
           description: 宿泊施設が存在しないので取得失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /trips:
+    get:
+      summary: ログイン中のユーザーに紐づく全ての旅行情報の取得
+      tags:
+        - trips
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: page
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: perPage
+          in: query
+      responses:
+        "200":
+          description: 旅行情報取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trips:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        startDate:
+                          type: string
+                        endDate:
+                          type: string
+                      required:
+                        - id
+                        - title
+                  totalPages:
+                    type: number
+                required:
+                  - trips
+                  - totalPages
+        "403":
+          description: ユーザー検証に失敗
           content:
             application/json:
               schema:

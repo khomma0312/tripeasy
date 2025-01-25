@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/shadcn/card";
 import { AccommodationForCard } from "@/features/accommodations/types";
 import { format } from "date-fns";
 import { dateFormatStrForFormat } from "@/consts/common";
+import { cn } from "@/utils/common";
 
 type Props = {
   accommodation: AccommodationForCard;
@@ -12,17 +13,25 @@ type Props = {
 
 export const AccommodationCard = ({ accommodation }: Props) => {
   return (
-    <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-gradient-to-br from-white to-gray-100">
+    <Card
+      className={cn(
+        "overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-gradient-to-br from-white to-gray-100 border-t-8 border-t-primary",
+        !accommodation.image && "pt-5" // 余白の調整
+      )}
+    >
       <div className="relative">
-        <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-        <Image
-          src={accommodation.image}
-          alt={accommodation.name}
-          width={400}
-          height={200}
-          className="w-full h-32 object-cover"
-        />
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black to-transparent"></div>
+        {accommodation.image && (
+          <div>
+            <Image
+              src={accommodation.image}
+              alt={accommodation.name}
+              width={400}
+              height={200}
+              className="w-full h-32 object-cover"
+            />
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black to-transparent"></div>
+          </div>
+        )}
       </div>
       <CardContent className="p-4">
         <h3 className="text-xl font-bold mb-2">{accommodation.name}</h3>

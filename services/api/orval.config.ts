@@ -22,6 +22,10 @@ module.exports = {
     },
     input: {
       target: "./swagger.yml",
+      filters: {
+        mode: "exclude",
+        tags: ["orval-exclude"],
+      },
     },
   },
 };

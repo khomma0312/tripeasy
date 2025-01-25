@@ -2,6 +2,7 @@ import { TodoListForCard } from "@/features/todo-lists/types";
 import { ListPageHeader } from "@/components/shared/list-page-header";
 import { TodoListCardColumn } from "@/features/todo-lists/components/todo-list-card-column";
 import { PaginatedNavigation } from "@/components/shared/paginated-navigation";
+import { WithPaginationLayout } from "@/components/layout/with-pagination-layout";
 
 type Props = {
   todoLists: TodoListForCard[];
@@ -15,7 +16,11 @@ export const TodoListsPage = ({
   totalPages,
 }: Props) => {
   return (
-    <div className="h-full flex flex-col justify-between">
+    <WithPaginationLayout
+      baseUrl="/todo-lists"
+      currentPage={currentPage}
+      totalPages={totalPages}
+    >
       <div>
         <ListPageHeader
           title="TODOリスト一覧"
@@ -24,11 +29,6 @@ export const TodoListsPage = ({
         />
         <TodoListCardColumn todoLists={todoLists} />
       </div>
-      <PaginatedNavigation
-        basedUrl="/todo-lists"
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
-    </div>
+    </WithPaginationLayout>
   );
 };

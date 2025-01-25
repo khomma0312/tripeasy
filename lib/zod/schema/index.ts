@@ -1,6 +1,7 @@
 import {
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
+  accommodationsPostApiSchema,
 } from "./accommodations";
 import { registerPostApiSchema } from "./register";
 import { requestTokenPostApiSchema } from "./request-token";
@@ -16,6 +17,7 @@ import {
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
 } from "./todo-lists";
+import { tripsAllGetApiSchema } from "./trips";
 import { verifyEmailPostApiSchema } from "./verify-email";
 
 // NOTE: APIパスを追加するごとに、この変数にzodスキーマを追加する
@@ -34,6 +36,9 @@ export const pathSchemas = [
   todoListsPatchApiSchema,
   todoListsDeleteApiSchema,
   // 宿泊施設予約情報用API
+  accommodationsPostApiSchema,
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
+  // 旅行情報用API
+  tripsAllGetApiSchema,
 ];

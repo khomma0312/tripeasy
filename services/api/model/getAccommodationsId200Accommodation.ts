@@ -13,11 +13,11 @@ export type GetAccommodationsId200Accommodation = {
   checkIn: string;
   checkOut: string;
   id: number;
-  image: string;
+  image?: string;
   name: string;
   notes?: string;
   phoneNumber?: string;
   reservationPrice?: number;
   tripAdvisorUrl?: string;
-  tripId: number;
+  tripId?: number;
 };

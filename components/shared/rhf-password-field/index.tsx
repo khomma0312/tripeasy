@@ -3,19 +3,20 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/shadcn/form";
 import { Input } from "@/components/shadcn/input";
 import { useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { RHFFieldLabel } from "../rhf-field-label";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
   placeholder?: string;
+  isRequired?: boolean;
 };
 
 export const RHFPasswordField = <T extends FieldValues>({
@@ -23,6 +24,7 @@ export const RHFPasswordField = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  isRequired,
 }: Props<T>) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,7 +34,7 @@ export const RHFPasswordField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <RHFFieldLabel label={label} htmlFor={name} isRequired={isRequired} />
           <FormControl>
             <div className="relative">
               <Input

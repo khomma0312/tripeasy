@@ -13,7 +13,7 @@ export const Default: StoryObj<typeof PaginatedNavigation> = {
     mockRouter.setCurrentUrl("/todo-lists");
   },
   args: {
-    basedUrl: "/todo-lists",
+    baseUrl: "/todo-lists",
     currentPage: 1,
     totalPages: 10,
   },

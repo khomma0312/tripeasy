@@ -6,6 +6,7 @@ import requestToken from "./request-token";
 import todoLists from "./todo-lists";
 import todoItems from "./todo-items";
 import accommodations from "./accommodations";
+import trips from "./trips";
 
 const app = new Hono().basePath("/api");
 
@@ -15,6 +16,7 @@ app.route("/request-token", requestToken);
 app.route("/todo-lists", todoLists);
 app.route("/todo-items", todoItems);
 app.route("/accommodations", accommodations);
+app.route("/trips", trips);
 
 export const GET = handle(app);
 export const POST = handle(app);

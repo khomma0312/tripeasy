@@ -1,6 +1,5 @@
 "use client";
 
-import { HorizontallyCenteredContentLayout } from "@/components/layout/horizontally-centered-content-layout";
 import { HandleError } from "@/components/shared/handle-error";
 import { LoaderCircle } from "lucide-react";
 import dynamic from "next/dynamic";

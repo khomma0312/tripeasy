@@ -12,6 +12,7 @@ import { DatePicker } from "@/components/shared/date-picker";
 import { UseFormReturn } from "react-hook-form";
 import { TypeOf } from "zod";
 import { todoItemAddSchema } from "@/lib/zod/schema/todo-items";
+import { RHFDatePickerField } from "@/components/shared/rhf-date-picker-field";
 
 type Props = {
   form: UseFormReturn<
@@ -49,22 +50,7 @@ export const TodoItemAddForm = ({ form, isPending, onSubmit }: Props) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="dueDate"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-auto">
-              <FormControl>
-                <DatePicker
-                  date={field.value}
-                  setDate={(date) => field.onChange(date)}
-                  className="w-full sm:w-auto"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <RHFDatePickerField control={form.control} name="dueDate" />
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
           <Plus />
           Todoを追加

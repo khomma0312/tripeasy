@@ -99,6 +99,20 @@
       "when": 1736434909264,
       "tag": "0013_add_bookingId_to_accommodations",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1737499085605,
+      "tag": "0014_change_accommodation_tripId_nullable",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1737550733828,
+      "tag": "0015_change_accommodations_image_nullable",
+      "breakpoints": true
     }
   ]
 }
