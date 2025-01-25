@@ -17,6 +17,7 @@ import {
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
 } from "./todo-lists";
+import { tripsAllGetApiSchema } from "./trips";
 import { verifyEmailPostApiSchema } from "./verify-email";
 
 // NOTE: APIパスを追加するごとに、この変数にzodスキーマを追加する
@@ -38,4 +39,6 @@ export const pathSchemas = [
   accommodationsPostApiSchema,
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
+  // 旅行情報用API
+  tripsAllGetApiSchema,
 ];
