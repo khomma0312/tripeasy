@@ -9,6 +9,8 @@ declare global {
       RESEND_FROM: string;
       RESEND_API_KEY: string;
       TRIP_ADVISOR_API_KEY: string;
+      BLOB_READ_WRITE_TOKEN: string;
+      GOOGLE_MAPS_API_KEY: string;
     }
   }
 }
