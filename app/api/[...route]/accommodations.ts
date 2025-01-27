@@ -6,6 +6,8 @@ import {
   ApiAllGetOutputType,
   ApiGetOutputType,
   ApiPostOutputType,
+  apiSearchGetInputSchema,
+  ApiSearchGetOutputType,
 } from "@/lib/zod/schema/accommodations";
 import { db } from "@/lib/drizzle/db";
 import { accommodations as accommodationsTable } from "@/schema";
@@ -15,7 +17,8 @@ import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/common";
 import { zValidator } from "@hono/zod-validator";
-import { getLatLngFromAddress } from "@/services/api/server";
+import { getLatLngFromAddress } from "@/services/api/externals/server/google-maps/fetcher";
+import { getAccommodationSuggestionsByLatLng } from "@/services/api/externals/server/rakuten-travel/fetcher";
 
 const logger = getLogger("api/accommodations");
 
@@ -184,6 +187,35 @@ const app = new Hono()
       })),
       totalPages,
     });
+  })
+  .get("/search", async (c) => {
+    const lat = Number(c.req.query("lat"));
+    const lng = Number(c.req.query("lng"));
+
+    if (isNaN(lat) || isNaN(lng)) {
+      return c.json<ApiErrorType>(
+        {
+          message: "緯度経度には数字を指定してください",
+        },
+        400
+      );
+    }
+
+    const result = await getAccommodationSuggestionsByLatLng(lat, lng);
+
+    const accommodations = result.hotels.map((hotel) => ({
+      id: hotel.hotel[0].hotelBasicInfo.hotelNo,
+      name: hotel.hotel[0].hotelBasicInfo.hotelName,
+      address:
+        hotel.hotel[0].hotelBasicInfo.address1 +
+        hotel.hotel[0].hotelBasicInfo.address2,
+      reviewAverage: hotel.hotel[0].hotelBasicInfo.reviewAverage,
+      informationUrl: hotel.hotel[0].hotelBasicInfo.hotelInformationUrl,
+      image: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
+      reviewCount: hotel.hotel[0].hotelBasicInfo.reviewCount,
+    }));
+
+    return c.json<ApiSearchGetOutputType>({ accommodations });
   })
   .get("/:id", async (c) => {
     const session = await auth();
