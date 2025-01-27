@@ -858,6 +858,81 @@ paths:
                     type: string
                 required:
                   - message
+  /accommodations/search:
+    get:
+      summary: 外部APIから検索した宿泊施設の取得
+      tags:
+        - accommodations
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: lat
+          in: query
+        - schema:
+            type: number
+          required: true
+          name: lng
+          in: query
+      responses:
+        "200":
+          description: 宿泊施設取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accommodations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        reviewAverage:
+                          type: number
+                        informationUrl:
+                          type: string
+                        image:
+                          type: string
+                        reviewCount:
+                          type: number
+                      required:
+                        - id
+                        - name
+                        - address
+                        - reviewAverage
+                        - informationUrl
+                        - image
+                        - reviewCount
+                required:
+                  - accommodations
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 宿泊施設が存在しないので取得失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
   /trips:
     get:
       summary: ログイン中のユーザーに紐づく全ての旅行情報の取得
