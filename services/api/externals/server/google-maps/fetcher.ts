@@ -5,7 +5,7 @@ const client = new Client();
 export const getLatLngFromAddress = async (address: string) => {
   const args = {
     params: {
-      key: process.env.GOOGLE_MAPS_API_KEY,
+      key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       address,
     },
   };
