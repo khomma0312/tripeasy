@@ -6,6 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetAccommodationsSearch404 = {
+export type GetAccommodationsSearch400 = {
   message: string;
 };

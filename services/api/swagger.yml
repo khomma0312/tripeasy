@@ -911,19 +911,8 @@ paths:
                         - reviewCount
                 required:
                   - accommodations
-        "403":
-          description: ユーザー検証に失敗
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        "404":
-          description: 宿泊施設が存在しないので取得失敗
+        "400":
+          description: 不正なリクエストのため失敗
           content:
             application/json:
               schema:

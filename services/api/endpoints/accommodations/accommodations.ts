@@ -29,8 +29,7 @@ import type {
   GetAccommodationsId404,
   GetAccommodationsParams,
   GetAccommodationsSearch200,
-  GetAccommodationsSearch403,
-  GetAccommodationsSearch404,
+  GetAccommodationsSearch400,
   GetAccommodationsSearchParams
 } from '../../model'
 import { customInstance } from '../../mutator/custom-instance';
@@ -345,7 +344,7 @@ export const getGetAccommodationsSearchQueryKey = (params: GetAccommodationsSear
     }
 
     
-export const getGetAccommodationsSearchQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(params: GetAccommodationsSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetAccommodationsSearchQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(params: GetAccommodationsSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -364,10 +363,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetAccommodationsSearchQueryResult = NonNullable<Awaited<ReturnType<typeof getAccommodationsSearch>>>
-export type GetAccommodationsSearchQueryError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>
+export type GetAccommodationsSearchQueryError = ErrorType<GetAccommodationsSearch400>
 
 
-export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAccommodationsSearch>>,
@@ -377,7 +376,7 @@ export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof get
       >, request?: SecondParameter<typeof customInstance>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAccommodationsSearch>>,
@@ -387,7 +386,7 @@ export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof get
       >, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
@@ -395,7 +394,7 @@ export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof get
  * @summary 外部APIから検索した宿泊施設の取得
  */
 
-export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
@@ -411,7 +410,7 @@ export function useGetAccommodationsSearch<TData = Awaited<ReturnType<typeof get
 
 
 
-export const getGetAccommodationsSearchSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(params: GetAccommodationsSearchParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetAccommodationsSearchSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(params: GetAccommodationsSearchParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -430,18 +429,18 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetAccommodationsSearchSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getAccommodationsSearch>>>
-export type GetAccommodationsSearchSuspenseQueryError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>
+export type GetAccommodationsSearchSuspenseQueryError = ErrorType<GetAccommodationsSearch400>
 
 
-export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
@@ -449,7 +448,7 @@ export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<ty
  * @summary 外部APIから検索した宿泊施設の取得
  */
 
-export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch403 | GetAccommodationsSearch404>>(
+export function useGetAccommodationsSearchSuspense<TData = Awaited<ReturnType<typeof getAccommodationsSearch>>, TError = ErrorType<GetAccommodationsSearch400>>(
  params: GetAccommodationsSearchParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getAccommodationsSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {

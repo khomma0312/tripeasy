@@ -230,15 +230,14 @@ export const accommodationsSearchGetApiSchema: RouteConfig = {
     query: apiSearchGetInputSchema,
   },
   responses: {
-    ...commonResponseConfig,
     200: {
       description: "宿泊施設取得成功",
       content: {
         "application/json": { schema: apiSearchGetOutputSchema },
       },
     },
-    404: {
-      description: "宿泊施設が存在しないので取得失敗",
+    400: {
+      description: "不正なリクエストのため失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },
