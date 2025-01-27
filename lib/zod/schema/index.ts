@@ -2,6 +2,7 @@ import {
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
   accommodationsPostApiSchema,
+  accommodationsSearchGetApiSchema,
 } from "./accommodations";
 import { registerPostApiSchema } from "./register";
 import { requestTokenPostApiSchema } from "./request-token";
@@ -39,6 +40,7 @@ export const pathSchemas = [
   accommodationsPostApiSchema,
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
+  accommodationsSearchGetApiSchema,
   // 旅行情報用API
   tripsAllGetApiSchema,
 ];
