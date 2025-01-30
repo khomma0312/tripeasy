@@ -3,11 +3,12 @@ import { rakutenApiUrl } from "./consts";
 import { getSearchParams } from "./utils";
 import { HotelSearchResponse } from "./models";
 
-export const getAccommodationSuggestionsByLatLng = async (
-  lat: number,
-  lng: number
-) => {
-  const searchParams = getSearchParams(lat, lng);
+export const getAccommodationSuggestionsByQuery = async (query: {
+  lat: number;
+  lng: number;
+  page: number;
+}) => {
+  const searchParams = getSearchParams(query);
   const res: HotelSearchResponse = await axios.get(
     `${rakutenApiUrl}&${searchParams.toString()}`
   );
