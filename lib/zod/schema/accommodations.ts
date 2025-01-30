@@ -94,6 +94,7 @@ export const accommodationForSearchResultSchema = z.object({
   address: z.string(),
   reviewAverage: z.number(),
   informationUrl: z.string(),
+  telephoneNo: z.string(),
   image: z.string(),
   reviewCount: z.number(),
 });
@@ -116,6 +117,7 @@ export const apiGetInputSchema = z.object({ id: z.number() });
 export const apiSearchGetInputSchema = z.object({
   lat: z.number(),
   lng: z.number(),
+  page: z.number(),
 });
 
 // POST APIの成功時に返却されるoutputのスキーマ
@@ -140,6 +142,8 @@ export type ApiGetOutputType = z.infer<typeof apiGetOutputSchema>;
 // 宿泊施設の検索結果を返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiSearchGetOutputSchema = z.object({
   accommodations: z.array(accommodationForSearchResultSchema),
+  pageCount: z.number(),
+  currentPage: z.number(),
 });
 export type ApiSearchGetOutputType = z.infer<typeof apiSearchGetOutputSchema>;
 
