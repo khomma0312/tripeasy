@@ -9,4 +9,5 @@
 export type GetAccommodationsSearchParams = {
 lat: number;
 lng: number;
+page: number;
 };

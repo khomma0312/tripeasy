@@ -14,4 +14,5 @@ export type GetAccommodationsSearch200AccommodationsItem = {
   name: string;
   reviewAverage: number;
   reviewCount: number;
+  telephoneNo: string;
 };

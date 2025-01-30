@@ -9,4 +9,6 @@ import type { GetAccommodationsSearch200AccommodationsItem } from './getAccommod
 
 export type GetAccommodationsSearch200 = {
   accommodations: GetAccommodationsSearch200AccommodationsItem[];
+  currentPage: number;
+  pageCount: number;
 };

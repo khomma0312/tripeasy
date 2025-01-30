@@ -874,6 +874,11 @@ paths:
           required: true
           name: lng
           in: query
+        - schema:
+            type: number
+          required: true
+          name: page
+          in: query
       responses:
         "200":
           description: 宿泊施設取得成功
@@ -897,6 +902,8 @@ paths:
                           type: number
                         informationUrl:
                           type: string
+                        telephoneNo:
+                          type: string
                         image:
                           type: string
                         reviewCount:
@@ -907,10 +914,17 @@ paths:
                         - address
                         - reviewAverage
                         - informationUrl
+                        - telephoneNo
                         - image
                         - reviewCount
+                  pageCount:
+                    type: number
+                  currentPage:
+                    type: number
                 required:
                   - accommodations
+                  - pageCount
+                  - currentPage
         "400":
           description: 不正なリクエストのため失敗
           content:
