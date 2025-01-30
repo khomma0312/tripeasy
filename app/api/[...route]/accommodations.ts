@@ -18,7 +18,7 @@ import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/common";
 import { zValidator } from "@hono/zod-validator";
 import { getLatLngFromAddress } from "@/services/api/externals/server/google-maps/fetcher";
-import { getAccommodationSuggestionsByLatLng } from "@/services/api/externals/server/rakuten-travel/fetcher";
+import { getAccommodationSuggestionsByQuery } from "@/services/api/externals/server/rakuten-travel/fetcher";
 
 const logger = getLogger("api/accommodations");
 
@@ -191,17 +191,18 @@ const app = new Hono()
   .get("/search", async (c) => {
     const lat = Number(c.req.query("lat"));
     const lng = Number(c.req.query("lng"));
+    const page = Number(c.req.query("page"));
 
-    if (isNaN(lat) || isNaN(lng)) {
+    if (isNaN(lat) || isNaN(lng) || isNaN(page)) {
       return c.json<ApiErrorType>(
         {
-          message: "緯度経度には数字を指定してください",
+          message: "検索クエリに正しい値を入力してください",
         },
         400
       );
     }
 
-    const result = await getAccommodationSuggestionsByLatLng(lat, lng);
+    const result = await getAccommodationSuggestionsByQuery({ lat, lng, page });
 
     const accommodations = result.hotels.map((hotel) => ({
       id: hotel.hotel[0].hotelBasicInfo.hotelNo,
@@ -211,11 +212,18 @@ const app = new Hono()
         hotel.hotel[0].hotelBasicInfo.address2,
       reviewAverage: hotel.hotel[0].hotelBasicInfo.reviewAverage,
       informationUrl: hotel.hotel[0].hotelBasicInfo.hotelInformationUrl,
+      telephoneNo: hotel.hotel[0].hotelBasicInfo.telephoneNo,
       image: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
       reviewCount: hotel.hotel[0].hotelBasicInfo.reviewCount,
     }));
 
-    return c.json<ApiSearchGetOutputType>({ accommodations });
+    console.log("accommodation/search 呼ばれた");
+
+    return c.json<ApiSearchGetOutputType>({
+      accommodations,
+      pageCount: result.pagingInfo.pageCount,
+      currentPage: result.pagingInfo.page,
+    });
   })
   .get("/:id", async (c) => {
     const session = await auth();
