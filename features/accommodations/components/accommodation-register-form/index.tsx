@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Trip } from "@/features/trips/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import {
   DollarSign,
@@ -22,13 +22,19 @@ import {
   RHFSelectField,
   SelectItem,
 } from "@/components/shared/rhf-select-field";
+import { AccommodationForSearchResult } from "../../types";
 
 type Props = {
   trips: Trip[];
+  autoCompleteFormData?: AccommodationForSearchResult;
 };
 
-export const AccommodationRegisterForm = ({ trips }: Props) => {
-  const { form, isPending, onSubmit } = useAddAccommodation();
+export const AccommodationRegisterForm = ({
+  trips,
+  autoCompleteFormData,
+}: Props) => {
+  const { form, isPending, onSubmit } =
+    useAddAccommodation(autoCompleteFormData);
   const router = useRouter();
   const tripItems: SelectItem[] = useMemo(() => {
     return trips.map((trip) => ({ value: String(trip.id), label: trip.title }));

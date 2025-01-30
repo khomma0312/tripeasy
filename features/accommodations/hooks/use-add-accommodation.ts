@@ -8,20 +8,27 @@ import { accommodationFormSchema } from "@/lib/zod/schema/accommodations";
 import { usePostAccommodations } from "@/services/api/custom/endpoints/accommodations";
 import { format } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
+import { AccommodationForSearchResult } from "../types";
 
-export const useAddAccommodation = () => {
+export const useAddAccommodation = (
+  autoCompleteFormData?: AccommodationForSearchResult
+) => {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof accommodationFormSchema>>({
     resolver: zodResolver(accommodationFormSchema),
     defaultValues: {
-      name: "",
-      address: "",
+      name: autoCompleteFormData?.name ? autoCompleteFormData.name : "",
+      address: autoCompleteFormData?.address
+        ? autoCompleteFormData.address
+        : "",
       checkIn: undefined,
       checkOut: undefined,
       reservationPrice: "",
       notes: "",
       image: "",
-      phoneNumber: "",
+      phoneNumber: autoCompleteFormData?.telephoneNo
+        ? autoCompleteFormData.telephoneNo
+        : "",
       bookingId: "",
       bookingUrl: "",
       tripAdvisorUrl: "",
