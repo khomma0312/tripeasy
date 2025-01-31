@@ -50,6 +50,17 @@ export const accommodationInputSchema = accommodationFormSchema.extend({
   tripAdvisorUrl: z.string().optional(),
 });
 
+// 宿泊施設検索ページのフォームの項目
+export const accommodationsSearchFormSchema = z.object({
+  place: z.object(
+    {
+      lat: z.number().optional(),
+      lng: z.number().optional(),
+    },
+    { message: "緯度経度が正しく入力されていません" }
+  ),
+});
+
 export const accommodationForListSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -77,6 +88,17 @@ export const accommodationForDetailSchema = z.object({
   bookingId: z.string().optional(),
 });
 
+export const accommodationForSearchResultSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  address: z.string(),
+  reviewAverage: z.number(),
+  informationUrl: z.string(),
+  telephoneNo: z.string(),
+  image: z.string(),
+  reviewCount: z.number(),
+});
+
 export const apiPostInputSchema = z.object({
   accommodation: accommodationInputSchema,
 });
@@ -90,6 +112,13 @@ export const apiAllGetInputSchema = z.object({
 
 // 単一の宿泊施設を返すGET APIのinputパラメータのスキーマ
 export const apiGetInputSchema = z.object({ id: z.number() });
+
+// 宿泊施設を検索するGET APIのinputパラメータのスキーマ
+export const apiSearchGetInputSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+  page: z.number(),
+});
 
 // POST APIの成功時に返却されるoutputのスキーマ
 export const apiPostOutputSchema = z.object({
@@ -109,6 +138,14 @@ export const apiGetOutputSchema = z.object({
   accommodation: accommodationForDetailSchema,
 });
 export type ApiGetOutputType = z.infer<typeof apiGetOutputSchema>;
+
+// 宿泊施設の検索結果を返すGET APIの成功時に返却されるoutputのスキーマ
+export const apiSearchGetOutputSchema = z.object({
+  accommodations: z.array(accommodationForSearchResultSchema),
+  pageCount: z.number(),
+  currentPage: z.number(),
+});
+export type ApiSearchGetOutputType = z.infer<typeof apiSearchGetOutputSchema>;
 
 // POST APIのスキーマ
 export const accommodationsPostApiSchema: RouteConfig = {
@@ -180,6 +217,31 @@ export const accommodationsGetApiSchema: RouteConfig = {
     },
     404: {
       description: "宿泊施設が存在しないので取得失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// 宿泊施設の検索結果を返すGET APIのスキーマ
+export const accommodationsSearchGetApiSchema: RouteConfig = {
+  method: "get",
+  path: "/accommodations/search",
+  summary: "外部APIから検索した宿泊施設の取得",
+  tags: ["accommodations"],
+  request: {
+    query: apiSearchGetInputSchema,
+  },
+  responses: {
+    200: {
+      description: "宿泊施設取得成功",
+      content: {
+        "application/json": { schema: apiSearchGetOutputSchema },
+      },
+    },
+    400: {
+      description: "不正なリクエストのため失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },

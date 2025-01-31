@@ -3,11 +3,27 @@
 import { useGetTripsSuspense } from "@/services/api/endpoints/trips/trips";
 import { AccommodationRegisterForm } from "../accommodation-register-form";
 import { convertDataTypesToMatchTrips } from "@/features/trips/utils";
+import { useSearchParams } from "next/navigation";
+import { AccommodationForSearchResult } from "../../types";
 
 export const AccommodationRegisterFormContainer = () => {
   const { data } = useGetTripsSuspense({ page: 1, perPage: -1 });
+  const searchParams = useSearchParams();
 
   const trips = convertDataTypesToMatchTrips(data);
 
-  return <AccommodationRegisterForm trips={trips} />;
+  const encodedJsonStr = searchParams.get("data");
+  const jsonStr = encodedJsonStr
+    ? decodeURIComponent(encodedJsonStr)
+    : undefined;
+  const autoCompleteFormData: AccommodationForSearchResult | undefined = jsonStr
+    ? JSON.parse(jsonStr)
+    : undefined;
+
+  return (
+    <AccommodationRegisterForm
+      trips={trips}
+      autoCompleteFormData={autoCompleteFormData}
+    />
+  );
 };

@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { Plus } from "lucide-react";
-import { Button } from "@/components/shadcn/button";
 import { TitleHeading } from "@/components/shared/title-heading";
+import { ButtonWithLink } from "../button-with-link";
 
 type Props = {
   title: string;
@@ -17,12 +16,7 @@ export const ListPageHeader = ({
   return (
     <div className="flex justify-between items-center mb-8">
       <TitleHeading>{title}</TitleHeading>
-      <Link href={linkForButton}>
-        <Button className="flex items-center gap-2">
-          <Plus />
-          {labelForButton}
-        </Button>
-      </Link>
+      <ButtonWithLink href={linkForButton} label={labelForButton} Icon={Plus} />
     </div>
   );
 };

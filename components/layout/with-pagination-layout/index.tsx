@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 type Props = {
   children: ReactNode;
   baseUrl: string;
-  currentPage: number;
-  totalPages: number;
+  currentPage?: number;
+  totalPages?: number;
 };
 
 export const WithPaginationLayout = ({
@@ -17,11 +17,13 @@ export const WithPaginationLayout = ({
   return (
     <div className="h-full flex flex-col justify-between gap-5">
       {children}
-      <PaginatedNavigation
-        baseUrl={baseUrl}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
+      {currentPage && totalPages && (
+        <PaginatedNavigation
+          baseUrl={baseUrl}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
+      )}
     </div>
   );
 };
