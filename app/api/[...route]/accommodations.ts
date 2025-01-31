@@ -6,7 +6,6 @@ import {
   ApiAllGetOutputType,
   ApiGetOutputType,
   ApiPostOutputType,
-  apiSearchGetInputSchema,
   ApiSearchGetOutputType,
 } from "@/lib/zod/schema/accommodations";
 import { db } from "@/lib/drizzle/db";
@@ -216,8 +215,6 @@ const app = new Hono()
       image: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
       reviewCount: hotel.hotel[0].hotelBasicInfo.reviewCount,
     }));
-
-    console.log("accommodation/search 呼ばれた");
 
     return c.json<ApiSearchGetOutputType>({
       accommodations,
