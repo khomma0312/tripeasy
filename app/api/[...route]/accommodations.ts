@@ -35,7 +35,7 @@ const app = new Hono()
       phoneNumber,
       bookingId,
       bookingUrl,
-      tripAdvisorUrl,
+      informationUrl,
       tripId,
     } = c.req.valid("form");
     let url: string | null = null;
@@ -112,7 +112,7 @@ const app = new Hono()
           image: url,
           phoneNumber: phoneNumber || null,
           bookingUrl: bookingUrl || null,
-          tripAdvisorUrl: tripAdvisorUrl || null,
+          tripAdvisorUrl: informationUrl || null,
           latLng,
           tripId:
             !isNaN(Number(tripId)) && Number(tripId) > 0
@@ -211,8 +211,8 @@ const app = new Hono()
         hotel.hotel[0].hotelBasicInfo.address2,
       reviewAverage: hotel.hotel[0].hotelBasicInfo.reviewAverage,
       informationUrl: hotel.hotel[0].hotelBasicInfo.hotelInformationUrl,
-      telephoneNo: hotel.hotel[0].hotelBasicInfo.telephoneNo,
-      image: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
+      phoneNumber: hotel.hotel[0].hotelBasicInfo.telephoneNo,
+      hotelImageUrl: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
       reviewCount: hotel.hotel[0].hotelBasicInfo.reviewCount,
     }));
 
@@ -262,7 +262,7 @@ const app = new Hono()
         reservationPrice: accommodation.reservationPrice ?? undefined,
         notes: accommodation.notes ?? undefined,
         bookingUrl: accommodation.bookingUrl ?? undefined,
-        tripAdvisorUrl: accommodation.tripAdvisorUrl ?? undefined,
+        informationUrl: accommodation.tripAdvisorUrl ?? undefined,
         phoneNumber: accommodation.phoneNumber ?? undefined,
         bookingId: accommodation.bookingId ?? undefined,
       },
