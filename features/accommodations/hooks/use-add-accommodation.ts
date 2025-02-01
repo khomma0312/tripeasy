@@ -6,33 +6,41 @@ import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
 import { accommodationFormSchema } from "@/lib/zod/schema/accommodations";
 import { usePostAccommodations } from "@/services/api/custom/endpoints/accommodations";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
-import { AccommodationForSearchResult } from "../types";
+import { Accommodation, AccommodationForSearchResult } from "../types";
+
+type AccommodationFormValues = Partial<
+  Accommodation & AccommodationForSearchResult
+>;
 
 export const useAddAccommodation = (
-  autoCompleteFormData?: AccommodationForSearchResult
+  defaultValues?: AccommodationFormValues
 ) => {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof accommodationFormSchema>>({
     resolver: zodResolver(accommodationFormSchema),
     defaultValues: {
-      name: autoCompleteFormData?.name ? autoCompleteFormData.name : "",
-      address: autoCompleteFormData?.address
-        ? autoCompleteFormData.address
+      name: defaultValues?.name ?? "",
+      address: defaultValues?.address ?? "",
+      checkIn: defaultValues?.checkIn
+        ? parse(defaultValues?.checkIn, dateFormatStrForParse, new Date())
+        : undefined,
+      checkOut: defaultValues?.checkOut
+        ? parse(defaultValues?.checkOut, dateFormatStrForParse, new Date())
+        : undefined,
+      reservationPrice: defaultValues?.reservationPrice
+        ? String(defaultValues?.reservationPrice)
         : "",
-      checkIn: undefined,
-      checkOut: undefined,
-      reservationPrice: "",
-      notes: "",
-      image: "",
-      phoneNumber: autoCompleteFormData?.telephoneNo
-        ? autoCompleteFormData.telephoneNo
+      notes: defaultValues?.notes ?? "",
+      image: defaultValues?.image ?? "",
+      phoneNumber: defaultValues?.phoneNumber ?? "",
+      bookingId: defaultValues?.bookingId ?? "",
+      bookingUrl: defaultValues?.bookingUrl ?? "",
+      informationUrl: defaultValues?.informationUrl
+        ? defaultValues?.informationUrl
         : "",
-      bookingId: "",
-      bookingUrl: "",
-      tripAdvisorUrl: "",
-      tripId: undefined,
+      tripId: defaultValues?.tripId ? String(defaultValues?.tripId) : undefined,
     },
   });
   const { errorToast } = useErrorToast();

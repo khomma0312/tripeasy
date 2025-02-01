@@ -1,7 +1,7 @@
 "use client";
 
 import { useGetTripsSuspense } from "@/services/api/endpoints/trips/trips";
-import { AccommodationRegisterForm } from "../accommodation-register-form";
+import { AccommodationForm } from "../accommodation-form";
 import { convertDataTypesToMatchTrips } from "@/features/trips/utils";
 import { useSearchParams } from "next/navigation";
 import { AccommodationForSearchResult } from "../../types";
@@ -21,9 +21,6 @@ export const AccommodationRegisterFormContainer = () => {
     : undefined;
 
   return (
-    <AccommodationRegisterForm
-      trips={trips}
-      autoCompleteFormData={autoCompleteFormData}
-    />
+    <AccommodationForm trips={trips} defaultValues={autoCompleteFormData} />
   );
 };

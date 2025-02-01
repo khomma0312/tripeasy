@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Trip } from "@/features/trips/types";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import {
   DollarSign,
@@ -22,19 +22,15 @@ import {
   RHFSelectField,
   SelectItem,
 } from "@/components/shared/rhf-select-field";
-import { AccommodationForSearchResult } from "../../types";
+import { Accommodation, AccommodationForSearchResult } from "../../types";
 
 type Props = {
   trips: Trip[];
-  autoCompleteFormData?: AccommodationForSearchResult;
+  defaultValues?: AccommodationForSearchResult | Accommodation;
 };
 
-export const AccommodationRegisterForm = ({
-  trips,
-  autoCompleteFormData,
-}: Props) => {
-  const { form, isPending, onSubmit } =
-    useAddAccommodation(autoCompleteFormData);
+export const AccommodationForm = ({ trips, defaultValues }: Props) => {
+  const { form, isPending, onSubmit } = useAddAccommodation(defaultValues);
   const router = useRouter();
   const tripItems: SelectItem[] = useMemo(() => {
     return trips.map((trip) => ({ value: String(trip.id), label: trip.title }));
@@ -111,7 +107,7 @@ export const AccommodationRegisterForm = ({
             <div className="space-y-2">
               <RHFInputField
                 control={form.control}
-                name="tripAdvisorUrl"
+                name="informationUrl"
                 label="TripAdvisorの宿泊先情報URL"
                 type="url"
                 Icon={Globe}
