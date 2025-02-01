@@ -14,10 +14,10 @@ export type GetAccommodationsId200Accommodation = {
   checkOut: string;
   id: number;
   image?: string;
+  informationUrl?: string;
   name: string;
   notes?: string;
   phoneNumber?: string;
   reservationPrice?: number;
-  tripAdvisorUrl?: string;
   tripId?: number;
 };

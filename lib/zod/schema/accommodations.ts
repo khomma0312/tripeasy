@@ -32,12 +32,11 @@ export const accommodationFormSchema = z.object({
         Array.from(files).every((file) => imageTypes.includes(file.type)),
       { message: "添付できる画像ファイルはjpegかpngです" }
     )
-    .or(z.literal(""))
-    .nullable(),
+    .or(z.string()),
   phoneNumber: z.string().optional(),
   bookingId: z.string().optional(),
   bookingUrl: z.string().url("URL形式で入力してください").or(z.literal("")),
-  tripAdvisorUrl: z.string().url("URL形式で入力してください").or(z.literal("")),
+  informationUrl: z.string().url("URL形式で入力してください").or(z.literal("")),
   tripId: z.string().optional(),
 });
 
@@ -45,9 +44,9 @@ export const accommodationInputSchema = accommodationFormSchema.extend({
   checkIn: z.string(),
   checkOut: z.string(),
   reservationPrice: z.string().optional(),
-  image: z.instanceof(Blob).or(z.literal("")),
+  image: z.instanceof(Blob).or(z.string()),
   bookingUrl: z.string().optional(),
-  tripAdvisorUrl: z.string().optional(),
+  informationUrl: z.string().optional(),
 });
 
 // 宿泊施設検索ページのフォームの項目
@@ -83,7 +82,7 @@ export const accommodationForDetailSchema = z.object({
   reservationPrice: z.number().optional(),
   notes: z.string().optional(),
   bookingUrl: z.string().optional(),
-  tripAdvisorUrl: z.string().optional(),
+  informationUrl: z.string().optional(),
   phoneNumber: z.string().optional(),
   bookingId: z.string().optional(),
 });
@@ -94,8 +93,8 @@ export const accommodationForSearchResultSchema = z.object({
   address: z.string(),
   reviewAverage: z.number(),
   informationUrl: z.string(),
-  telephoneNo: z.string(),
-  image: z.string(),
+  phoneNumber: z.string(),
+  hotelImageUrl: z.string(),
   reviewCount: z.number(),
 });
 

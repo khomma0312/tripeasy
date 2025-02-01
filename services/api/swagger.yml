@@ -663,15 +663,13 @@ paths:
                       anyOf:
                         - {}
                         - type: string
-                          enum:
-                            - ""
                     phoneNumber:
                       type: string
                     bookingId:
                       type: string
                     bookingUrl:
                       type: string
-                    tripAdvisorUrl:
+                    informationUrl:
                       type: string
                     tripId:
                       type: string
@@ -823,7 +821,7 @@ paths:
                         type: string
                       bookingUrl:
                         type: string
-                      tripAdvisorUrl:
+                      informationUrl:
                         type: string
                       phoneNumber:
                         type: string
@@ -902,9 +900,9 @@ paths:
                           type: number
                         informationUrl:
                           type: string
-                        telephoneNo:
+                        phoneNumber:
                           type: string
-                        image:
+                        hotelImageUrl:
                           type: string
                         reviewCount:
                           type: number
@@ -914,8 +912,8 @@ paths:
                         - address
                         - reviewAverage
                         - informationUrl
-                        - telephoneNo
-                        - image
+                        - phoneNumber
+                        - hotelImageUrl
                         - reviewCount
                   pageCount:
                     type: number
