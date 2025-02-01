@@ -5,10 +5,9 @@ import type {
   UseMutationResult,
 } from "@tanstack/react-query";
 import type {
-  PostAccommodations200,
-  PostAccommodations403,
-  PostAccommodations500,
-  PostAccommodationsBody,
+  AccommodationsErrorResponse,
+  PatchAccommodationsId200,
+  PatchAccommodationsIdBody,
 } from "@/services/api/custom/model";
 import { customInstance } from "@/services/api/mutator/custom-instance";
 import type {
@@ -22,15 +21,16 @@ type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 /**
  * @summary 宿泊施設新規作成API
  */
-export const postAccommodations = (
-  postAccommodationsBody: BodyType<PostAccommodationsBody>,
+export const patchAccommodations = (
+  id: number,
+  patchAccommodationsBody: BodyType<PatchAccommodationsIdBody>,
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal
 ) => {
   // ファイル含め、FormDataに各項目を追加していく
   const formData = new FormData();
 
-  Object.entries(postAccommodationsBody.accommodation).forEach(
+  Object.entries(patchAccommodationsBody.accommodation).forEach(
     ([key, value]) => {
       if (value instanceof FileList) {
         formData.append(key, value[0]);
@@ -40,10 +40,10 @@ export const postAccommodations = (
     }
   );
 
-  return customInstance<PostAccommodations200>(
+  return customInstance<PatchAccommodationsId200>(
     {
-      url: `/api/accommodations`,
-      method: "POST",
+      url: `/api/accommodations/${id}`,
+      method: "PATCH",
       headers: { "Content-Type": "multipart/form-data" },
       data: formData,
       signal,
@@ -52,66 +52,66 @@ export const postAccommodations = (
   );
 };
 
-export const getPostAccommodationsMutationOptions = <
-  TError = ErrorType<PostAccommodations403 | PostAccommodations500>,
+export const getPatchAccommodationsMutationOptions = <
+  TError = ErrorType<AccommodationsErrorResponse>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAccommodations>>,
+    Awaited<ReturnType<typeof patchAccommodations>>,
     TError,
-    { data: BodyType<PostAccommodationsBody> },
+    { id: number; data: BodyType<PatchAccommodationsIdBody> },
     TContext
   >;
   request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof postAccommodations>>,
+  Awaited<ReturnType<typeof patchAccommodations>>,
   TError,
-  { data: BodyType<PostAccommodationsBody> },
+  { id: number; data: BodyType<PatchAccommodationsIdBody> },
   TContext
 > => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAccommodations>>,
-    { data: BodyType<PostAccommodationsBody> }
+    Awaited<ReturnType<typeof patchAccommodations>>,
+    { id: number; data: BodyType<PatchAccommodationsIdBody> }
   > = (props) => {
-    const { data } = props ?? {};
+    const { id, data } = props ?? {};
 
-    return postAccommodations(data, requestOptions);
+    return patchAccommodations(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAccommodationsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAccommodations>>
+export type PatchAccommodationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAccommodations>>
 >;
-export type PostAccommodationsMutationBody = BodyType<PostAccommodationsBody>;
-export type PostAccommodationsMutationError = ErrorType<
-  PostAccommodations403 | PostAccommodations500
->;
+export type PatchAccommodationsMutationBody =
+  BodyType<PatchAccommodationsIdBody>;
+export type PatchAccommodationsMutationError =
+  ErrorType<AccommodationsErrorResponse>;
 
 /**
  * @summary 宿泊施設新規作成API
  */
-export const usePostAccommodations = <
-  TError = ErrorType<PostAccommodations403 | PostAccommodations500>,
+export const usePatchAccommodationsId = <
+  TError = ErrorType<AccommodationsErrorResponse>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAccommodations>>,
+    Awaited<ReturnType<typeof patchAccommodations>>,
     TError,
-    { data: BodyType<PostAccommodationsBody> },
+    { id: number; data: BodyType<PatchAccommodationsIdBody> },
     TContext
   >;
   request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof postAccommodations>>,
+  Awaited<ReturnType<typeof patchAccommodations>>,
   TError,
-  { data: BodyType<PostAccommodationsBody> },
+  { id: number; data: BodyType<PatchAccommodationsIdBody> },
   TContext
 > => {
-  const mutationOptions = getPostAccommodationsMutationOptions(options);
+  const mutationOptions = getPatchAccommodationsMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

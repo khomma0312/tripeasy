@@ -6,10 +6,10 @@ type Props = {
   }>;
 };
 
-const Accommodation = async ({ params }: Props) => {
+const AccommodationEdit = async ({ params }: Props) => {
   const { id: strId } = await params;
   const id = strId ? Number(strId) : 0;
   return <PageClient id={id} />;
 };
 
-export default Accommodation;
+export default AccommodationEdit;

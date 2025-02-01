@@ -1,29 +1,32 @@
 "use client";
 
 import { useGetTripsSuspense } from "@/services/api/endpoints/trips/trips";
-import { AccommodationRegisterForm } from "../accommodation-register-form";
+import { AccommodationForm } from "../accommodation-form";
 import { convertDataTypesToMatchTrips } from "@/features/trips/utils";
-import { useSearchParams } from "next/navigation";
-import { AccommodationForSearchResult } from "../../types";
+import { useAccommodationForm } from "../../hooks/use-accommodation-form";
+import { useAddAccommodation } from "../../hooks/use-add-accommodation";
+import { AccommodationFormDefaultValues } from "../../types";
 
-export const AccommodationRegisterFormContainer = () => {
+type Props = {
+  defaultValues?: AccommodationFormDefaultValues;
+};
+
+export const AccommodationRegisterFormContainer = ({
+  defaultValues,
+}: Props) => {
   const { data } = useGetTripsSuspense({ page: 1, perPage: -1 });
-  const searchParams = useSearchParams();
+  const { form } = useAccommodationForm(defaultValues);
+  const { isPending, onSubmit } = useAddAccommodation(form);
 
   const trips = convertDataTypesToMatchTrips(data);
 
-  const encodedJsonStr = searchParams.get("data");
-  const jsonStr = encodedJsonStr
-    ? decodeURIComponent(encodedJsonStr)
-    : undefined;
-  const autoCompleteFormData: AccommodationForSearchResult | undefined = jsonStr
-    ? JSON.parse(jsonStr)
-    : undefined;
-
   return (
-    <AccommodationRegisterForm
+    <AccommodationForm
+      formTitle="新規宿泊施設登録"
       trips={trips}
-      autoCompleteFormData={autoCompleteFormData}
+      form={form}
+      isPending={isPending}
+      onSubmit={onSubmit}
     />
   );
 };

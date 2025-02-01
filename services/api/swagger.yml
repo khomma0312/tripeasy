@@ -663,15 +663,13 @@ paths:
                       anyOf:
                         - {}
                         - type: string
-                          enum:
-                            - ""
                     phoneNumber:
                       type: string
                     bookingId:
                       type: string
                     bookingUrl:
                       type: string
-                    tripAdvisorUrl:
+                    informationUrl:
                       type: string
                     tripId:
                       type: string
@@ -781,6 +779,88 @@ paths:
                     type: string
                 required:
                   - message
+    patch:
+      summary: 宿泊施設更新API
+      tags:
+        - accommodations
+        - orval-exclude
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                accommodation:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    address:
+                      type: string
+                    checkIn:
+                      type: string
+                    checkOut:
+                      type: string
+                    reservationPrice:
+                      type: string
+                    notes:
+                      type: string
+                    image:
+                      anyOf:
+                        - {}
+                        - type: string
+                    phoneNumber:
+                      type: string
+                    bookingId:
+                      type: string
+                    bookingUrl:
+                      type: string
+                    informationUrl:
+                      type: string
+                    tripId:
+                      type: string
+                  required:
+                    - name
+                    - checkIn
+                    - checkOut
+                    - image
+              required:
+                - accommodation
+      responses:
+        "200":
+          description: 宿泊施設更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 宿泊施設更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
   /accommodations/{id}:
     get:
       summary: 単一の宿泊施設の取得
@@ -823,7 +903,7 @@ paths:
                         type: string
                       bookingUrl:
                         type: string
-                      tripAdvisorUrl:
+                      informationUrl:
                         type: string
                       phoneNumber:
                         type: string
@@ -902,9 +982,9 @@ paths:
                           type: number
                         informationUrl:
                           type: string
-                        telephoneNo:
+                        phoneNumber:
                           type: string
-                        image:
+                        hotelImageUrl:
                           type: string
                         reviewCount:
                           type: number
@@ -914,8 +994,8 @@ paths:
                         - address
                         - reviewAverage
                         - informationUrl
-                        - telephoneNo
-                        - image
+                        - phoneNumber
+                        - hotelImageUrl
                         - reviewCount
                   pageCount:
                     type: number

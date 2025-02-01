@@ -17,7 +17,7 @@ const mockAccommodation = {
   address: "東京都新宿区1-2-3",
   notes: "テスト備考",
   bookingUrl: "https://example.com/booking",
-  tripAdvisorUrl:
+  informationUrl:
     "https://www.tripadvisor.com/Hotel_Review-g2-d2-Reviews-Kyoto_Riverside_Inn-Kyoto_Kyoto_Prefecture_Kinki.html",
   phoneNumber: "03-0000-0000",
   bookingId: "ABC123",
@@ -51,7 +51,7 @@ export const OptionalFieldNotFilled: StoryObj<typeof AccommodationDetailCard> =
         address: undefined,
         notes: undefined,
         bookingUrl: undefined,
-        tripAdvisorUrl: undefined,
+        informationUrl: undefined,
         phoneNumber: undefined,
         bookingId: undefined,
       },

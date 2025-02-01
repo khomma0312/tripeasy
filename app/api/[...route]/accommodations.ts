@@ -5,6 +5,7 @@ import {
   accommodationInputSchema,
   ApiAllGetOutputType,
   ApiGetOutputType,
+  ApiPatchOutputType,
   ApiPostOutputType,
   ApiSearchGetOutputType,
 } from "@/lib/zod/schema/accommodations";
@@ -35,7 +36,7 @@ const app = new Hono()
       phoneNumber,
       bookingId,
       bookingUrl,
-      tripAdvisorUrl,
+      informationUrl,
       tripId,
     } = c.req.valid("form");
     let url: string | null = null;
@@ -112,7 +113,7 @@ const app = new Hono()
           image: url,
           phoneNumber: phoneNumber || null,
           bookingUrl: bookingUrl || null,
-          tripAdvisorUrl: tripAdvisorUrl || null,
+          tripAdvisorUrl: informationUrl || null,
           latLng,
           tripId:
             !isNaN(Number(tripId)) && Number(tripId) > 0
@@ -123,6 +124,122 @@ const app = new Hono()
         })
         .returning({ id: accommodationsTable.id });
       return c.json<ApiPostOutputType>({ id: accommodation.id });
+    } catch (e) {
+      logger.error(e);
+      return c.json<ApiErrorType>(
+        { message: "データの登録に失敗しました" },
+        500
+      );
+    }
+  })
+  .patch("/:id", zValidator("form", accommodationInputSchema), async (c) => {
+    const session = await auth();
+    const id = Number(c.req.param("id"));
+    const {
+      name,
+      address,
+      checkIn,
+      checkOut,
+      reservationPrice,
+      notes,
+      image,
+      phoneNumber,
+      bookingId,
+      bookingUrl,
+      informationUrl,
+      tripId,
+    } = c.req.valid("form");
+    // imageが文字列であれば、すでに登録済みの画像URLが入っている想定なので初期値に設定する
+    let url: string | null = typeof image === "string" ? image : null;
+    let latLng: { x: number; y: number } | null = null;
+
+    if (!session?.user) {
+      logger.error("User verification failed.");
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    // reservationPriceはintegerで保存するので数値に変換
+    const reservationPriceNum = Number(reservationPrice);
+
+    if (isNaN(reservationPriceNum)) {
+      logger.error("reservationPrice should not be NaN.");
+      return c.json<ApiErrorType>(
+        { message: "予約料金に数字以外の値が入力されています" },
+        400
+      );
+    }
+
+    // 住所が存在すれば、Google Maps APIを使って緯度経度の算出をする
+    if (address) {
+      try {
+        const { lat, lng, isLocationReliable } = await getLatLngFromAddress(
+          address
+        );
+        if (isLocationReliable) latLng = { x: lng, y: lat };
+      } catch (e) {
+        logger.error(e);
+      }
+    }
+
+    if (image instanceof File) {
+      try {
+        logger.info("Uploading image...");
+        const { url: uploadedUrl } = await put(
+          `/accomodations/${userId}/${image.name}`,
+          image,
+          {
+            access: "public",
+          }
+        );
+        url = uploadedUrl;
+
+        logger.info("Image uploaded successfully.");
+      } catch (e) {
+        logger.error(e);
+        return c.json<ApiErrorType>(
+          {
+            message: "ファイルのアップロードに失敗しました",
+          },
+          500
+        );
+      }
+    }
+
+    try {
+      const [accommodation] = await db
+        .update(accommodationsTable)
+        .set({
+          name,
+          address: address || null,
+          checkIn,
+          checkOut,
+          reservationPrice:
+            reservationPriceNum === 0 ? null : reservationPriceNum,
+          notes: notes || null,
+          image: url,
+          phoneNumber: phoneNumber || null,
+          bookingUrl: bookingUrl || null,
+          tripAdvisorUrl: informationUrl || null,
+          latLng,
+          tripId:
+            !isNaN(Number(tripId)) && Number(tripId) > 0
+              ? Number(tripId)
+              : null, // tripIdがfalsyでないかつ、NaNにならない場合はnumberに変換して登録
+          bookingId: bookingId || null,
+        })
+        .where(
+          and(
+            eq(accommodationsTable.id, id),
+            eq(accommodationsTable.userId, userId)
+          )
+        )
+        .returning({ id: accommodationsTable.id });
+      return c.json<ApiPatchOutputType>({ id: accommodation.id });
     } catch (e) {
       logger.error(e);
       return c.json<ApiErrorType>(
@@ -211,8 +328,8 @@ const app = new Hono()
         hotel.hotel[0].hotelBasicInfo.address2,
       reviewAverage: hotel.hotel[0].hotelBasicInfo.reviewAverage,
       informationUrl: hotel.hotel[0].hotelBasicInfo.hotelInformationUrl,
-      telephoneNo: hotel.hotel[0].hotelBasicInfo.telephoneNo,
-      image: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
+      phoneNumber: hotel.hotel[0].hotelBasicInfo.telephoneNo,
+      hotelImageUrl: hotel.hotel[0].hotelBasicInfo.hotelImageUrl,
       reviewCount: hotel.hotel[0].hotelBasicInfo.reviewCount,
     }));
 
@@ -262,7 +379,7 @@ const app = new Hono()
         reservationPrice: accommodation.reservationPrice ?? undefined,
         notes: accommodation.notes ?? undefined,
         bookingUrl: accommodation.bookingUrl ?? undefined,
-        tripAdvisorUrl: accommodation.tripAdvisorUrl ?? undefined,
+        informationUrl: accommodation.tripAdvisorUrl ?? undefined,
         phoneNumber: accommodation.phoneNumber ?? undefined,
         bookingId: accommodation.bookingId ?? undefined,
       },

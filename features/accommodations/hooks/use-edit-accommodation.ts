@@ -2,33 +2,34 @@ import { UseFormReturn } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
-import { usePostAccommodations } from "@/services/api/custom/endpoints/accommodations/post";
+import { usePatchAccommodationsId } from "@/services/api/custom/endpoints/accommodations/patch";
 import { format } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
 import { AccommodationFormFieldValues } from "../types";
 
-export const useAddAccommodation = (
+export const useEditAccommodation = (
+  id: number,
   form: UseFormReturn<AccommodationFormFieldValues>
 ) => {
   const { toast } = useToast();
   const { errorToast } = useErrorToast();
   const queryClient = useQueryClient();
-  const { isPending, mutate } = usePostAccommodations({
+
+  const { isPending, mutate } = usePatchAccommodationsId({
     mutation: {
       onSuccess: () => {
-        toast({ title: "宿泊施設情報を追加しました" });
+        toast({ title: "宿泊施設情報を変更しました" });
         queryClient.invalidateQueries({
-          queryKey: [`/api/accommodations`],
+          queryKey: [`/api/accommodations/${id}`, `/api/accommodations`],
         });
-        form.reset();
       },
       onError: () => {
-        errorToast("宿泊施設情報の追加に失敗しました");
+        errorToast("宿泊施設情報の変更に失敗しました");
       },
     },
   });
 
-  const addAccommodation = (accommodation: AccommodationFormFieldValues) => {
+  const editAccommodation = (accommodation: AccommodationFormFieldValues) => {
     // mutateの引数の型に合わせるため、型を変換
     const typeConvertedAccommodation = {
       ...accommodation,
@@ -37,6 +38,7 @@ export const useAddAccommodation = (
     };
 
     mutate({
+      id,
       data: {
         accommodation: typeConvertedAccommodation,
       },
@@ -44,7 +46,7 @@ export const useAddAccommodation = (
   };
 
   const onSubmit = (accommodation: AccommodationFormFieldValues) => {
-    addAccommodation(accommodation);
+    editAccommodation(accommodation);
   };
 
   return {

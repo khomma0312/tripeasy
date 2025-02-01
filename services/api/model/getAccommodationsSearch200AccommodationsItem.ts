@@ -8,11 +8,11 @@
 
 export type GetAccommodationsSearch200AccommodationsItem = {
   address: string;
+  hotelImageUrl: string;
   id: number;
-  image: string;
   informationUrl: string;
   name: string;
+  phoneNumber: string;
   reviewAverage: number;
   reviewCount: number;
-  telephoneNo: string;
 };

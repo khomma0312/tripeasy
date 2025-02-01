@@ -30,7 +30,7 @@ export const SearchResultCard = ({ accommodation }: Props) => {
     <Card className="overflow-hidden flex flex-col h-full">
       <div className="h-48 relative overflow-hidden">
         <Image
-          src={accommodation.image || noImage}
+          src={accommodation.hotelImageUrl || noImage}
           alt={accommodation.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

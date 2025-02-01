@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Trip } from "@/features/trips/types";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import {
   DollarSign,
@@ -17,24 +17,28 @@ import { RHFInputField } from "@/components/shared/rhf-input-field";
 import { RHFTextareaField } from "@/components/shared/rhf-textarea-field";
 import { RHFDatePickerField } from "@/components/shared/rhf-date-picker-field";
 import { RHFFileField } from "@/components/shared/rhf-file-field";
-import { useAddAccommodation } from "@/features/accommodations/hooks/use-add-accommodation";
 import {
   RHFSelectField,
   SelectItem,
 } from "@/components/shared/rhf-select-field";
-import { AccommodationForSearchResult } from "../../types";
+import { AccommodationFormFieldValues } from "../../types";
+import { UseFormReturn } from "react-hook-form";
 
 type Props = {
+  formTitle: string;
   trips: Trip[];
-  autoCompleteFormData?: AccommodationForSearchResult;
+  form: UseFormReturn<AccommodationFormFieldValues>;
+  isPending: boolean;
+  onSubmit: (accommodation: AccommodationFormFieldValues) => void;
 };
 
-export const AccommodationRegisterForm = ({
+export const AccommodationForm = ({
+  formTitle,
   trips,
-  autoCompleteFormData,
+  form,
+  isPending,
+  onSubmit,
 }: Props) => {
-  const { form, isPending, onSubmit } =
-    useAddAccommodation(autoCompleteFormData);
   const router = useRouter();
   const tripItems: SelectItem[] = useMemo(() => {
     return trips.map((trip) => ({ value: String(trip.id), label: trip.title }));
@@ -43,7 +47,7 @@ export const AccommodationRegisterForm = ({
 
   return (
     <div className="max-w-screen-lg h-full mx-auto px-6 pt-12 pb-12">
-      <h1 className="text-2xl font-semibold mb-6">新規宿泊施設登録</h1>
+      <h1 className="text-2xl font-semibold mb-6">{formTitle}</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -111,7 +115,7 @@ export const AccommodationRegisterForm = ({
             <div className="space-y-2">
               <RHFInputField
                 control={form.control}
-                name="tripAdvisorUrl"
+                name="informationUrl"
                 label="TripAdvisorの宿泊先情報URL"
                 type="url"
                 Icon={Globe}
