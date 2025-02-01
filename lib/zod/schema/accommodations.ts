@@ -103,6 +103,11 @@ export const apiPostInputSchema = z.object({
 });
 export type ApiPostInputType = z.infer<typeof apiPostInputSchema>;
 
+export const apiPatchInputSchema = z.object({
+  accommodation: accommodationInputSchema,
+});
+export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
+
 // 宿泊施設を全て返すGET APIのinputパラメータのスキーマ
 export const apiAllGetInputSchema = z.object({
   page: z.number(),
@@ -124,6 +129,12 @@ export const apiPostOutputSchema = z.object({
   id: z.number(),
 });
 export type ApiPostOutputType = z.infer<typeof apiPostOutputSchema>;
+
+// PATCH APIの成功時に返却されるoutputのスキーマ
+export const apiPatchOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
 
 // 宿泊施設を全て返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiAllGetOutputSchema = z.object({
@@ -169,6 +180,36 @@ export const accommodationsPostApiSchema: RouteConfig = {
     },
     500: {
       description: "宿泊施設作成に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// PATCH APIのスキーマ
+export const accommodationsPatchApiSchema: RouteConfig = {
+  method: "patch",
+  path: "/accommodations",
+  summary: "宿泊施設更新API",
+  tags: ["accommodations", "orval-exclude"],
+  request: {
+    body: {
+      content: {
+        "multipart/form-data": { schema: apiPatchInputSchema },
+      },
+    },
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "宿泊施設更新成功",
+      content: {
+        "application/json": { schema: apiPatchOutputSchema },
+      },
+    },
+    500: {
+      description: "宿泊施設更新に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },

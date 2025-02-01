@@ -1,6 +1,7 @@
 import {
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
+  accommodationsPatchApiSchema,
   accommodationsPostApiSchema,
   accommodationsSearchGetApiSchema,
 } from "./accommodations";
@@ -41,6 +42,7 @@ export const pathSchemas = [
   accommodationsAllGetApiSchema,
   accommodationsGetApiSchema,
   accommodationsSearchGetApiSchema,
+  accommodationsPatchApiSchema,
   // 旅行情報用API
   tripsAllGetApiSchema,
 ];
