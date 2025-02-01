@@ -8,13 +8,14 @@ import {
 import { Input } from "@/components/shadcn/input";
 import { useState, ChangeEvent, useEffect } from "react";
 import { RHFFieldLabel } from "../rhf-field-label";
+import { Button } from "@/components/shadcn/button";
+import { cn } from "@/utils/common";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
-  currentValue: "" | FileList | null | undefined;
-  placeholder?: string;
+  currentValue: string | FileList;
   disabled?: boolean;
   isRequired?: boolean;
 };
@@ -37,17 +38,21 @@ export const RHFFileField = <T extends FieldValues>({
   name,
   label,
   currentValue,
-  placeholder,
   disabled,
   isRequired,
 }: Props<T>) => {
-  const [preview, setPreview] = useState("");
+  const isCurrentValueURL =
+    typeof currentValue === "string" && URL.canParse(currentValue);
+  const [preview, setPreview] = useState(isCurrentValueURL ? currentValue : "");
   const [key, setKey] = useState("");
+  const [isInputShown, setIsInputShown] = useState(
+    isCurrentValueURL ? false : true
+  );
 
   useEffect(() => {
     // RHFのform.resetではvalueをリセットするだけなので、valueが変更された時にkeyをリセットして再レンダリングさせる
     const randomKey = Math.random().toString(36);
-    if (!(currentValue instanceof FileList)) {
+    if (!currentValue) {
       setKey(randomKey);
       setPreview("");
     }
@@ -67,17 +72,27 @@ export const RHFFileField = <T extends FieldValues>({
           },
         }) => (
           <FormItem>
-            <RHFFieldLabel
-              label={label}
-              htmlFor={name}
-              isRequired={isRequired}
-            />
+            <div className="flex items-center gap-2">
+              <RHFFieldLabel
+                label={label}
+                htmlFor={name}
+                isRequired={isRequired}
+              />
+              {!isInputShown && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsInputShown(true)}
+                >
+                  画像を変更する
+                </Button>
+              )}
+            </div>
             <FormControl>
-              <div className="relative">
+              <div className={cn("relative", !isInputShown && "hidden")}>
                 <Input
                   {...rest}
                   id={name}
-                  placeholder={placeholder}
                   type="file"
                   disabled={disabled}
                   onChange={(event) => {
@@ -93,12 +108,15 @@ export const RHFFileField = <T extends FieldValues>({
         )}
       />
       {preview ? (
-        <div className="aspect-square max-w-32">
-          <img
-            src={preview}
-            alt=""
-            className="w-full h-full object-contain object-center"
-          />
+        <div>
+          <p className="text-xs">設定中の画像</p>
+          <div className="aspect-square max-w-32">
+            <img
+              src={preview}
+              alt=""
+              className="w-full h-full object-contain object-center"
+            />
+          </div>
         </div>
       ) : null}
     </div>
