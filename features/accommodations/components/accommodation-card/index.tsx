@@ -48,17 +48,19 @@ export const AccommodationCard = ({ accommodation }: Props) => {
             )} -{" "}
             {format(new Date(accommodation.checkOut), dateFormatStrForFormat)}
           </p>
-          <p className="flex items-center text-sm font-semibold">
-            <ExternalLink className="w-4 h-4 mr-2 text-gray-400" />
-            <a
-              href={accommodation.bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              予約サイトで確認
-            </a>
-          </p>
+          {accommodation.bookingUrl && (
+            <p className="flex items-center text-sm font-semibold">
+              <ExternalLink className="w-4 h-4 mr-2 text-gray-400" />
+              <Link
+                href={accommodation.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                予約サイトで確認
+              </Link>
+            </p>
+          )}
         </div>
         <div className="mt-4 pt-4 border-t border-dashed border-gray-300 flex justify-between items-center">
           <div className="text-xs text-gray-500">
