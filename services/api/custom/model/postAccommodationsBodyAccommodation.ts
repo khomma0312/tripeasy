@@ -9,5 +9,5 @@ export type PostAccommodationsBodyAccommodation = {
   notes?: string;
   phoneNumber?: string;
   reservationPrice?: string;
-  tripAdvisorUrl?: string;
+  informationUrl?: string;
 };
