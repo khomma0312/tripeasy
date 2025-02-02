@@ -6,6 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './deleteAccommodationsId200';
+export * from './deleteAccommodationsId403';
+export * from './deleteAccommodationsId500';
 export * from './deleteTodoItemsId200';
 export * from './deleteTodoItemsId403';
 export * from './deleteTodoItemsId500';

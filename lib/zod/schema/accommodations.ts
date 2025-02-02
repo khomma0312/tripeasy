@@ -115,7 +115,7 @@ export const apiAllGetInputSchema = z.object({
 });
 
 // 単一の宿泊施設を返すGET APIのinputパラメータのスキーマ
-export const apiGetInputSchema = z.object({ id: z.number() });
+export const apiParamsInputSchema = z.object({ id: z.number() });
 
 // 宿泊施設を検索するGET APIのinputパラメータのスキーマ
 export const apiSearchGetInputSchema = z.object({
@@ -135,6 +135,12 @@ export const apiPatchOutputSchema = z.object({
   id: z.number(),
 });
 export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
+
+// DELETE APIの成功時に返却されるoutputのスキーマ
+export const apiDeleteOutputSchema = z.object({
+  id: z.number(),
+});
+export type ApiDeleteOutputType = z.infer<typeof apiDeleteOutputSchema>;
 
 // 宿泊施設を全て返すGET APIの成功時に返却されるoutputのスキーマ
 export const apiAllGetOutputSchema = z.object({
@@ -190,10 +196,11 @@ export const accommodationsPostApiSchema: RouteConfig = {
 // PATCH APIのスキーマ
 export const accommodationsPatchApiSchema: RouteConfig = {
   method: "patch",
-  path: "/accommodations",
+  path: "/accommodations/{id}",
   summary: "宿泊施設更新API",
   tags: ["accommodations", "orval-exclude"],
   request: {
+    params: apiParamsInputSchema,
     body: {
       content: {
         "multipart/form-data": { schema: apiPatchInputSchema },
@@ -210,6 +217,32 @@ export const accommodationsPatchApiSchema: RouteConfig = {
     },
     500: {
       description: "宿泊施設更新に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// DELETE APIのスキーマ
+export const accommodationsDeleteApiSchema: RouteConfig = {
+  method: "delete",
+  path: "/accommodations/{id}",
+  summary: "宿泊施設削除API",
+  tags: ["accommodations"],
+  request: {
+    params: apiParamsInputSchema,
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "宿泊施設削除成功",
+      content: {
+        "application/json": { schema: apiDeleteOutputSchema },
+      },
+    },
+    500: {
+      description: "宿泊施設削除に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },
@@ -245,7 +278,7 @@ export const accommodationsGetApiSchema: RouteConfig = {
   summary: "単一の宿泊施設の取得",
   tags: ["accommodations"],
   request: {
-    params: apiGetInputSchema,
+    params: apiParamsInputSchema,
   },
   responses: {
     ...commonResponseConfig,
