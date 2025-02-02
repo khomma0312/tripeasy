@@ -1,4 +1,4 @@
-import { UseFormReturn } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
@@ -7,10 +7,8 @@ import { format } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
 import { AccommodationFormFieldValues } from "../types";
 
-export const useEditAccommodation = (
-  id: number,
-  form: UseFormReturn<AccommodationFormFieldValues>
-) => {
+export const useEditAccommodation = (id: number) => {
+  const router = useRouter();
   const { toast } = useToast();
   const { errorToast } = useErrorToast();
   const queryClient = useQueryClient();
@@ -20,8 +18,11 @@ export const useEditAccommodation = (
       onSuccess: () => {
         toast({ title: "宿泊施設情報を変更しました" });
         queryClient.invalidateQueries({
-          queryKey: [`/api/accommodations/${id}`, `/api/accommodations`],
+          predicate: (query) =>
+            query.queryKey[0] === `/api/accommodations/${id}` ||
+            query.queryKey[0] === `/api/accommodations`,
         });
+        router.push(`/accommodations/${id}`);
       },
       onError: () => {
         errorToast("宿泊施設情報の変更に失敗しました");
