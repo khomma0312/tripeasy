@@ -113,6 +113,13 @@
       "when": 1737550733828,
       "tag": "0015_change_accommodations_image_nullable",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1738503048466,
+      "tag": "0016_change_tripAdvisorUrl_to_informationUrl",
+      "breakpoints": true
     }
   ]
 }
