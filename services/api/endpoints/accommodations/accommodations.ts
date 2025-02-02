@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery,
   useSuspenseQuery
 } from '@tanstack/react-query'
@@ -13,15 +14,21 @@ import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult
 } from '@tanstack/react-query'
 import type {
+  DeleteAccommodationsId200,
+  DeleteAccommodationsId403,
+  DeleteAccommodationsId500,
   GetAccommodations200,
   GetAccommodations403,
   GetAccommodationsId200,
@@ -323,6 +330,61 @@ export function useGetAccommodationsIdSuspense<TData = Awaited<ReturnType<typeof
 
 
 /**
+ * @summary 宿泊施設削除API
+ */
+export const deleteAccommodationsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<DeleteAccommodationsId200>(
+      {url: `/api/accommodations/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteAccommodationsIdMutationOptions = <TError = ErrorType<DeleteAccommodationsId403 | DeleteAccommodationsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAccommodationsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteAccommodationsId>>, TError,{id: number}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAccommodationsId>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteAccommodationsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteAccommodationsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAccommodationsId>>>
+    
+    export type DeleteAccommodationsIdMutationError = ErrorType<DeleteAccommodationsId403 | DeleteAccommodationsId500>
+
+    /**
+ * @summary 宿泊施設削除API
+ */
+export const useDeleteAccommodationsId = <TError = ErrorType<DeleteAccommodationsId403 | DeleteAccommodationsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAccommodationsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteAccommodationsId>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteAccommodationsIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary 外部APIから検索した宿泊施設の取得
  */
 export const getAccommodationsSearch = (

@@ -15,7 +15,7 @@ export const AccommodationEditFormContainer = ({ id }: Props) => {
   const { data: tripData } = useGetTripsSuspense({ page: 1, perPage: -1 });
   const { data } = useGetAccommodationsIdSuspense(id);
   const { form } = useAccommodationForm(data.accommodation);
-  const { isPending, onSubmit } = useEditAccommodation(id, form);
+  const { isPending, onSubmit } = useEditAccommodation(id);
 
   const trips = convertDataTypesToMatchTrips(tripData);
 

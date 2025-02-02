@@ -14,6 +14,7 @@ import {
   http
 } from 'msw'
 import type {
+  DeleteAccommodationsId200,
   GetAccommodations200,
   GetAccommodationsId200,
   GetAccommodationsSearch200
@@ -22,6 +23,8 @@ import type {
 export const getGetAccommodationsResponseMock = (overrideResponse: Partial< GetAccommodations200 > = {}): GetAccommodations200 => ({accommodations: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({address: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), bookingId: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), bookingUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), checkIn: faker.string.alpha(20), checkOut: faker.string.alpha(20), id: faker.number.int({min: undefined, max: undefined}), image: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), name: faker.string.alpha(20)})), totalPages: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getGetAccommodationsIdResponseMock = (overrideResponse: Partial< GetAccommodationsId200 > = {}): GetAccommodationsId200 => ({accommodation: {address: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), bookingId: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), bookingUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), checkIn: faker.string.alpha(20), checkOut: faker.string.alpha(20), id: faker.number.int({min: undefined, max: undefined}), image: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), informationUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), name: faker.string.alpha(20), notes: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), phoneNumber: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), reservationPrice: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), tripId: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined])}, ...overrideResponse})
+
+export const getDeleteAccommodationsIdResponseMock = (overrideResponse: Partial< DeleteAccommodationsId200 > = {}): DeleteAccommodationsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getGetAccommodationsSearchResponseMock = (overrideResponse: Partial< GetAccommodationsSearch200 > = {}): GetAccommodationsSearch200 => ({accommodations: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({address: faker.string.alpha(20), hotelImageUrl: faker.string.alpha(20), id: faker.number.int({min: undefined, max: undefined}), informationUrl: faker.string.alpha(20), name: faker.string.alpha(20), phoneNumber: faker.string.alpha(20), reviewAverage: faker.number.int({min: undefined, max: undefined}), reviewCount: faker.number.int({min: undefined, max: undefined})})), currentPage: faker.number.int({min: undefined, max: undefined}), pageCount: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
@@ -50,6 +53,18 @@ export const getGetAccommodationsIdMockHandler = (overrideResponse?: GetAccommod
   })
 }
 
+export const getDeleteAccommodationsIdMockHandler = (overrideResponse?: DeleteAccommodationsId200 | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<DeleteAccommodationsId200> | DeleteAccommodationsId200)) => {
+  return http.delete('*/accommodations/:id', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getDeleteAccommodationsIdResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
+
 export const getGetAccommodationsSearchMockHandler = (overrideResponse?: GetAccommodationsSearch200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetAccommodationsSearch200> | GetAccommodationsSearch200)) => {
   return http.get('*/accommodations/search', async (info) => {await delay(1000);
   
@@ -64,5 +79,6 @@ export const getGetAccommodationsSearchMockHandler = (overrideResponse?: GetAcco
 export const getAccommodationsMock = () => [
   getGetAccommodationsMockHandler(),
   getGetAccommodationsIdMockHandler(),
+  getDeleteAccommodationsIdMockHandler(),
   getGetAccommodationsSearchMockHandler()
 ]

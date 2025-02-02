@@ -1,9 +1,10 @@
 import { File } from "buffer";
 import { Hono } from "hono";
-import { put } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
 import {
   accommodationInputSchema,
   ApiAllGetOutputType,
+  ApiDeleteOutputType,
   ApiGetOutputType,
   ApiPatchOutputType,
   ApiPostOutputType,
@@ -244,6 +245,71 @@ const app = new Hono()
       logger.error(e);
       return c.json<ApiErrorType>(
         { message: "データの登録に失敗しました" },
+        500
+      );
+    }
+  })
+  .delete("/:id", async (c) => {
+    const session = await auth();
+    const accommodationId = Number(c.req.param("id"));
+
+    if (!session?.user) {
+      logger.error("User verification failed.");
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    try {
+      // 画像のURLを取得する
+      const [accommodation] = await db
+        .select({
+          image: accommodationsTable.image,
+        })
+        .from(accommodationsTable)
+        .where(
+          and(
+            eq(accommodationsTable.id, accommodationId),
+            eq(accommodationsTable.userId, userId)
+          )
+        );
+
+      if (
+        accommodation.image &&
+        accommodation.image.includes("public.blob.vercel-storage.com")
+      ) {
+        logger.info("Deleting image...");
+        await del(accommodation.image);
+        logger.info("Image deleted successfully.");
+      }
+    } catch (e) {
+      logger.error(e);
+      return c.json<ApiErrorType>(
+        {
+          message: "画像の削除に失敗しました",
+        },
+        500
+      );
+    }
+
+    try {
+      const [deleted] = await db
+        .delete(accommodationsTable)
+        .where(
+          and(
+            eq(accommodationsTable.id, accommodationId),
+            eq(accommodationsTable.userId, userId)
+          )
+        )
+        .returning({ id: accommodationsTable.id });
+      return c.json<ApiDeleteOutputType>({ id: deleted.id });
+    } catch (e) {
+      logger.error(e);
+      return c.json<ApiErrorType>(
+        { message: "データの削除に失敗しました" },
         500
       );
     }

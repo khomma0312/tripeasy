@@ -779,11 +779,94 @@ paths:
                     type: string
                 required:
                   - message
+  /accommodations/{id}:
+    get:
+      summary: 単一の宿泊施設の取得
+      tags:
+        - accommodations
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: 予約した宿泊施設取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accommodation:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      tripId:
+                        type: number
+                      name:
+                        type: string
+                      image:
+                        type: string
+                      address:
+                        type: string
+                      checkIn:
+                        type: string
+                      checkOut:
+                        type: string
+                      reservationPrice:
+                        type: number
+                      notes:
+                        type: string
+                      bookingUrl:
+                        type: string
+                      informationUrl:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      bookingId:
+                        type: string
+                    required:
+                      - id
+                      - name
+                      - checkIn
+                      - checkOut
+                required:
+                  - accommodation
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 宿泊施設が存在しないので取得失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
     patch:
       summary: 宿泊施設更新API
       tags:
         - accommodations
         - orval-exclude
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
       requestBody:
         content:
           multipart/form-data:
@@ -861,9 +944,8 @@ paths:
                     type: string
                 required:
                   - message
-  /accommodations/{id}:
-    get:
-      summary: 単一の宿泊施設の取得
+    delete:
+      summary: 宿泊施設削除API
       tags:
         - accommodations
       parameters:
@@ -874,48 +956,16 @@ paths:
           in: path
       responses:
         "200":
-          description: 予約した宿泊施設取得成功
+          description: 宿泊施設削除成功
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  accommodation:
-                    type: object
-                    properties:
-                      id:
-                        type: number
-                      tripId:
-                        type: number
-                      name:
-                        type: string
-                      image:
-                        type: string
-                      address:
-                        type: string
-                      checkIn:
-                        type: string
-                      checkOut:
-                        type: string
-                      reservationPrice:
-                        type: number
-                      notes:
-                        type: string
-                      bookingUrl:
-                        type: string
-                      informationUrl:
-                        type: string
-                      phoneNumber:
-                        type: string
-                      bookingId:
-                        type: string
-                    required:
-                      - id
-                      - name
-                      - checkIn
-                      - checkOut
+                  id:
+                    type: number
                 required:
-                  - accommodation
+                  - id
         "403":
           description: ユーザー検証に失敗
           content:
@@ -927,8 +977,8 @@ paths:
                     type: string
                 required:
                   - message
-        "404":
-          description: 宿泊施設が存在しないので取得失敗
+        "500":
+          description: 宿泊施設削除に失敗
           content:
             application/json:
               schema:

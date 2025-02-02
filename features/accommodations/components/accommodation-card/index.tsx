@@ -6,12 +6,16 @@ import { AccommodationForCard } from "@/features/accommodations/types";
 import { format } from "date-fns";
 import { dateFormatStrForFormat } from "@/consts/common";
 import { cn } from "@/utils/common";
+import { AccommodationDeleteButton } from "../accommodation-delete-button";
+import { useDeleteAccommodation } from "../../hooks/use-delete-accommodation";
 
 type Props = {
   accommodation: AccommodationForCard;
 };
 
 export const AccommodationCard = ({ accommodation }: Props) => {
+  const { onSubmit } = useDeleteAccommodation(accommodation.id);
+
   return (
     <Card
       className={cn(
@@ -66,12 +70,18 @@ export const AccommodationCard = ({ accommodation }: Props) => {
           <div className="text-xs text-gray-500">
             予約番号: {accommodation.bookingId ?? "登録なし"}
           </div>
-          <Link
-            href={`/accommodations/${accommodation.id}`}
-            className="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors duration-300"
-          >
-            詳細を見る
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={`/accommodations/${accommodation.id}`}
+              className="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors duration-300"
+            >
+              詳細を見る
+            </Link>
+            <AccommodationDeleteButton
+              onDelete={() => onSubmit(accommodation.id)}
+              className="rounded-full"
+            />
+          </div>
         </div>
       </CardContent>
       <div className="absolute top-1/2 -left-2 w-4 h-8 bg-background rounded-r-full"></div>

@@ -5,10 +5,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.tripadvisor.com",
-      },
-      {
-        protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
       },
       {
