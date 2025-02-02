@@ -116,7 +116,7 @@ export const AccommodationForm = ({
               <RHFInputField
                 control={form.control}
                 name="informationUrl"
-                label="TripAdvisorの宿泊先情報URL"
+                label="宿泊先の外部参考サイトURL"
                 type="url"
                 Icon={Globe}
               />
