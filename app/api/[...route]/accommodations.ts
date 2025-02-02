@@ -277,7 +277,10 @@ const app = new Hono()
           )
         );
 
-      if (accommodation.image) {
+      if (
+        accommodation.image &&
+        accommodation.image.includes("public.blob.vercel-storage.com")
+      ) {
         logger.info("Deleting image...");
         await del(accommodation.image);
         logger.info("Image deleted successfully.");
