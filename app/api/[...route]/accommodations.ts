@@ -114,7 +114,7 @@ const app = new Hono()
           image: url,
           phoneNumber: phoneNumber || null,
           bookingUrl: bookingUrl || null,
-          tripAdvisorUrl: informationUrl || null,
+          informationUrl: informationUrl || null,
           latLng,
           tripId:
             !isNaN(Number(tripId)) && Number(tripId) > 0
@@ -225,7 +225,7 @@ const app = new Hono()
           image: url,
           phoneNumber: phoneNumber || null,
           bookingUrl: bookingUrl || null,
-          tripAdvisorUrl: informationUrl || null,
+          informationUrl: informationUrl || null,
           latLng,
           tripId:
             !isNaN(Number(tripId)) && Number(tripId) > 0
@@ -445,7 +445,7 @@ const app = new Hono()
         reservationPrice: accommodation.reservationPrice ?? undefined,
         notes: accommodation.notes ?? undefined,
         bookingUrl: accommodation.bookingUrl ?? undefined,
-        informationUrl: accommodation.tripAdvisorUrl ?? undefined,
+        informationUrl: accommodation.informationUrl ?? undefined,
         phoneNumber: accommodation.phoneNumber ?? undefined,
         bookingId: accommodation.bookingId ?? undefined,
       },

@@ -21,7 +21,7 @@ export const accommodations = pgTable("accommodations", {
   notes: text(),
   bookingId: text(),
   bookingUrl: text(),
-  tripAdvisorUrl: text(),
+  informationUrl: text(),
   phoneNumber: varchar({ length: 256 }),
   latLng: point("latLng", { mode: "xy" }),
   tripId: integer().references(() => trips.id),
