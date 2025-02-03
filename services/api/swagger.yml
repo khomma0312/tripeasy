@@ -1099,7 +1099,9 @@ paths:
                           type: number
                         title:
                           type: string
-                        description:
+                        image:
+                          type: string
+                        destination:
                           type: string
                         startDate:
                           type: string
@@ -1108,6 +1110,8 @@ paths:
                       required:
                         - id
                         - title
+                        - startDate
+                        - endDate
                   totalPages:
                     type: number
                 required:
@@ -1115,6 +1119,51 @@ paths:
                   - totalPages
         "403":
           description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /trips/{id}:
+    delete:
+      summary: 旅程情報削除API
+      tags:
+        - trips
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: 旅程情報削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 旅程情報削除に失敗
           content:
             application/json:
               schema:
