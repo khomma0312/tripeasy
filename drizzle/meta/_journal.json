@@ -127,6 +127,20 @@
       "when": 1738589326384,
       "tag": "0017_change_trips_table_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1738619422984,
+      "tag": "0018_add_on_delete_cascade_accommodations_and_todo_lists",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1738619769706,
+      "tag": "0019_add_on_delete_cascade_todo_items",
+      "breakpoints": true
     }
   ]
 }

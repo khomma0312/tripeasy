@@ -12,7 +12,9 @@ import { users } from "./auth";
 
 export const todoItems = pgTable("todo_items", {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
-  todoListId: integer().references(() => todoLists.id),
+  todoListId: integer().references(() => todoLists.id, {
+    onDelete: "cascade",
+  }),
   title: varchar({ length: 256 }).notNull(),
   dueDate: date(),
   isCompleted: boolean().notNull().default(false),
