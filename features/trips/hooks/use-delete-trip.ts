@@ -16,7 +16,9 @@ export const useDeleteTrip = (id: number) => {
         queryClient.invalidateQueries({
           predicate: (query) =>
             query.queryKey[0] === `/api/trips/${id}` ||
-            query.queryKey[0] === `/api/trips`,
+            query.queryKey[0] === `/api/trips` ||
+            query.queryKey[0] === `/api/todo-lists` ||
+            query.queryKey[0] === `/api/accommodations`,
         });
       },
       onError: () => {
