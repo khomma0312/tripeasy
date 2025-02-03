@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Trip } from "@/features/trips/types";
+import { TripForList } from "@/features/trips/types";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/shadcn/button";
 import {
@@ -26,7 +26,7 @@ import { UseFormReturn } from "react-hook-form";
 
 type Props = {
   formTitle: string;
-  trips: Trip[];
+  trips: TripForList[];
   form: UseFormReturn<AccommodationFormFieldValues>;
   isPending: boolean;
   onSubmit: (accommodation: AccommodationFormFieldValues) => void;

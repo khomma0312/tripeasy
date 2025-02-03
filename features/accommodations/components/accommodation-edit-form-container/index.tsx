@@ -2,7 +2,6 @@
 
 import { useGetTripsSuspense } from "@/services/api/endpoints/trips/trips";
 import { AccommodationForm } from "../accommodation-form";
-import { convertDataTypesToMatchTrips } from "@/features/trips/utils";
 import { useGetAccommodationsIdSuspense } from "@/services/api/endpoints/accommodations/accommodations";
 import { useAccommodationForm } from "../../hooks/use-accommodation-form";
 import { useEditAccommodation } from "../../hooks/use-edit-accommodation";
@@ -17,12 +16,10 @@ export const AccommodationEditFormContainer = ({ id }: Props) => {
   const { form } = useAccommodationForm(data.accommodation);
   const { isPending, onSubmit } = useEditAccommodation(id);
 
-  const trips = convertDataTypesToMatchTrips(tripData);
-
   return (
     <AccommodationForm
       formTitle="宿泊施設情報の編集"
-      trips={trips}
+      trips={tripData.trips}
       form={form}
       isPending={isPending}
       onSubmit={onSubmit}
