@@ -8,8 +8,9 @@ export const trips = pgTable("trips", {
     .notNull()
     .references(() => users.id),
   title: varchar({ length: 256 }).notNull(),
-  description: text(),
-  startDate: date(),
-  endDate: date(),
+  image: text(),
+  destination: text(),
+  startDate: date().notNull(),
+  endDate: date().notNull(),
   ...timestamps,
 });

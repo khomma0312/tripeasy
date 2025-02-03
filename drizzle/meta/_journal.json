@@ -120,6 +120,13 @@
       "when": 1738503048466,
       "tag": "0016_change_tripAdvisorUrl_to_informationUrl",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1738589326384,
+      "tag": "0017_change_trips_table_schema",
+      "breakpoints": true
     }
   ]
 }
