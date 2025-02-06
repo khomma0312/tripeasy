@@ -7,7 +7,7 @@ import {
 } from "@/lib/zod/schema/trips";
 import { db } from "@/lib/drizzle/db";
 import { trips as tripsTable } from "@/schema";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
@@ -137,7 +137,10 @@ const app = new Hono()
     const trips =
       limit === -1
         ? await baseQuery
-        : await baseQuery.offset(offset).limit(limit);
+        : await baseQuery
+            .offset(offset)
+            .limit(limit)
+            .orderBy(desc(tripsTable.id));
 
     const totalCount = trips.length;
     const totalPages = limit === -1 ? 1 : Math.ceil(totalCount / limit);
