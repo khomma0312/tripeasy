@@ -1,24 +1,12 @@
-export type TodoListForCard = {
-  id: number;
-  title: string;
-  startDate?: string;
-  totalTasks: number;
-  completedTasks: number;
-};
+import { z } from "zod";
+import {
+  todoListForDetailSchema,
+  todoListForListSchema,
+} from "@/lib/zod/schema/todo-lists";
+import { todoItemForDetailSchema } from "@/lib/zod/schema/todo-items";
 
-export type TodoList = {
-  id: number;
-  title: string;
-  tripId: number;
-  tripTitle: string;
-  tripDate?: Date | undefined;
-  items: TodoItem[];
-};
+export type TodoListForCard = z.infer<typeof todoListForListSchema>;
 
-export type TodoItem = {
-  id: number;
-  title: string;
-  dueDate?: Date | undefined;
-  isCompleted: boolean;
-  order: number;
-};
+export type TodoList = z.infer<typeof todoListForDetailSchema>;
+
+export type TodoItem = z.infer<typeof todoItemForDetailSchema>;

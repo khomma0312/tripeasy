@@ -12,7 +12,7 @@ import {
   todoLists as todoListsTable,
   trips,
 } from "@/schema";
-import { and, count, eq, isNotNull, sql } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
