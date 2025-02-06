@@ -6,19 +6,23 @@ import { format } from "date-fns";
 import { dateFormatStrForParse } from "@/consts/common";
 import { TripFormFieldValues } from "@/features/trips/types";
 import { usePostTrips } from "@/services/api/endpoints/trips/trips";
+import { useRouter } from "next/navigation";
 
 export const useAddTrip = (form: UseFormReturn<TripFormFieldValues>) => {
+  const router = useRouter();
   const { toast } = useToast();
   const { errorToast } = useErrorToast();
   const queryClient = useQueryClient();
   const { isPending, mutate } = usePostTrips({
     mutation: {
-      onSuccess: () => {
+      onSuccess: (data) => {
         toast({ title: "旅行予定を追加しました" });
         queryClient.invalidateQueries({
           queryKey: [`/api/trips`],
         });
         form.reset();
+        const { id } = data;
+        router.push(`/trips/${id}`);
       },
       onError: () => {
         errorToast("旅行予定の追加に失敗しました");
