@@ -479,10 +479,6 @@ paths:
                     type: number
                   title:
                     type: string
-                  tripId:
-                    type: number
-                  tripTitle:
-                    type: string
                   tripDate:
                     type: string
                   items:
@@ -508,8 +504,6 @@ paths:
                 required:
                   - id
                   - title
-                  - tripId
-                  - tripTitle
                   - items
         "403":
           description: ユーザー検証に失敗

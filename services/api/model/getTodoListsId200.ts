@@ -12,6 +12,4 @@ export type GetTodoListsId200 = {
   items: GetTodoListsId200ItemsItem[];
   title: string;
   tripDate?: string;
-  tripId: number;
-  tripTitle: string;
 };

@@ -35,8 +35,6 @@ export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
 export const apiGetOutputSchema = z.object({
   id: z.number(),
   title: z.string(),
-  tripId: z.number(),
-  tripTitle: z.string(),
   tripDate: z.string().optional(),
   items: z.array(todoItemSchema),
 });

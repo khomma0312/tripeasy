@@ -12,7 +12,7 @@ import {
   todoLists as todoListsTable,
   trips,
 } from "@/schema";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq, isNotNull, sql } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
@@ -121,10 +121,14 @@ const app = new Hono()
       );
     }
 
-    const [trip] = await db
-      .select({ id: trips.id, title: trips.title, date: trips.startDate })
-      .from(trips)
-      .where(eq(trips.id, todoList.tripId));
+    const tripResult = todoList.tripId
+      ? await db
+          .select({ id: trips.id, title: trips.title, date: trips.startDate })
+          .from(trips)
+          .where(eq(trips.id, todoList.tripId))
+      : null;
+
+    const trip = tripResult?.length ? tripResult[0] : null;
 
     const todoItems = await db
       .select({
@@ -141,9 +145,7 @@ const app = new Hono()
     return c.json<ApiGetOutputType>({
       id: todoList.id,
       title: todoList.title,
-      tripId: trip.id,
-      tripTitle: trip.title,
-      tripDate: trip.date ?? undefined,
+      tripDate: trip?.date ?? undefined,
       items: todoItems.map((item) => ({
         ...item,
         dueDate: item.dueDate ?? undefined,
