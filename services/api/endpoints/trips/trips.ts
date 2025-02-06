@@ -31,10 +31,14 @@ import type {
   DeleteTripsId500,
   GetTrips200,
   GetTrips403,
-  GetTripsParams
+  GetTripsParams,
+  PostTrips200,
+  PostTrips403,
+  PostTrips500,
+  PostTripsBody
 } from '../../model'
 import { customInstance } from '../../mutator/custom-instance';
-import type { ErrorType } from '../../mutator/custom-instance';
+import type { ErrorType, BodyType } from '../../mutator/custom-instance';
 
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
@@ -183,6 +187,64 @@ export function useGetTripsSuspense<TData = Awaited<ReturnType<typeof getTrips>>
 
 
 /**
+ * @summary 旅程情報新規作成API
+ */
+export const postTrips = (
+    postTripsBody: BodyType<PostTripsBody>,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PostTrips200>(
+      {url: `/api/trips`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postTripsBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostTripsMutationOptions = <TError = ErrorType<PostTrips403 | PostTrips500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postTrips>>, TError,{data: BodyType<PostTripsBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postTrips>>, TError,{data: BodyType<PostTripsBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postTrips>>, {data: BodyType<PostTripsBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postTrips(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostTripsMutationResult = NonNullable<Awaited<ReturnType<typeof postTrips>>>
+    export type PostTripsMutationBody = BodyType<PostTripsBody>
+    export type PostTripsMutationError = ErrorType<PostTrips403 | PostTrips500>
+
+    /**
+ * @summary 旅程情報新規作成API
+ */
+export const usePostTrips = <TError = ErrorType<PostTrips403 | PostTrips500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postTrips>>, TError,{data: BodyType<PostTripsBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postTrips>>,
+        TError,
+        {data: BodyType<PostTripsBody>},
+        TContext
+      > => {
+
+      const mutationOptions = getPostTripsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary 旅程情報削除API
  */
 export const deleteTripsId = (

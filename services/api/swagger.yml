@@ -1128,6 +1128,73 @@ paths:
                     type: string
                 required:
                   - message
+    post:
+      summary: 旅程情報新規作成API
+      tags:
+        - trips
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trip:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    destination:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                  required:
+                    - title
+                    - startDate
+                    - endDate
+              required:
+                - trip
+      responses:
+        "200":
+          description: 旅程情報作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 旅程情報作成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
   /trips/{id}:
     delete:
       summary: 旅程情報削除API

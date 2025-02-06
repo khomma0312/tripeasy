@@ -15,10 +15,13 @@ import {
 } from 'msw'
 import type {
   DeleteTripsId200,
-  GetTrips200
+  GetTrips200,
+  PostTrips200
 } from '../../model'
 
 export const getGetTripsResponseMock = (overrideResponse: Partial< GetTrips200 > = {}): GetTrips200 => ({totalPages: faker.number.int({min: undefined, max: undefined}), trips: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({destination: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), endDate: faker.string.alpha(20), id: faker.number.int({min: undefined, max: undefined}), image: faker.helpers.arrayElement([faker.string.alpha(20), undefined]), startDate: faker.string.alpha(20), title: faker.string.alpha(20)})), ...overrideResponse})
+
+export const getPostTripsResponseMock = (overrideResponse: Partial< PostTrips200 > = {}): PostTrips200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getDeleteTripsIdResponseMock = (overrideResponse: Partial< DeleteTripsId200 > = {}): DeleteTripsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
@@ -29,6 +32,18 @@ export const getGetTripsMockHandler = (overrideResponse?: GetTrips200 | ((info: 
     return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
             ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
             : getGetTripsResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
+
+export const getPostTripsMockHandler = (overrideResponse?: PostTrips200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostTrips200> | PostTrips200)) => {
+  return http.post('*/trips', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getPostTripsResponseMock()),
       { status: 200,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -48,5 +63,6 @@ export const getDeleteTripsIdMockHandler = (overrideResponse?: DeleteTripsId200 
 }
 export const getTripsMock = () => [
   getGetTripsMockHandler(),
+  getPostTripsMockHandler(),
   getDeleteTripsIdMockHandler()
 ]
