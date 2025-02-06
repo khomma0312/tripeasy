@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import {
   ApiAllGetOutputType,
   ApiDeleteOutputType,
+  apiPostInputSchema,
+  ApiPostOutputType,
 } from "@/lib/zod/schema/trips";
 import { db } from "@/lib/drizzle/db";
 import { trips as tripsTable } from "@/schema";
@@ -11,11 +13,42 @@ import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/common";
 import { del } from "@vercel/blob";
-// import { zValidator } from "@hono/zod-validator";
+import { zValidator } from "@hono/zod-validator";
 
 const logger = getLogger("api/trips");
 
 const app = new Hono()
+  .post("/", zValidator("json", apiPostInputSchema), async (c) => {
+    const session = await auth();
+    const { trip } = c.req.valid("json");
+
+    if (!session?.user) {
+      logger.error("User verification failed.");
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    try {
+      const [addedTrip] = await db
+        .insert(tripsTable)
+        .values({
+          ...trip,
+          userId,
+        })
+        .returning({ id: tripsTable.id });
+      return c.json<ApiPostOutputType>({ id: addedTrip.id });
+    } catch (e) {
+      logger.error(e);
+      return c.json<ApiErrorType>(
+        { message: "データの登録に失敗しました" },
+        500
+      );
+    }
+  })
   .delete("/:id", async (c) => {
     const session = await auth();
     const tripId = Number(c.req.param("id"));
@@ -109,6 +142,7 @@ const app = new Hono()
     const totalCount = trips.length;
     const totalPages = limit === -1 ? 1 : Math.ceil(totalCount / limit);
 
+    // TODO: 東北、関東、関西などエリアに分けて適当に所定の画像を返すようにしてもいいかも
     return c.json<ApiAllGetOutputType>({
       trips: trips.map((trip) => ({
         ...trip,
