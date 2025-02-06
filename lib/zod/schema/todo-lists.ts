@@ -1,7 +1,22 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { todoItemSchema } from "./todo-items";
+import { todoItemForDetailSchema, todoItemInputSchema } from "./todo-items";
 import { apiErrorSchema, commonResponseConfig } from "./common";
+
+export const todoListForListSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  startDate: z.string().optional(),
+  totalTasks: z.number(),
+  completedTasks: z.number(),
+});
+
+export const todoListForDetailSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  tripDate: z.date().optional(),
+  items: z.array(todoItemForDetailSchema),
+});
 
 // Todoリストを全て返すGET APIのinputパラメータのスキーマ
 export const apiAllGetInputSchema = z.object({
@@ -35,10 +50,8 @@ export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
 export const apiGetOutputSchema = z.object({
   id: z.number(),
   title: z.string(),
-  tripId: z.number(),
-  tripTitle: z.string(),
   tripDate: z.string().optional(),
-  items: z.array(todoItemSchema),
+  items: z.array(todoItemInputSchema),
 });
 export type ApiGetOutputType = z.infer<typeof apiGetOutputSchema>;
 

@@ -2,6 +2,14 @@ import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { apiErrorSchema, commonResponseConfig } from "./common";
 
+export const todoItemForDetailSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  dueDate: z.date().optional(),
+  isCompleted: z.boolean(),
+  order: z.number(),
+});
+
 // TODOアイテム新規追加フォームの項目
 export const todoItemAddSchema = z.object({
   title: z.string().min(1, "やることを入力してください"),
@@ -9,7 +17,7 @@ export const todoItemAddSchema = z.object({
 });
 
 // TODOアイテムが持つ項目
-export const todoItemSchema = z.object({
+export const todoItemInputSchema = z.object({
   id: z.number(),
   title: z.string(),
   dueDate: z.string().optional(),
@@ -20,19 +28,19 @@ export const todoItemSchema = z.object({
 // POST APIのinputパラメータのスキーマ
 export const apiPostInputSchema = z.object({
   todoListId: z.number(),
-  todoItem: todoItemSchema.omit({ id: true }),
+  todoItem: todoItemInputSchema.omit({ id: true }),
 });
 export type ApiPostInputType = z.infer<typeof apiPostInputSchema>;
 
 // PATCH APIのinputパラメータのスキーマ
-export const apiPatchInputSchema = todoItemSchema.pick({
+export const apiPatchInputSchema = todoItemInputSchema.pick({
   title: true,
   dueDate: true,
 });
 export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
 
 // isCompletedを変更するPATCH APIのinputパラメータのスキーマ
-export const apiPatchIsCompletedInputSchema = todoItemSchema.pick({
+export const apiPatchIsCompletedInputSchema = todoItemInputSchema.pick({
   isCompleted: true,
 });
 export type ApiPatchIsCompletedInputType = z.infer<

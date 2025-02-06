@@ -6,11 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetTrips200TripsItem = {
+export type PostTripsBodyTrip = {
   destination?: string;
   endDate: string;
-  id: number;
-  image?: string;
   startDate: string;
   title: string;
 };

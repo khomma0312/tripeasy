@@ -6,11 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetTrips200TripsItem = {
-  destination?: string;
-  endDate: string;
+export type DeleteTripsId200 = {
   id: number;
-  image?: string;
-  startDate: string;
-  title: string;
 };

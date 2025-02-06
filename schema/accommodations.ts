@@ -24,7 +24,9 @@ export const accommodations = pgTable("accommodations", {
   informationUrl: text(),
   phoneNumber: varchar({ length: 256 }),
   latLng: point("latLng", { mode: "xy" }),
-  tripId: integer().references(() => trips.id),
+  tripId: integer().references(() => trips.id, {
+    onDelete: "cascade",
+  }),
   userId: text()
     .notNull()
     .references(() => users.id),

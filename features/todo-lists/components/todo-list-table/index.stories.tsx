@@ -29,8 +29,6 @@ const mockTodoList: TodoList = {
   id: 1,
   title: "テストTodoリスト",
   tripDate: new Date("2023-07-15"),
-  tripId: 1,
-  tripTitle: "テスト旅行",
   items: [
     { id: 1, title: "タスク1", isCompleted: false, order: 1 },
     { id: 2, title: "タスク2", isCompleted: true, order: 2 },
