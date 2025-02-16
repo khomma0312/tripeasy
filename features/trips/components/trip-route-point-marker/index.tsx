@@ -6,6 +6,7 @@ import {
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import { colorsForTripDay } from "@/features/trips/consts";
+import { useSelectedTripDayIndexAtomValue } from "@/features/trips/store/selected-trip-day-index";
 
 type Props = {
   position: { lat: number; lng: number };
@@ -15,6 +16,7 @@ type Props = {
 export const TripRoutePointMarker = ({ position, visitOrder }: Props) => {
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [infoWindowShown, setInfoWindowShown] = useState(false);
+  const selectedTripDayIndex = useSelectedTripDayIndexAtomValue();
 
   // clicking the marker will toggle the infowindow
   const handleMarkerClick = useCallback(
@@ -33,8 +35,8 @@ export const TripRoutePointMarker = ({ position, visitOrder }: Props) => {
         onClick={handleMarkerClick}
       >
         <Pin
-          background={colorsForTripDay[7]}
-          borderColor={colorsForTripDay[7]}
+          background={colorsForTripDay[selectedTripDayIndex ?? 0]}
+          borderColor={colorsForTripDay[selectedTripDayIndex ?? 0]}
           glyphColor={"#ffffff"}
           glyph={visitOrder.toString()}
         />
