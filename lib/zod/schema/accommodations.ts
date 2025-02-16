@@ -114,7 +114,7 @@ export const apiAllGetInputSchema = z.object({
   perPage: z.number().optional(),
 });
 
-// 単一の宿泊施設を返すGET APIのinputパラメータのスキーマ
+// path paramsのinputスキーマ
 export const apiParamsInputSchema = z.object({ id: z.number() });
 
 // 宿泊施設を検索するGET APIのinputパラメータのスキーマ
@@ -271,7 +271,7 @@ export const accommodationsAllGetApiSchema: RouteConfig = {
   },
 };
 
-// 宿泊施設を全て返すGET APIのスキーマ
+// 単一の宿泊施設を返すGET APIのスキーマ
 export const accommodationsGetApiSchema: RouteConfig = {
   method: "get",
   path: "/accommodations/{id}",

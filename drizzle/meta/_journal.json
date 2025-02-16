@@ -141,6 +141,13 @@
       "when": 1738619769706,
       "tag": "0019_add_on_delete_cascade_todo_items",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1739259148525,
+      "tag": "0020_add_tables_for_trip_itinerary_feature",
+      "breakpoints": true
     }
   ]
 }

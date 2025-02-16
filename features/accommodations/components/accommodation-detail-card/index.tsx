@@ -13,7 +13,7 @@ import {
   Phone,
   FileText,
 } from "lucide-react";
-import { formatDateWithSlash } from "@/utils/common";
+import { formatDateRange, formatDateWithSlash } from "@/utils/common";
 import noImage from "#/no-image.png";
 
 type Props = {
@@ -39,8 +39,7 @@ export const AccommodationDetailCard = ({ accommodation }: Props) => {
           <div className="space-y-4">
             <p className="flex items-center">
               <Calendar className="mr-2 h-5 w-5 text-gray-500" />
-              {formatDateWithSlash(accommodation.checkIn)} -{" "}
-              {formatDateWithSlash(accommodation.checkOut)}
+              {formatDateRange(accommodation.checkIn, accommodation.checkOut)}
             </p>
             {accommodation.reservationPrice && (
               <p className="flex items-center">

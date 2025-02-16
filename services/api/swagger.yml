@@ -1190,6 +1190,124 @@ paths:
                 required:
                   - message
   /trips/{id}:
+    get:
+      summary: 単一の旅行情報の取得
+      tags:
+        - trips
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: 旅行情報取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trip:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      title:
+                        type: string
+                      image:
+                        type: string
+                      destination:
+                        type: string
+                      startDate:
+                        type: string
+                      endDate:
+                        type: string
+                      tripDays:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            dayOrder:
+                              type: number
+                            dayDate:
+                              type: string
+                            dayDescription:
+                              type: string
+                            tripRoutePoints:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  address:
+                                    type: string
+                                  latLng:
+                                    type: object
+                                    properties:
+                                      x:
+                                        type: number
+                                      y:
+                                        type: number
+                                    required:
+                                      - x
+                                      - y
+                                  visitOrder:
+                                    type: number
+                                  arrivalTime:
+                                    type: string
+                                  departureTime:
+                                    type: string
+                                required:
+                                  - name
+                                  - visitOrder
+                                  - arrivalTime
+                                  - departureTime
+                          required:
+                            - dayOrder
+                            - dayDate
+                            - tripRoutePoints
+                      todoIds:
+                        type: array
+                        items:
+                          type: number
+                      accommodationIds:
+                        type: array
+                        items:
+                          type: number
+                    required:
+                      - id
+                      - title
+                      - startDate
+                      - endDate
+                      - tripDays
+                      - todoIds
+                      - accommodationIds
+                required:
+                  - trip
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 旅行情報が存在しないので取得失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
     delete:
       summary: 旅程情報削除API
       tags:

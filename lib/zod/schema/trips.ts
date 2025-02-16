@@ -23,7 +23,21 @@ export const tripForListSchema = z.object({
   endDate: z.string(),
 });
 
-export const tripItemSchema = z.object({});
+export const tripRoutePointSchema = z.object({
+  name: z.string(),
+  address: z.string().optional(),
+  latLng: z.object({ x: z.number(), y: z.number() }).optional(),
+  visitOrder: z.number(),
+  arrivalTime: z.string(),
+  departureTime: z.string(),
+});
+
+export const tripDaySchema = z.object({
+  dayOrder: z.number(),
+  dayDate: z.string(),
+  dayDescription: z.string().optional(),
+  tripRoutePoints: z.array(tripRoutePointSchema),
+});
 
 export const tripForDetailSchema = z.object({
   id: z.number(),
@@ -32,9 +46,9 @@ export const tripForDetailSchema = z.object({
   destination: z.string().optional(),
   startDate: z.string(),
   endDate: z.string(),
-  tripItems: z.array(tripItemSchema),
-  todoIds: z.array(z.number()),
-  accommodationIds: z.array(z.number()),
+  tripDays: z.array(tripDaySchema),
+  todoIds: z.array(z.number()).optional(),
+  accommodationIds: z.array(z.number()).optional(),
 });
 
 export const apiPostInputSchema = z.object({
@@ -48,7 +62,7 @@ export const apiAllGetInputSchema = z.object({
   perPage: z.number().optional(),
 });
 
-// 単一の旅程情報を返すGET APIのinputパラメータのスキーマ
+// path paramsのinputスキーマ
 export const apiParamsInputSchema = z.object({ id: z.number() });
 
 // POST APIの成功時に返却されるoutputのスキーマ
@@ -62,6 +76,19 @@ export const apiDeleteOutputSchema = z.object({
   id: z.number(),
 });
 export type ApiDeleteOutputType = z.infer<typeof apiDeleteOutputSchema>;
+
+// 旅行情報を全て返すGET APIの成功時に返却されるoutputのスキーマ
+export const apiAllGetOutputSchema = z.object({
+  trips: z.array(tripForListSchema),
+  totalPages: z.number(),
+});
+export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
+
+// 単一の旅行情報を返すGET APIの成功時に返却されるoutputのスキーマ
+export const apiGetOutputSchema = z.object({
+  trip: tripForDetailSchema,
+});
+export type ApiGetOutputType = z.infer<typeof apiGetOutputSchema>;
 
 // POST APIのスキーマ
 export const tripsPostApiSchema: RouteConfig = {
@@ -120,13 +147,6 @@ export const tripsDeleteApiSchema: RouteConfig = {
   },
 };
 
-// 旅行情報を全て返すGET APIの成功時に返却されるoutputのスキーマ
-export const apiAllGetOutputSchema = z.object({
-  trips: z.array(tripForListSchema),
-  totalPages: z.number(),
-});
-export type ApiAllGetOutputType = z.infer<typeof apiAllGetOutputSchema>;
-
 // 旅行情報を全て返すGET APIのスキーマ
 export const tripsAllGetApiSchema: RouteConfig = {
   method: "get",
@@ -142,6 +162,32 @@ export const tripsAllGetApiSchema: RouteConfig = {
       description: "旅行情報取得成功",
       content: {
         "application/json": { schema: apiAllGetOutputSchema },
+      },
+    },
+  },
+};
+
+// 単一の旅行情報を返すGET APIのスキーマ
+export const tripsGetApiSchema: RouteConfig = {
+  method: "get",
+  path: "/trips/{id}",
+  summary: "単一の旅行情報の取得",
+  tags: ["trips"],
+  request: {
+    params: apiParamsInputSchema,
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "旅行情報取得成功",
+      content: {
+        "application/json": { schema: apiGetOutputSchema },
+      },
+    },
+    404: {
+      description: "旅行情報が存在しないので取得失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
       },
     },
   },

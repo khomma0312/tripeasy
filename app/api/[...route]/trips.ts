@@ -2,11 +2,21 @@ import { Hono } from "hono";
 import {
   ApiAllGetOutputType,
   ApiDeleteOutputType,
+  ApiGetOutputType,
   apiPostInputSchema,
   ApiPostOutputType,
+  tripDaySchema,
+  tripForDetailSchema,
 } from "@/lib/zod/schema/trips";
 import { db } from "@/lib/drizzle/db";
-import { trips as tripsTable } from "@/schema";
+import {
+  trips as tripsTable,
+  tripDaySegments as tripDaySegmentsTable,
+  tripRoutePoints as tripRoutePointsTable,
+  destinations as destinationsTable,
+  todoLists as todoListsTable,
+  accommodations as accommodationsTable,
+} from "@/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
@@ -14,6 +24,7 @@ import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/common";
 import { del } from "@vercel/blob";
 import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
 
 const logger = getLogger("api/trips");
 
@@ -155,6 +166,138 @@ const app = new Hono()
         endDate: trip.endDate ?? undefined,
       })),
       totalPages,
+    });
+  })
+  .get("/:id", async (c) => {
+    const session = await auth();
+    const tripId = Number(c.req.param("id"));
+
+    if (!session?.user) {
+      logger.error("User verification failed.");
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    // tripに紐づくtodoとaccommodationのIDを取得
+    const tripRows = await db
+      .select({
+        todoId: todoListsTable.id,
+        accommodationId: accommodationsTable.id,
+      })
+      .from(tripsTable)
+      .leftJoin(todoListsTable, eq(tripsTable.id, todoListsTable.tripId))
+      .leftJoin(
+        accommodationsTable,
+        eq(tripsTable.id, accommodationsTable.tripId)
+      )
+      .where(and(eq(tripsTable.id, tripId), eq(tripsTable.userId, userId)));
+
+    const accommodationIds = tripRows
+      .map((trip) => trip.accommodationId)
+      .filter((id) => id !== null);
+    const todoIds = tripRows
+      .map((trip) => trip.todoId)
+      .filter((id) => id !== null);
+
+    const tripRoutePointsSubquery = db
+      .select({
+        id: tripRoutePointsTable.id,
+        name: destinationsTable.name,
+        address: destinationsTable.address,
+        latLng: destinationsTable.latLng,
+        visitOrder: tripRoutePointsTable.visitOrder,
+        arrivalTime: tripRoutePointsTable.arrivalTime,
+        departureTime: tripRoutePointsTable.departureTime,
+        tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
+      })
+      .from(tripRoutePointsTable)
+      .innerJoin(
+        destinationsTable,
+        eq(tripRoutePointsTable.destinationId, destinationsTable.id)
+      )
+      .where(eq(tripRoutePointsTable.userId, userId))
+      .orderBy(desc(tripRoutePointsTable.visitOrder))
+      .as("tripRoutePointsSubquery");
+
+    // tripとそれに紐づくtripDayとtripRoutePointsを取得
+    const result = await db
+      .select({
+        trip: tripsTable,
+        tripDays: tripDaySegmentsTable,
+        tripRoutePoints: {
+          name: tripRoutePointsSubquery.name,
+          address: tripRoutePointsSubquery.address,
+          latLng: tripRoutePointsSubquery.latLng,
+          visitOrder: tripRoutePointsSubquery.visitOrder,
+          arrivalTime: tripRoutePointsSubquery.arrivalTime,
+          departureTime: tripRoutePointsSubquery.departureTime,
+        },
+      })
+      .from(tripsTable)
+      .leftJoin(
+        tripDaySegmentsTable,
+        eq(tripsTable.id, tripDaySegmentsTable.tripId)
+      )
+      .leftJoin(
+        tripRoutePointsSubquery,
+        eq(tripDaySegmentsTable.id, tripRoutePointsSubquery.tripDaySegmentId)
+      )
+      .where(and(eq(tripsTable.id, tripId), eq(tripsTable.userId, userId)));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const reducedResultSchema = tripForDetailSchema.extend({
+      tripDays: z.record(z.number(), tripDaySchema),
+    });
+
+    type ReducedResult = z.infer<typeof reducedResultSchema>;
+
+    // tripのデータをレスポンス用に整形
+    const trip = result.reduce(
+      (acc, cur) => {
+        if (!cur.tripDays) {
+          return acc;
+        }
+
+        return {
+          id: cur.trip.id,
+          title: cur.trip.title,
+          startDate: cur.trip.startDate,
+          endDate: cur.trip.endDate,
+          todoIds: todoIds ?? undefined,
+          accommodationIds: accommodationIds ?? undefined,
+          destination: cur.trip.destination ?? undefined,
+          image: cur.trip.image ?? undefined,
+          tripDays: {
+            ...acc.tripDays,
+            [cur.tripDays.id]: {
+              dayOrder: cur.tripDays.dayOrder,
+              dayDate: cur.tripDays.dayDate,
+              tripRoutePoints: cur.tripRoutePoints
+                ? [
+                    ...(acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? []),
+                    {
+                      name: cur.tripRoutePoints.name,
+                      visitOrder: cur.tripRoutePoints.visitOrder,
+                      arrivalTime: cur.tripRoutePoints.arrivalTime,
+                      departureTime: cur.tripRoutePoints.departureTime,
+                      address: cur.tripRoutePoints.address ?? undefined,
+                      latLng: cur.tripRoutePoints.latLng ?? undefined,
+                    },
+                  ]
+                : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
+            },
+          },
+        };
+      },
+      { tripDays: {} } as ReducedResult
+    );
+
+    return c.json<ApiGetOutputType>({
+      trip: { ...trip, tripDays: Object.values(trip.tripDays) },
     });
   });
 

@@ -27,5 +27,6 @@ export const paths = {
 
 export const dateFormatStrForFormat = "yyyy/MM/dd";
 export const dateFormatStrForParse = "yyyy-MM-dd";
+export const timeFormatStrForParse = "HH:mm:ss";
 
 export const paginationDefaultLimit = 10;
