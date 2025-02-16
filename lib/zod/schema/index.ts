@@ -23,6 +23,7 @@ import {
 import {
   tripsAllGetApiSchema,
   tripsDeleteApiSchema,
+  tripsGetApiSchema,
   tripsPostApiSchema,
 } from "./trips";
 import { verifyEmailPostApiSchema } from "./verify-email";
@@ -51,6 +52,7 @@ export const pathSchemas = [
   accommodationsDeleteApiSchema,
   // 旅行情報用API
   tripsAllGetApiSchema,
+  tripsGetApiSchema,
   tripsPostApiSchema,
   tripsDeleteApiSchema,
 ];

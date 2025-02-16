@@ -31,6 +31,9 @@ import type {
   DeleteTripsId500,
   GetTrips200,
   GetTrips403,
+  GetTripsId200,
+  GetTripsId403,
+  GetTripsId404,
   GetTripsParams,
   PostTrips200,
   PostTrips403,
@@ -245,6 +248,147 @@ export const usePostTrips = <TError = ErrorType<PostTrips403 | PostTrips500>,
       return useMutation(mutationOptions);
     }
     /**
+ * @summary 単一の旅行情報の取得
+ */
+export const getTripsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetTripsId200>(
+      {url: `/api/trips/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetTripsIdQueryKey = (id: number,) => {
+    return [`/api/trips/${id}`] as const;
+    }
+
+    
+export const getGetTripsIdQueryOptions = <TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTripsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTripsId>>> = ({ signal }) => getTripsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetTripsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getTripsId>>>
+export type GetTripsIdQueryError = ErrorType<GetTripsId403 | GetTripsId404>
+
+
+export function useGetTripsId<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTripsId>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTripsId<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getTripsId>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTripsId<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary 単一の旅行情報の取得
+ */
+
+export function useGetTripsId<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetTripsIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const getGetTripsIdSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTripsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTripsId>>> = ({ signal }) => getTripsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetTripsIdSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getTripsId>>>
+export type GetTripsIdSuspenseQueryError = ErrorType<GetTripsId403 | GetTripsId404>
+
+
+export function useGetTripsIdSuspense<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTripsIdSuspense<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetTripsIdSuspense<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary 単一の旅行情報の取得
+ */
+
+export function useGetTripsIdSuspense<TData = Awaited<ReturnType<typeof getTripsId>>, TError = ErrorType<GetTripsId403 | GetTripsId404>>(
+ id: number, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTripsId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetTripsIdSuspenseQueryOptions(id,options)
+
+  const query = useSuspenseQuery(queryOptions) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
  * @summary 旅程情報削除API
  */
 export const deleteTripsId = (
