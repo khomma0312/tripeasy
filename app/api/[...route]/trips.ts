@@ -24,7 +24,6 @@ import { ApiErrorType } from "@/lib/zod/schema/common";
 import { paginationDefaultLimit } from "@/consts/common";
 import { del } from "@vercel/blob";
 import { zValidator } from "@hono/zod-validator";
-import { Trip, TripDay } from "@/features/trips/types";
 import { z } from "zod";
 
 const logger = getLogger("api/trips");
@@ -249,6 +248,7 @@ const app = new Hono()
       )
       .where(and(eq(tripsTable.id, tripId), eq(tripsTable.userId, userId)));
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const reducedResultSchema = tripForDetailSchema.extend({
       tripDays: z.record(z.number(), tripDaySchema),
     });
