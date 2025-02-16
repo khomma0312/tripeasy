@@ -18,3 +18,10 @@ export const formatDateWithSlash = (date: string | Date) => {
   const targetDate = new Date(date);
   return format(new Date(targetDate), dateFormatStrForFormat);
 };
+
+export const formatDateRange = (
+  startDate: string | Date,
+  endDate: string | Date
+) => {
+  return `${formatDateWithSlash(startDate)} - ${formatDateWithSlash(endDate)}`;
+};
