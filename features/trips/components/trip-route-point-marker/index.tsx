@@ -11,20 +11,25 @@ import { useSelectedTripDayIndexAtomValue } from "@/features/trips/store/selecte
 type Props = {
   position: { lat: number; lng: number };
   visitOrder: number;
+  name: string;
+  address: string | undefined;
 };
 
-export const TripRoutePointMarker = ({ position, visitOrder }: Props) => {
+export const TripRoutePointMarker = ({
+  position,
+  visitOrder,
+  name,
+  address,
+}: Props) => {
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [infoWindowShown, setInfoWindowShown] = useState(false);
   const selectedTripDayIndex = useSelectedTripDayIndexAtomValue();
 
-  // clicking the marker will toggle the infowindow
   const handleMarkerClick = useCallback(
     () => setInfoWindowShown((isShown) => !isShown),
     []
   );
 
-  // if the maps api closes the infowindow, we have to synchronize our state
   const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
   return (
@@ -44,8 +49,8 @@ export const TripRoutePointMarker = ({ position, visitOrder }: Props) => {
 
       {infoWindowShown && (
         <InfoWindow anchor={marker} onClose={handleClose}>
-          <h2>InfoWindow content!</h2>
-          <p>Some arbitrary html to be rendered into the InfoWindow.</p>
+          <h4 className="text-base font-bold">{name}</h4>
+          <p className="text-sm text-gray-600">{address}</p>
         </InfoWindow>
       )}
     </>
