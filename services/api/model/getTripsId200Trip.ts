@@ -8,13 +8,13 @@
 import type { GetTripsId200TripTripDaysItem } from './getTripsId200TripTripDaysItem';
 
 export type GetTripsId200Trip = {
-  accommodationIds: number[];
+  accommodationIds?: number[];
   destination?: string;
   endDate: string;
   id: number;
   image?: string;
   startDate: string;
   title: string;
-  todoIds: number[];
+  todoIds?: number[];
   tripDays: GetTripsId200TripTripDaysItem[];
 };
