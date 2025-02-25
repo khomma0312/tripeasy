@@ -7,6 +7,8 @@ import todoLists from "./todo-lists";
 import todoItems from "./todo-items";
 import accommodations from "./accommodations";
 import trips from "./trips";
+import tripRoutePoints from "./trip-route-points";
+import destinations from "./destinations";
 
 const app = new Hono().basePath("/api");
 
@@ -17,6 +19,8 @@ app.route("/todo-lists", todoLists);
 app.route("/todo-items", todoItems);
 app.route("/accommodations", accommodations);
 app.route("/trips", trips);
+app.route("/trip-route-points", tripRoutePoints);
+app.route("/destinations", destinations);
 
 export const GET = handle(app);
 export const POST = handle(app);
