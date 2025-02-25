@@ -58,6 +58,9 @@ export const MapDirections = ({
       .then((result) => {
         directionsRenderer.setDirections(result);
         setLegs(result.routes[0].legs);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   }, [
     directionsService,
