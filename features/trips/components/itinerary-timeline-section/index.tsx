@@ -3,6 +3,7 @@ import { colorsForTripDay } from "@/features/trips/consts";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { ItineraryTripRoutePointCard } from "@/features/trips/components/itinerary-trip-route-point-card";
+import { TripRoutePointAddButtonGroup } from "@/features/trips/components/trip-route-point-add-button-group";
 
 type Props = {
   tripDay: TripDay;
@@ -36,6 +37,8 @@ export const ItineraryTimelineSection = ({ tripDay }: Props) => {
           />
         ))}
       </div>
+      {/* 予定追加ボタン部分 */}
+      <TripRoutePointAddButtonGroup />
     </div>
   );
 };
