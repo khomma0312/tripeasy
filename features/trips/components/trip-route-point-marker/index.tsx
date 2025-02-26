@@ -24,9 +24,8 @@ export const TripRoutePointMarker = ({
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [infoWindowShown, setInfoWindowShown] = useState(false);
   const selectedTripDayIndex = useSelectedTripDayIndexAtomValue();
-  const dividerNum = colorNames.length - 1;
   const colorIndex = selectedTripDayIndex
-    ? selectedTripDayIndex % dividerNum
+    ? selectedTripDayIndex % colorNames.length
     : undefined;
 
   const handleMarkerClick = useCallback(

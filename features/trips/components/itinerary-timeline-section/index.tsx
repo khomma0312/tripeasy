@@ -12,8 +12,7 @@ type Props = {
 
 export const ItineraryTimelineSection = ({ tripDay }: Props) => {
   const { dayOrder, dayDate, tripRoutePoints } = tripDay;
-  const dividerNum = colorNames.length - 1;
-  const colorIndex = (dayOrder - 1) % dividerNum;
+  const colorIndex = (dayOrder - 1) % colorNames.length;
   const itineraryDayDate = new Date(dayDate);
 
   return (
