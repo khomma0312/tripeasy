@@ -1,9 +1,10 @@
 import { TripDay } from "@/features/trips/types";
-import { colorsForTripDay } from "@/features/trips/consts";
+import { colorNames, getBgColorForTripDay } from "@/features/trips/consts";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { ItineraryTripRoutePointCard } from "@/features/trips/components/itinerary-trip-route-point-card";
 import { TripRoutePointAddButtonGroup } from "@/features/trips/components/trip-route-point-add-button-group";
+import { cn } from "@/utils/common";
 
 type Props = {
   tripDay: TripDay;
@@ -11,7 +12,8 @@ type Props = {
 
 export const ItineraryTimelineSection = ({ tripDay }: Props) => {
   const { dayOrder, dayDate, tripRoutePoints } = tripDay;
-  const colorIndex = (dayOrder % colorsForTripDay.length) - 1;
+  const dividerNum = colorNames.length - 1;
+  const colorIndex = (dayOrder - 1) % dividerNum;
   const itineraryDayDate = new Date(dayDate);
 
   return (
@@ -19,7 +21,10 @@ export const ItineraryTimelineSection = ({ tripDay }: Props) => {
       {/* ヘッダー部分 */}
       <div className="flex justify-between">
         <h4
-          className={`bg-[${colorsForTripDay[colorIndex]}] text-white font-bold px-3 py-1 rounded-md`}
+          className={cn(
+            `text-white font-bold px-3 py-1 rounded-md`,
+            getBgColorForTripDay(colorIndex)
+          )}
         >
           {dayOrder}日目
         </h4>
