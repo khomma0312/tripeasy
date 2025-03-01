@@ -6,6 +6,7 @@ import {
   accommodationsPostApiSchema,
   accommodationsSearchGetApiSchema,
 } from "./accommodations";
+import { destinationsSearchGetApiSchema } from "./destinations";
 import { registerPostApiSchema } from "./register";
 import { requestTokenPostApiSchema } from "./request-token";
 import {
@@ -20,6 +21,7 @@ import {
   todoListsGetApiSchema,
   todoListsPatchApiSchema,
 } from "./todo-lists";
+import { tripRoutePointsPostApiSchema } from "./trip-route-points";
 import {
   tripsAllGetApiSchema,
   tripsDeleteApiSchema,
@@ -55,4 +57,8 @@ export const pathSchemas = [
   tripsGetApiSchema,
   tripsPostApiSchema,
   tripsDeleteApiSchema,
+  // 旅行情報の目的地用API
+  tripRoutePointsPostApiSchema,
+  // 目的地用API
+  destinationsSearchGetApiSchema,
 ];

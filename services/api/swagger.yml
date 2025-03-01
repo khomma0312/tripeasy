@@ -1282,8 +1282,6 @@ paths:
                       - startDate
                       - endDate
                       - tripDays
-                      - todoIds
-                      - accommodationIds
                 required:
                   - trip
         "403":
@@ -1343,6 +1341,148 @@ paths:
                   - message
         "500":
           description: 旅程情報削除に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /trip-route-points:
+    post:
+      summary: 目的地新規作成API
+      tags:
+        - trip-route-points
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tripRoutePoint:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    address:
+                      type: string
+                    latLng:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lng:
+                          type: number
+                      required:
+                        - lat
+                        - lng
+                    arrivalTime:
+                      type: string
+                    departureTime:
+                      type: string
+                    tripDayId:
+                      type: number
+                  required:
+                    - name
+                    - address
+                    - arrivalTime
+                    - departureTime
+                    - tripDayId
+              required:
+                - tripRoutePoint
+      responses:
+        "200":
+          description: 目的地作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 目的地作成に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /destinations/search:
+    get:
+      summary: 外部APIを使用して目的地の検索結果の取得
+      tags:
+        - destinations
+        - orval-exclude
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: searchTerm
+          in: query
+        - schema:
+            type: boolean
+          required: true
+          name: searchByPlaceId
+          in: query
+      responses:
+        "200":
+          description: 目的地検索結果取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  destinations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        imageUrl:
+                          type: string
+                        placeId:
+                          type: string
+                        latLng:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            lng:
+                              type: number
+                          required:
+                            - lat
+                            - lng
+                      required:
+                        - name
+                        - address
+                  nextPageToken:
+                    type: string
+                required:
+                  - destinations
+        "400":
+          description: 不正なリクエストのため失敗
           content:
             application/json:
               schema:

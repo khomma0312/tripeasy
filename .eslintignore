@@ -1,3 +1,7 @@
 # api generated file
 services/api/endpoints/*
 services/api/model/*
+
+# custom api
+services/api/custom/endpoints/*
+services/api/custom/model/*
