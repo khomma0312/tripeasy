@@ -11,15 +11,13 @@ export const tripRoutePointFormSchema = z.object({
       lng: z.number(),
     })
     .optional(),
-  arrivalTime: z.date(),
-  departureTime: z.date(),
+  imageUrl: z.string().optional(),
+  arrivalTime: z.string(),
+  departureTime: z.string(),
   tripDayId: z.number(),
 });
 
-export const tripRoutePointInputSchema = tripRoutePointFormSchema.extend({
-  arrivalTime: z.string(),
-  departureTime: z.string(),
-});
+export const tripRoutePointInputSchema = tripRoutePointFormSchema;
 
 export const apiPostInputSchema = z.object({
   tripRoutePoint: tripRoutePointInputSchema,

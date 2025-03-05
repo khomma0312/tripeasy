@@ -1234,6 +1234,8 @@ paths:
                               type: string
                             dayDescription:
                               type: string
+                            tripDayId:
+                              type: number
                             tripRoutePoints:
                               type: array
                               items:
@@ -1259,6 +1261,8 @@ paths:
                                     type: string
                                   departureTime:
                                     type: string
+                                  imageUrl:
+                                    type: string
                                 required:
                                   - name
                                   - visitOrder
@@ -1267,7 +1271,7 @@ paths:
                           required:
                             - dayOrder
                             - dayDate
-                            - tripRoutePoints
+                            - tripDayId
                       todoIds:
                         type: array
                         items:
@@ -1378,6 +1382,8 @@ paths:
                       required:
                         - lat
                         - lng
+                    imageUrl:
+                      type: string
                     arrivalTime:
                       type: string
                     departureTime:

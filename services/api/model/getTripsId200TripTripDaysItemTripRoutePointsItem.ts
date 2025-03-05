@@ -11,6 +11,7 @@ export type GetTripsId200TripTripDaysItemTripRoutePointsItem = {
   address?: string;
   arrivalTime: string;
   departureTime: string;
+  imageUrl?: string;
   latLng?: GetTripsId200TripTripDaysItemTripRoutePointsItemLatLng;
   name: string;
   visitOrder: number;

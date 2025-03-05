@@ -11,6 +11,7 @@ export type PostTripRoutePointsBodyTripRoutePoint = {
   address: string;
   arrivalTime: string;
   departureTime: string;
+  imageUrl?: string;
   latLng?: PostTripRoutePointsBodyTripRoutePointLatLng;
   name: string;
   tripDayId: number;
