@@ -25,6 +25,8 @@ import { paginationDefaultLimit } from "@/consts/common";
 import { del } from "@vercel/blob";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { differenceInDays } from "date-fns";
+import { format, addDays } from "date-fns";
 
 const logger = getLogger("api/trips");
 
@@ -51,6 +53,23 @@ const app = new Hono()
           userId,
         })
         .returning({ id: tripsTable.id });
+
+      // tripDayも旅行日数分追加しておく
+      // 旅行日数はtripのstartDateとendDateから計算する
+      const startDate = new Date(trip.startDate);
+      const endDate = new Date(trip.endDate);
+      const diffDays = differenceInDays(endDate, startDate);
+
+      // 単一のクエリで複数レコードを挿入
+      const tripDaysToInsert = Array.from({ length: diffDays }, (_, i) => ({
+        tripId: addedTrip.id,
+        dayOrder: i + 1,
+        dayDate: format(addDays(startDate, i), "yyyy-MM-dd"),
+        userId,
+      }));
+
+      await db.insert(tripDaySegmentsTable).values(tripDaysToInsert);
+
       return c.json<ApiPostOutputType>({ id: addedTrip.id });
     } catch (e) {
       logger.error(e);
@@ -213,6 +232,7 @@ const app = new Hono()
         arrivalTime: tripRoutePointsTable.arrivalTime,
         departureTime: tripRoutePointsTable.departureTime,
         tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
+        imageUrl: destinationsTable.imageUrl,
       })
       .from(tripRoutePointsTable)
       .innerJoin(
@@ -235,6 +255,7 @@ const app = new Hono()
           visitOrder: tripRoutePointsSubquery.visitOrder,
           arrivalTime: tripRoutePointsSubquery.arrivalTime,
           departureTime: tripRoutePointsSubquery.departureTime,
+          imageUrl: tripRoutePointsSubquery.imageUrl,
         },
       })
       .from(tripsTable)
@@ -258,11 +279,7 @@ const app = new Hono()
     // tripのデータをレスポンス用に整形
     const trip = result.reduce(
       (acc, cur) => {
-        if (!cur.tripDays) {
-          return acc;
-        }
-
-        return {
+        const tripInfo = {
           id: cur.trip.id,
           title: cur.trip.title,
           startDate: cur.trip.startDate,
@@ -271,11 +288,23 @@ const app = new Hono()
           accommodationIds: accommodationIds ?? undefined,
           destination: cur.trip.destination ?? undefined,
           image: cur.trip.image ?? undefined,
+        };
+
+        if (!cur.tripDays) {
+          return {
+            ...tripInfo,
+            tripDays: { ...acc.tripDays },
+          };
+        }
+
+        return {
+          ...tripInfo,
           tripDays: {
             ...acc.tripDays,
             [cur.tripDays.id]: {
               dayOrder: cur.tripDays.dayOrder,
               dayDate: cur.tripDays.dayDate,
+              tripDayId: cur.tripDays.id,
               tripRoutePoints: cur.tripRoutePoints
                 ? [
                     ...(acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? []),
@@ -286,6 +315,7 @@ const app = new Hono()
                       departureTime: cur.tripRoutePoints.departureTime,
                       address: cur.tripRoutePoints.address ?? undefined,
                       latLng: cur.tripRoutePoints.latLng ?? undefined,
+                      imageUrl: cur.tripRoutePoints.imageUrl ?? undefined,
                     },
                   ]
                 : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
@@ -295,6 +325,14 @@ const app = new Hono()
       },
       { tripDays: {} } as ReducedResult
     );
+
+    // tripRoutePointsのvisitOrderの昇順でソート
+    trip.tripDays = Object.values(trip.tripDays).map((tripDay) => ({
+      ...tripDay,
+      tripRoutePoints: tripDay.tripRoutePoints?.sort(
+        (a, b) => a.visitOrder - b.visitOrder
+      ),
+    }));
 
     return c.json<ApiGetOutputType>({
       trip: { ...trip, tripDays: Object.values(trip.tripDays) },
