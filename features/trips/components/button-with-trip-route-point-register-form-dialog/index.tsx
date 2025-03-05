@@ -34,10 +34,14 @@ export const ButtonWithTripRoutePointRegisterFormDialog = ({
     imageUrl,
     selectedTripDayId
   );
-  const { isPending, onSubmit } = useAddTripRoutePoint(form, Number(id));
+  const { isPending, onSubmit, formKey } = useAddTripRoutePoint(
+    form,
+    Number(id)
+  );
 
   return (
     <ButtonWithFormDialog
+      key={formKey}
       buttonLabel="旅程表に追加"
       dialogTitle="旅程表に追加"
       dialogDescription="旅行地点に関する情報を入力してください。"
