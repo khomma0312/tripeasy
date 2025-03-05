@@ -25,3 +25,7 @@ export const formatDateRange = (
 ) => {
   return `${formatDateWithSlash(startDate)} - ${formatDateWithSlash(endDate)}`;
 };
+
+export const generateRandomKey = () => {
+  return Math.random().toString(36);
+};
