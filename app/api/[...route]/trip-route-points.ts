@@ -12,8 +12,9 @@ import {
   apiPostInputSchema,
   ApiPostOutputType,
 } from "@/lib/zod/schema/trip-route-points";
-import { eq, max } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { getLatLngFromAddress } from "@/services/api/externals/server/google-maps/fetcher";
+import { convertTimeToDate } from "@/features/trips/utils";
 
 const logger = getLogger("api/trip-route-points");
 
@@ -27,10 +28,12 @@ const app = new Hono().post(
       name,
       address,
       latLng: latLngInput,
+      imageUrl,
       arrivalTime,
       departureTime,
       tripDayId,
     } = tripRoutePoint;
+
     let latLng: { x: number; y: number } | null = latLngInput
       ? { x: latLngInput.lng, y: latLngInput.lat }
       : null;
@@ -56,15 +59,45 @@ const app = new Hono().post(
     }
 
     try {
-      // tripDayIdに紐づくtripRoutePointsの中で、visitOrderが最大のものを取得
-      const [maxVisitOrder] = await db
-        .select({ visitOrder: max(tripRoutePointsTable.visitOrder) })
+      const savedTripRoutePoints = await db
+        .select()
         .from(tripRoutePointsTable)
         .where(eq(tripRoutePointsTable.tripDaySegmentId, tripDayId));
 
-      const visitOrder = maxVisitOrder.visitOrder
-        ? maxVisitOrder.visitOrder + 1
-        : 1;
+      const tripRoutePointVisitOrders = savedTripRoutePoints.map(
+        (tripRoutePoint) => ({
+          id: tripRoutePoint.id,
+          arrivalTime: convertTimeToDate(
+            new Date(),
+            tripRoutePoint.arrivalTime
+          ),
+          visitOrder: tripRoutePoint.visitOrder,
+        })
+      );
+
+      const newTripRoutePoint = {
+        id: null,
+        arrivalTime: convertTimeToDate(new Date(), `${arrivalTime}:00`),
+      };
+
+      // 新規tripRoutePointを追加して、arrivalTimeの早い順にvisitOrderを振り直す
+      const sortedTripRoutePointVisitOrders = [
+        newTripRoutePoint,
+        ...tripRoutePointVisitOrders,
+      ]
+        .sort((a, b) => a.arrivalTime.getTime() - b.arrivalTime.getTime())
+        .map((tripRoutePoint, index) => ({
+          ...tripRoutePoint,
+          visitOrder: index + 1,
+        }));
+
+      const newVisitOrder = sortedTripRoutePointVisitOrders.find(
+        (tripRoutePoint) => tripRoutePoint.id === null
+      )?.visitOrder;
+
+      if (!newVisitOrder) {
+        throw new Error("visitOrderが取得できませんでした");
+      }
 
       // name, address, latLngからdestinationを作成
       const [addedDestination] = await db
@@ -73,6 +106,7 @@ const app = new Hono().post(
           name,
           address,
           latLng,
+          imageUrl,
           userId,
         })
         .returning({ id: destinationsTable.id });
@@ -85,9 +119,31 @@ const app = new Hono().post(
           userId,
           destinationId: addedDestination.id,
           tripDaySegmentId: tripDayId,
-          visitOrder,
+          visitOrder: newVisitOrder,
         })
         .returning({ id: tripRoutePointsTable.id });
+
+      const updatedVisitOrders = sortedTripRoutePointVisitOrders.filter(
+        (point) => point.id !== null
+      );
+
+      if (updatedVisitOrders.length > 0) {
+        const ids = updatedVisitOrders.map((item) => item.id);
+
+        // 既存のvisitOrderを更新する
+        let caseExpression = sql`CASE `;
+        updatedVisitOrders.forEach((item) => {
+          caseExpression = sql`${caseExpression} WHEN ${tripRoutePointsTable.id} = ${item.id} THEN ${item.visitOrder}`;
+        });
+        caseExpression = sql`${caseExpression} ELSE ${tripRoutePointsTable.visitOrder} END`;
+        await db
+          .update(tripRoutePointsTable)
+          .set({
+            visitOrder: caseExpression,
+          })
+          .where(inArray(tripRoutePointsTable.id, ids));
+      }
+
       return c.json<ApiPostOutputType>({ id: addedTripRoutePoint.id });
     } catch (e) {
       logger.error(e);
