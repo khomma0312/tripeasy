@@ -21,6 +21,13 @@ export const TripRoutePointForm = ({
   RegisterButton,
   CloseButton,
 }: Props) => {
+  const arrivalTime = form.watch("arrivalTime");
+  const [arrivalTimeHour, arrivalTimeMinute] = arrivalTime?.split(":") || [];
+  const arrivalTimeObj = {
+    hour: arrivalTimeHour ? parseInt(arrivalTimeHour, 10) : 0,
+    minute: arrivalTimeMinute ? parseInt(arrivalTimeMinute, 10) : 0,
+  };
+
   return (
     <div className="h-full">
       <Form {...form}>
@@ -50,8 +57,8 @@ export const TripRoutePointForm = ({
                 control={form.control}
                 name="arrivalTime"
                 label="到着時間"
-                defaultHour="9"
-                defaultMinute="0"
+                defaultHour={9}
+                defaultMinute={0}
                 isRequired
                 onChange={(hour, minute) => {
                   form.setValue("arrivalTime", `${hour}:${minute}`);
@@ -61,8 +68,9 @@ export const TripRoutePointForm = ({
                 control={form.control}
                 name="departureTime"
                 label="出発時間"
-                defaultHour="10"
-                defaultMinute="0"
+                defaultHour={10}
+                defaultMinute={0}
+                comparedTime={arrivalTimeObj}
                 isRequired
                 onChange={(hour, minute) => {
                   form.setValue("departureTime", `${hour}:${minute}`);
