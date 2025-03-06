@@ -12,30 +12,30 @@ import {
   DialogTrigger,
 } from "@/components/shadcn/dialog";
 import { cn } from "@/utils/common";
-import { useTripForm } from "@/features/trips/hooks/use-trip-form";
-import { TripForm } from "@/features/trips/components/trip-form";
-import { useAddTrip } from "@/features/trips/hooks/use-add-trip";
 
 type Props = {
+  buttonLabel: string;
   dialogTitle: string;
   dialogDescription?: string;
   className?: string;
+  buttonSize?: "sm" | "default" | "lg" | "icon" | null;
+  Form: React.ReactNode;
 };
 
-export const RegisterButtonWithFormDialog = ({
+export const ButtonWithFormDialog = ({
+  buttonLabel,
   dialogTitle,
   dialogDescription,
   className,
+  buttonSize,
+  Form,
 }: Props) => {
-  const { form } = useTripForm();
-  const { isPending, onSubmit } = useAddTrip(form);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={cn("", className)}>
+        <Button className={cn("", className)} size={buttonSize}>
           <Plus />
-          新規追加
+          {buttonLabel}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -45,21 +45,13 @@ export const RegisterButtonWithFormDialog = ({
             <DialogDescription>{dialogDescription}</DialogDescription>
           )}
         </DialogHeader>
-        <DialogDescription>
-          旅行の基本情報を入力してください。
-        </DialogDescription>
-        <TripForm
-          form={form}
-          isPending={isPending}
-          onSubmit={onSubmit}
-          CloseButton={CloseButton}
-        />
+        {Form}
       </DialogContent>
     </Dialog>
   );
 };
 
-const CloseButton = () => {
+export const CloseButton = () => {
   return (
     <DialogClose asChild>
       <Button variant="outline">キャンセル</Button>

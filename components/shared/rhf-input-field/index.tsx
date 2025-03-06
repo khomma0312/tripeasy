@@ -8,16 +8,20 @@ import {
 import { Input } from "@/components/shadcn/input";
 import { RHFFieldLabel } from "../rhf-field-label";
 import { LucideProps } from "lucide-react";
+import { cn } from "@/utils/common";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
-  label: string;
+  label?: string;
   placeholder?: string;
   type?: string;
   disabled?: boolean;
+  readOnly?: boolean;
+  hidden?: boolean;
   isRequired?: boolean;
   Icon?: React.ComponentType<LucideProps>;
+  className?: string;
 };
 
 export const RHFInputField = <T extends FieldValues>({
@@ -28,7 +32,10 @@ export const RHFInputField = <T extends FieldValues>({
   type,
   disabled,
   isRequired,
+  readOnly,
   Icon,
+  hidden,
+  className,
 }: Props<T>) => {
   return (
     <FormField
@@ -36,7 +43,13 @@ export const RHFInputField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <RHFFieldLabel label={label} htmlFor={name} isRequired={isRequired} />
+          {label && (
+            <RHFFieldLabel
+              label={label}
+              htmlFor={name}
+              isRequired={isRequired}
+            />
+          )}
           <FormControl>
             <div className="relative">
               {Icon && (
@@ -51,7 +64,9 @@ export const RHFInputField = <T extends FieldValues>({
                 placeholder={placeholder}
                 type={type ? type : "text"}
                 disabled={disabled}
-                className={Icon && "pl-10"}
+                readOnly={readOnly}
+                className={cn(className, Icon && "pl-10")}
+                hidden={hidden}
               />
             </div>
           </FormControl>

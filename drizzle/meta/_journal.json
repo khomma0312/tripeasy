@@ -148,6 +148,20 @@
       "when": 1739259148525,
       "tag": "0020_add_tables_for_trip_itinerary_feature",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1740839320229,
+      "tag": "0021_add_image_url_to_destinations",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1740839387043,
+      "tag": "0022_delete_google_location_id_in_destinations",
+      "breakpoints": true
     }
   ]
 }

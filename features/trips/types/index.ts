@@ -31,6 +31,8 @@ export type TripRoutePointFormFieldValues = z.infer<
   typeof tripRoutePointFormSchema
 >;
 
+export type TripRoutePointFormDefaultValues = Partial<TripRoutePoint>;
+
 export type TripRoutePointInputValues = z.infer<
   typeof tripRoutePointInputSchema
 >;

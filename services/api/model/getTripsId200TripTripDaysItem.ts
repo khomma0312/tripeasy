@@ -11,5 +11,6 @@ export type GetTripsId200TripTripDaysItem = {
   dayDate: string;
   dayDescription?: string;
   dayOrder: number;
-  tripRoutePoints: GetTripsId200TripTripDaysItemTripRoutePointsItem[];
+  tripDayId: number;
+  tripRoutePoints?: GetTripsId200TripTripDaysItemTripRoutePointsItem[];
 };

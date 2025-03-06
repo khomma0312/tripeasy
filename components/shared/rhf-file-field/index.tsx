@@ -9,7 +9,7 @@ import { Input } from "@/components/shadcn/input";
 import { useState, ChangeEvent, useEffect } from "react";
 import { RHFFieldLabel } from "../rhf-field-label";
 import { Button } from "@/components/shadcn/button";
-import { cn } from "@/utils/common";
+import { cn, generateRandomKey } from "@/utils/common";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -51,7 +51,7 @@ export const RHFFileField = <T extends FieldValues>({
 
   useEffect(() => {
     // RHFのform.resetではvalueをリセットするだけなので、valueが変更された時にkeyをリセットして再レンダリングさせる
-    const randomKey = Math.random().toString(36);
+    const randomKey = generateRandomKey();
     if (!currentValue) {
       setKey(randomKey);
       setPreview("");
