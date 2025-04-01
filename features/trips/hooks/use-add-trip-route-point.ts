@@ -2,13 +2,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
 import { usePostTripRoutePoints } from "@/services/api/endpoints/trip-route-points/trip-route-points";
-import { TripRoutePointFormFieldValues } from "@/features/trips/types";
+import {
+  TripRoutePointFormAccommodationFieldValues,
+  TripRoutePointFormDestinationFieldValues,
+  TripRoutePointFormFieldValues,
+} from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
 import { useRef } from "react";
 import { generateRandomKey } from "@/utils/common";
 
 export const useAddTripRoutePoint = (
-  form: UseFormReturn<TripRoutePointFormFieldValues>,
+  form:
+    | UseFormReturn<TripRoutePointFormAccommodationFieldValues>
+    | UseFormReturn<TripRoutePointFormDestinationFieldValues>,
   tripId: number
 ) => {
   const formKeyRef = useRef(generateRandomKey());
