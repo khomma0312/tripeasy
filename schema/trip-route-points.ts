@@ -3,6 +3,7 @@ import { timestamps } from "@/lib/drizzle/columns-helpers";
 import { tripDaySegments } from "./trip-day-segments";
 import { users } from "./auth";
 import { destinations } from "./destinations";
+import { accommodations } from "./accommodations";
 
 export const tripRoutePoints = pgTable("trip_route_points", {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
@@ -12,9 +13,10 @@ export const tripRoutePoints = pgTable("trip_route_points", {
   tripDaySegmentId: integer("trip_day_segment_id")
     .notNull()
     .references(() => tripDaySegments.id),
-  destinationId: integer("destination_id")
-    .notNull()
-    .references(() => destinations.id),
+  destinationId: integer("destination_id").references(() => destinations.id),
+  accommodationId: integer("accommodation_id").references(
+    () => accommodations.id
+  ),
   userId: text("user_id")
     .notNull()
     .references(() => users.id),

@@ -19,7 +19,21 @@ export const destinationSearchFormSchema = z.object({
 // 目的地の検索結果を返すGET APIのinputパラメータのスキーマ
 export const apiSearchGetInputSchema = z.object({
   searchTerm: z.string(),
-  searchByPlaceId: z.boolean(),
+  searchByPlaceId: z.string(),
+  searchLocationLat: z
+    .string()
+    .optional()
+    .transform((val) =>
+      val && !isNaN(Number(val)) ? parseFloat(val) : undefined
+    ),
+  searchLocationLng: z
+    .string()
+    .optional()
+    .transform((val) =>
+      val && !isNaN(Number(val)) ? parseFloat(val) : undefined
+    ),
+  searchType: z.enum(["accommodation", "destination"]).optional(),
+  nextPageToken: z.string().optional(),
 });
 
 export type ApiSearchGetInputType = z.infer<typeof apiSearchGetInputSchema>;

@@ -3,6 +3,10 @@ import {
   destinationSearchFormSchema,
 } from "@/lib/zod/schema/destinations";
 import {
+  tripRoutePointAccommodationInputSchema,
+  tripRoutePointDestinationInputSchema,
+  tripRoutePointFormAccommodationSchema,
+  tripRoutePointFormDestinationSchema,
   tripRoutePointFormSchema,
   tripRoutePointInputSchema,
 } from "@/lib/zod/schema/trip-route-points";
@@ -31,10 +35,24 @@ export type TripRoutePointFormFieldValues = z.infer<
   typeof tripRoutePointFormSchema
 >;
 
-export type TripRoutePointFormDefaultValues = Partial<TripRoutePoint>;
+export type TripRoutePointFormDestinationFieldValues = z.infer<
+  typeof tripRoutePointFormDestinationSchema
+>;
+
+export type TripRoutePointFormAccommodationFieldValues = z.infer<
+  typeof tripRoutePointFormAccommodationSchema
+>;
 
 export type TripRoutePointInputValues = z.infer<
   typeof tripRoutePointInputSchema
+>;
+
+export type TripRoutePointAccommodationInputValues = z.infer<
+  typeof tripRoutePointAccommodationInputSchema
+>;
+
+export type TripRoutePointDestinationInputValues = z.infer<
+  typeof tripRoutePointDestinationInputSchema
 >;
 
 export type Destination = z.infer<typeof destinationSchema>;
@@ -42,3 +60,5 @@ export type Destination = z.infer<typeof destinationSchema>;
 export type DestinationSearchFormFieldValues = z.infer<
   typeof destinationSearchFormSchema
 >;
+
+export type TripRoutePointPlaceType = "accommodation" | "destination";

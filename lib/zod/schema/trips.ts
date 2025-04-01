@@ -31,6 +31,7 @@ export const tripRoutePointSchema = z.object({
   arrivalTime: z.string(),
   departureTime: z.string(),
   imageUrl: z.string().optional(),
+  accommodationId: z.number().optional(),
 });
 
 export const tripDaySchema = z.object({
