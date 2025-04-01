@@ -1,0 +1,1 @@
+ALTER TABLE "destinations" RENAME COLUMN "imageUrl" TO "image_url";
