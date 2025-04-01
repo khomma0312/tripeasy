@@ -3,10 +3,11 @@ import {
   CloseButton,
 } from "@/components/shared/button-with-form-dialog";
 import { useAddTripRoutePoint } from "@/features/trips/hooks/use-add-trip-route-point";
-import { TripRoutePointForm } from "@/features/trips/components/trip-route-point-form";
-import { useTripRoutePointForm } from "../../hooks/use-trip-route-point-form";
+import { TripRoutePointRegisterForm } from "@/features/trips/components/trip-route-point-register-form";
+import { useTripRoutePointRegisterForm } from "@/features/trips/hooks/use-trip-route-point-register-form";
 import { useParams } from "next/navigation";
 import { useSelectedTripDayIdForRegisterAtomValue } from "../../store/selected-tripDayId-for-register";
+import { TripRoutePointPlaceType } from "../../types";
 
 type Props = {
   className?: string;
@@ -15,6 +16,7 @@ type Props = {
   latLng: { lat: number; lng: number } | undefined;
   imageUrl: string | undefined;
   buttonSize?: "sm" | "default" | "lg" | "icon" | null;
+  placeType?: TripRoutePointPlaceType;
 };
 
 export const ButtonWithTripRoutePointRegisterFormDialog = ({
@@ -24,10 +26,11 @@ export const ButtonWithTripRoutePointRegisterFormDialog = ({
   latLng,
   imageUrl,
   buttonSize,
+  placeType = "destination",
 }: Props) => {
   const { id } = useParams();
   const selectedTripDayId = useSelectedTripDayIdForRegisterAtomValue();
-  const { form } = useTripRoutePointForm(
+  const { form } = useTripRoutePointRegisterForm(
     name,
     address,
     latLng,
@@ -48,9 +51,10 @@ export const ButtonWithTripRoutePointRegisterFormDialog = ({
       className={className}
       buttonSize={buttonSize}
       Form={
-        <TripRoutePointForm
+        <TripRoutePointRegisterForm
           form={form}
           isPending={isPending}
+          placeType={placeType}
           onSubmit={onSubmit}
           CloseButton={CloseButton}
         />

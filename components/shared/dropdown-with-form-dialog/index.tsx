@@ -41,7 +41,7 @@ export const DropdownWithFormDialog = ({
 }: Props) => {
   return (
     <Dialog>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         {DropdownTrigger}
         <DropdownMenuContent align="end">
           {menuItems.map((menuItem, index) => {

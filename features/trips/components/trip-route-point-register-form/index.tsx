@@ -2,21 +2,27 @@
 
 import { Form } from "@/components/shadcn/form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
-import { TripRoutePointFormFieldValues } from "@/features/trips/types";
+import {
+  TripRoutePointFormDestinationFieldValues,
+  TripRoutePointFormFieldValues,
+  TripRoutePointPlaceType,
+} from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/shadcn/button";
 import { RHFTimeSelectField } from "@/components/shared/rhf-time-select-field";
 
 type Props = {
-  form: UseFormReturn<TripRoutePointFormFieldValues>;
+  form: UseFormReturn<TripRoutePointFormDestinationFieldValues>;
+  placeType: TripRoutePointPlaceType;
   isPending: boolean;
   onSubmit: (trip: TripRoutePointFormFieldValues) => void;
   RegisterButton?: React.ComponentType;
   CloseButton?: React.ComponentType;
 };
 
-export const TripRoutePointForm = ({
+export const TripRoutePointRegisterForm = ({
   form,
+  placeType,
   onSubmit,
   RegisterButton,
   CloseButton,
@@ -28,11 +34,21 @@ export const TripRoutePointForm = ({
     minute: arrivalTimeMinute ? parseInt(arrivalTimeMinute, 10) : 0,
   };
 
+  const onValid = (values: TripRoutePointFormDestinationFieldValues) => {
+    if (placeType === "destination") {
+      onSubmit({ destination: values });
+    }
+
+    if (placeType === "accommodation") {
+      onSubmit({ accommodation: values });
+    }
+  };
+
   return (
     <div className="h-full">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onValid)}
           className="space-y-6 bg-white p-6"
         >
           <div className="grid grid-cols-1 gap-6">
@@ -41,14 +57,6 @@ export const TripRoutePointForm = ({
                 control={form.control}
                 name="name"
                 label="目的地名"
-                isRequired
-              />
-            </div>
-            <div className="space-y-2">
-              <RHFInputField
-                control={form.control}
-                name="address"
-                label="住所"
                 isRequired
               />
             </div>

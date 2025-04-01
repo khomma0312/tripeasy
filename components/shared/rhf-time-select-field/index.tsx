@@ -48,6 +48,10 @@ const minuteOptions = MINUTE_OPTION_NUMBERS.map((minute) => ({
   displayValue: minute.toString().padStart(2, "0"),
 }));
 
+const padTime = (time: number | string) => {
+  return time.toString().padStart(2, "0");
+};
+
 export const RHFTimeSelectField = <T extends FieldValues>({
   control,
   name,
@@ -94,15 +98,15 @@ export const RHFTimeSelectField = <T extends FieldValues>({
 
     if (isFieldTimeLessThanOrEqualComparedTime) {
       if (isComparedMinuteOverMax) {
-        setHour((comparedTimeHour + 1).toString());
-        setMinute("0");
+        setHour(padTime(comparedTimeHour + 1));
+        setMinute("00");
       } else {
-        setHour(comparedTimeHour.toString());
-        setMinute((comparedTimeMinute + MINUTE_STEP).toString());
+        setHour(padTime(comparedTimeHour));
+        setMinute(padTime(comparedTimeMinute + MINUTE_STEP));
       }
     }
 
-    onChange(hour, minute);
+    onChange(padTime(hour), padTime(minute));
   }, [comparedTime, hour, minute]);
 
   return (

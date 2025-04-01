@@ -1,8 +1,8 @@
 import { Button } from "@/components/shadcn/button";
-import { ButtonDropdownWithTripRoutePointRegisterFormDialog } from "../button-dropdown-with-trip-route-point-regsiter-form-dialog";
+import { ButtonWithTripRoutePointRegisterFromExistingAccommodationFormDialog } from "../button-with-trip-route-point-register-from-existing-accommodation-form-dialog";
 import { MenuItem } from "@/components/shared/dropdown-with-form-dialog";
 import { BedDoubleIcon } from "lucide-react";
-import { DropdownMenuTrigger } from "@/components/shadcn/dropdown-menu";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   menuItems: MenuItem[];
@@ -10,7 +10,7 @@ type Props = {
 
 export const TripRoutePointAccommodationAddButton = ({ menuItems }: Props) => {
   return (
-    <ButtonDropdownWithTripRoutePointRegisterFormDialog
+    <ButtonWithTripRoutePointRegisterFromExistingAccommodationFormDialog
       menuItems={menuItems}
       DropdownTrigger={<DropdownTrigger />}
     />
