@@ -4,7 +4,6 @@ import { Suspense, useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/shadcn/button";
-import { Input } from "@/components/shadcn/input";
 import { ArrowLeftIcon, SearchIcon } from "lucide-react";
 import {
   Form,
@@ -21,18 +20,30 @@ import {
 } from "@/features/trips/components/place-autocomplete-input";
 import { CenteredLoaderCircle } from "@/components/shared/centered-loader-circle";
 import { HandleError } from "@/components/shared/handle-error";
+import { useMapCenterPositionAtomValue } from "@/features/trips/store/map-center-position";
+import { useSearchPlaceTypeAtom } from "../../store/search-place-type";
 
 export const DestinationSearchSideBar = () => {
   const isPlaceIdSelected = useRef(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const mapCenterPosition = useMapCenterPositionAtomValue();
 
   const setIsDestinationSearchOpen = useIsDestinationSearchOpenSetAtom();
+  const [searchType, setSearchPlaceType] = useSearchPlaceTypeAtom();
+
   const form = useForm<DestinationSearchFormFieldValues>({
     resolver: zodResolver(destinationSearchFormSchema),
     defaultValues: {
       searchTerm: "",
     },
   });
+
+  const isDestinationSearchValid = Boolean(
+    searchType === "destination" && searchTerm
+  );
+  const isAccommodationSearchValid = Boolean(
+    searchType === "accommodation" && (searchTerm || mapCenterPosition)
+  );
 
   const handleInputChange = useCallback(
     (event: CustomInputEvent, onChange: (...event: any[]) => void) => {
@@ -54,7 +65,10 @@ export const DestinationSearchSideBar = () => {
           <div className="flex gap-2">
             <Button
               variant="ghost"
-              onClick={() => setIsDestinationSearchOpen(false)}
+              onClick={() => {
+                setIsDestinationSearchOpen(false);
+                setSearchPlaceType(undefined);
+              }}
               className="p-2"
             >
               <ArrowLeftIcon className="size-4" />
@@ -92,12 +106,13 @@ export const DestinationSearchSideBar = () => {
         </form>
       </Form>
       {/* 検索結果 */}
-      {searchTerm && (
+      {(isDestinationSearchValid || isAccommodationSearchValid) && (
         <HandleError>
           <Suspense fallback={<CenteredLoaderCircle />}>
             <DestinationSearchResultsContainer
               searchTerm={searchTerm}
               searchByPlaceId={isPlaceIdSelected.current}
+              searchLocation={mapCenterPosition}
             />
           </Suspense>
         </HandleError>

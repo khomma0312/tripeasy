@@ -1,5 +1,6 @@
 import { cn } from "@/utils/common";
 import { useSelectedTripDayIndexAtom } from "@/features/trips/store/selected-trip-day-index";
+import { getTripDayIndex } from "@/features/trips/utils";
 
 type Props = {
   title: string;
@@ -8,7 +9,7 @@ type Props = {
 
 export const ItineraryDayTab = ({ title, dayOrder }: Props) => {
   const [selectedDay, setSelectedDay] = useSelectedTripDayIndexAtom();
-  const index = dayOrder ? dayOrder - 1 : undefined;
+  const index = getTripDayIndex(dayOrder);
 
   return (
     <div
