@@ -8,6 +8,7 @@
 import type { GetTripsId200TripTripDaysItemTripRoutePointsItemLatLng } from './getTripsId200TripTripDaysItemTripRoutePointsItemLatLng';
 
 export type GetTripsId200TripTripDaysItemTripRoutePointsItem = {
+  accommodationId?: number;
   address?: string;
   arrivalTime: string;
   departureTime: string;

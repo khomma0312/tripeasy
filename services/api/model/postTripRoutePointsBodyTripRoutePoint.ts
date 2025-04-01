@@ -5,14 +5,10 @@
  * TripeasyのAPI仕様書
  * OpenAPI spec version: 1.0.0
  */
-import type { PostTripRoutePointsBodyTripRoutePointLatLng } from './postTripRoutePointsBodyTripRoutePointLatLng';
+import type { PostTripRoutePointsBodyTripRoutePointAccommodation } from './postTripRoutePointsBodyTripRoutePointAccommodation';
+import type { PostTripRoutePointsBodyTripRoutePointDestination } from './postTripRoutePointsBodyTripRoutePointDestination';
 
 export type PostTripRoutePointsBodyTripRoutePoint = {
-  address: string;
-  arrivalTime: string;
-  departureTime: string;
-  imageUrl?: string;
-  latLng?: PostTripRoutePointsBodyTripRoutePointLatLng;
-  name: string;
-  tripDayId: number;
+  accommodation?: PostTripRoutePointsBodyTripRoutePointAccommodation;
+  destination?: PostTripRoutePointsBodyTripRoutePointDestination;
 };
