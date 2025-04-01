@@ -15,7 +15,7 @@ export const ItineraryTripRoutePointCard = ({
   tripRoutePoint,
   itineraryDayDate,
 }: Props) => {
-  const { name, address, arrivalTime, departureTime, visitOrder } =
+  const { name, address, arrivalTime, departureTime, visitOrder, imageUrl } =
     tripRoutePoint;
 
   const arrivalTimeDate = convertTimeToDate(itineraryDayDate, arrivalTime);
@@ -40,11 +40,11 @@ export const ItineraryTripRoutePointCard = ({
             </span>
             <div className="w-20 h-20 rounded-lg overflow-hidden">
               <Image
-                src={"/no-image.png"}
+                src={imageUrl ?? "/no-image.png"}
                 alt={name}
                 width={100}
                 height={100}
-                className="w-full h-16 object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
