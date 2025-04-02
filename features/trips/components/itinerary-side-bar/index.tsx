@@ -9,7 +9,7 @@ type Props = {
 
 export const ItinerarySideBar = ({ trip }: Props) => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full h-screen bg-background flex flex-col">
       <div className="sticky top-0 z-50">
         {/* ヘッダー */}
         <ItinerarySideBarHeader trip={trip} />
@@ -17,9 +17,13 @@ export const ItinerarySideBar = ({ trip }: Props) => {
         <ItineraryDayTabGroup tripDays={trip.tripDays} />
       </div>
       {/* 各日のタイムライン */}
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-y-auto flex-1">
         {trip.tripDays.map((tripDay) => (
-          <ItineraryTimelineSection key={tripDay.dayOrder} tripDay={tripDay} />
+          <ItineraryTimelineSection
+            key={tripDay.dayOrder}
+            tripDay={tripDay}
+            tripDays={trip.tripDays}
+          />
         ))}
       </div>
     </div>

@@ -1,9 +1,4 @@
 import { Hono } from "hono";
-import { db } from "@/lib/drizzle/db";
-import {
-  tripRoutePoints as tripRoutePointsTable,
-  destinations as destinationsTable,
-} from "@/schema";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
@@ -12,8 +7,14 @@ import {
   apiPostInputSchema,
   ApiPostOutputType,
 } from "@/lib/zod/schema/trip-route-points";
-import { eq, max } from "drizzle-orm";
 import { getLatLngFromAddress } from "@/services/api/externals/server/google-maps/fetcher";
+import {
+  addNewAccommodation,
+  addNewDestination,
+  addNewTripRoutePoint,
+  calculateNewRoutePointVisitOrder,
+  updateTripRoutePointVisitOrder,
+} from "@/utils/api/trip-route-points";
 
 const logger = getLogger("api/trip-route-points");
 
@@ -23,17 +24,7 @@ const app = new Hono().post(
   async (c) => {
     const session = await auth();
     const { tripRoutePoint } = c.req.valid("json");
-    const {
-      name,
-      address,
-      latLng: latLngInput,
-      arrivalTime,
-      departureTime,
-      tripDayId,
-    } = tripRoutePoint;
-    let latLng: { x: number; y: number } | null = latLngInput
-      ? { x: latLngInput.lng, y: latLngInput.lat }
-      : null;
+    const { destination, accommodation } = tripRoutePoint;
 
     if (!session?.user) {
       logger.error("User verification failed.");
@@ -45,57 +36,125 @@ const app = new Hono().post(
 
     const userId = session.user.id ?? "";
 
-    try {
-      // 住所から緯度経度を取得
-      const { lat, lng, isLocationReliable } = await getLatLngFromAddress(
-        address
-      );
-      if (isLocationReliable && !latLng) latLng = { x: lng, y: lat };
-    } catch (e) {
-      logger.error(e);
-    }
+    // destinationがinputにある場合
+    if (destination) {
+      const {
+        name,
+        address,
+        latLng: latLngInput,
+        imageUrl,
+        tripDayId,
+        arrivalTime,
+        departureTime,
+      } = destination;
 
-    try {
-      // tripDayIdに紐づくtripRoutePointsの中で、visitOrderが最大のものを取得
-      const [maxVisitOrder] = await db
-        .select({ visitOrder: max(tripRoutePointsTable.visitOrder) })
-        .from(tripRoutePointsTable)
-        .where(eq(tripRoutePointsTable.tripDaySegmentId, tripDayId));
+      let latLng: { x: number; y: number } | undefined = latLngInput
+        ? { x: latLngInput.lng, y: latLngInput.lat }
+        : undefined;
 
-      const visitOrder = maxVisitOrder.visitOrder
-        ? maxVisitOrder.visitOrder + 1
-        : 1;
+      try {
+        // 住所から緯度経度を取得
+        const { lat, lng, isLocationReliable } = await getLatLngFromAddress(
+          address
+        );
+        if (isLocationReliable && !latLng) latLng = { x: lng, y: lat };
+      } catch (e) {
+        // 緯度経度取得に失敗した場合はlatLngをundefinedにしてログ出力
+        logger.error(e);
+      }
 
-      // name, address, latLngからdestinationを作成
-      const [addedDestination] = await db
-        .insert(destinationsTable)
-        .values({
-          name,
-          address,
-          latLng,
-          userId,
-        })
-        .returning({ id: destinationsTable.id });
+      try {
+        const { newVisitOrder, sortedTripRoutePointVisitOrders } =
+          await calculateNewRoutePointVisitOrder(tripDayId, arrivalTime);
 
-      const [addedTripRoutePoint] = await db
-        .insert(tripRoutePointsTable)
-        .values({
+        // name, address, latLngからdestinationを作成
+        const addedDestination = await addNewDestination(
+          {
+            name,
+            address,
+            latLng,
+            imageUrl,
+          },
+          userId
+        );
+
+        const newTripRoutePoint = {
           arrivalTime,
           departureTime,
           userId,
           destinationId: addedDestination.id,
           tripDaySegmentId: tripDayId,
-          visitOrder,
-        })
-        .returning({ id: tripRoutePointsTable.id });
-      return c.json<ApiPostOutputType>({ id: addedTripRoutePoint.id });
-    } catch (e) {
-      logger.error(e);
-      return c.json<ApiErrorType>(
-        { message: "データの登録に失敗しました" },
-        500
-      );
+          visitOrder: newVisitOrder,
+        };
+
+        const addedTripRoutePoint = await addNewTripRoutePoint(
+          newTripRoutePoint
+        );
+
+        await updateTripRoutePointVisitOrder(sortedTripRoutePointVisitOrders);
+
+        return c.json<ApiPostOutputType>({ id: addedTripRoutePoint.id });
+      } catch (e) {
+        logger.error(e);
+        return c.json<ApiErrorType>(
+          { message: "データの登録に失敗しました" },
+          500
+        );
+      }
     }
+
+    // accommodationがinputにある場合
+    if (accommodation) {
+      try {
+        let accommodationId: number | undefined = undefined;
+        const {
+          arrivalTime,
+          departureTime,
+          tripDayId,
+          accommodationId: accommodationIdInput,
+        } = accommodation;
+
+        if (accommodationIdInput) {
+          accommodationId = accommodationIdInput;
+        } else {
+          // name, address, latLngからdestinationを作成
+          const addedAccommodation = await addNewAccommodation(
+            accommodation,
+            userId
+          );
+          accommodationId = addedAccommodation.id;
+        }
+
+        const { newVisitOrder, sortedTripRoutePointVisitOrders } =
+          await calculateNewRoutePointVisitOrder(tripDayId, arrivalTime);
+
+        const newTripRoutePoint = {
+          arrivalTime,
+          departureTime,
+          userId,
+          accommodationId,
+          tripDaySegmentId: tripDayId,
+          visitOrder: newVisitOrder,
+        };
+
+        const addedTripRoutePoint = await addNewTripRoutePoint(
+          newTripRoutePoint
+        );
+
+        await updateTripRoutePointVisitOrder(sortedTripRoutePointVisitOrders);
+
+        return c.json<ApiPostOutputType>({ id: addedTripRoutePoint.id });
+      } catch (e) {
+        logger.error(e);
+        return c.json<ApiErrorType>(
+          { message: "データの登録に失敗しました" },
+          500
+        );
+      }
+    }
+
+    logger.error("destinationまたはaccommodationが存在しません");
+    return c.json<ApiErrorType>({ message: "データの登録に失敗しました" }, 500);
   }
 );
 

@@ -17,7 +17,7 @@ import {
   todoLists as todoListsTable,
   accommodations as accommodationsTable,
 } from "@/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
@@ -25,6 +25,8 @@ import { paginationDefaultLimit } from "@/consts/common";
 import { del } from "@vercel/blob";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { differenceInDays } from "date-fns";
+import { format, addDays } from "date-fns";
 
 const logger = getLogger("api/trips");
 
@@ -51,6 +53,23 @@ const app = new Hono()
           userId,
         })
         .returning({ id: tripsTable.id });
+
+      // tripDayも旅行日数分追加しておく
+      // 旅行日数はtripのstartDateとendDateから計算する
+      const startDate = new Date(trip.startDate);
+      const endDate = new Date(trip.endDate);
+      const diffDays = differenceInDays(endDate, startDate);
+
+      // 単一のクエリで複数レコードを挿入
+      const tripDaysToInsert = Array.from({ length: diffDays }, (_, i) => ({
+        tripId: addedTrip.id,
+        dayOrder: i + 1,
+        dayDate: format(addDays(startDate, i), "yyyy-MM-dd"),
+        userId,
+      }));
+
+      await db.insert(tripDaySegmentsTable).values(tripDaysToInsert);
+
       return c.json<ApiPostOutputType>({ id: addedTrip.id });
     } catch (e) {
       logger.error(e);
@@ -203,7 +222,8 @@ const app = new Hono()
       .map((trip) => trip.todoId)
       .filter((id) => id !== null);
 
-    const tripRoutePointsSubquery = db
+    // 目的地のルートポイントを取得
+    const destinationRoutePoints = await db
       .select({
         id: tripRoutePointsTable.id,
         name: destinationsTable.name,
@@ -213,40 +233,75 @@ const app = new Hono()
         arrivalTime: tripRoutePointsTable.arrivalTime,
         departureTime: tripRoutePointsTable.departureTime,
         tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
+        imageUrl: destinationsTable.imageUrl,
+        accommodationId: tripRoutePointsTable.accommodationId, // HACK: 必ずnullになる想定だが型を合わせるために取得している
       })
       .from(tripRoutePointsTable)
       .innerJoin(
         destinationsTable,
         eq(tripRoutePointsTable.destinationId, destinationsTable.id)
       )
-      .where(eq(tripRoutePointsTable.userId, userId))
-      .orderBy(desc(tripRoutePointsTable.visitOrder))
-      .as("tripRoutePointsSubquery");
+      .where(
+        and(
+          eq(tripRoutePointsTable.userId, userId),
+          isNotNull(tripRoutePointsTable.destinationId)
+        )
+      );
 
-    // tripとそれに紐づくtripDayとtripRoutePointsを取得
-    const result = await db
+    // 宿泊施設のルートポイントを取得
+    const accommodationRoutePoints = await db
+      .select({
+        id: tripRoutePointsTable.id,
+        name: accommodationsTable.name,
+        address: accommodationsTable.address,
+        latLng: accommodationsTable.latLng,
+        visitOrder: tripRoutePointsTable.visitOrder,
+        arrivalTime: tripRoutePointsTable.arrivalTime,
+        departureTime: tripRoutePointsTable.departureTime,
+        tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
+        imageUrl: accommodationsTable.image,
+        accommodationId: tripRoutePointsTable.accommodationId,
+      })
+      .from(tripRoutePointsTable)
+      .innerJoin(
+        accommodationsTable,
+        eq(tripRoutePointsTable.accommodationId, accommodationsTable.id)
+      )
+      .where(
+        and(
+          eq(tripRoutePointsTable.userId, userId),
+          isNotNull(tripRoutePointsTable.accommodationId)
+        )
+      );
+
+    // 両方の結果をマージ
+    const allRoutePoints = [
+      ...destinationRoutePoints,
+      ...accommodationRoutePoints,
+    ];
+
+    // tripとそれに紐づくtripDayを取得
+    const tripAndDays = await db
       .select({
         trip: tripsTable,
         tripDays: tripDaySegmentsTable,
-        tripRoutePoints: {
-          name: tripRoutePointsSubquery.name,
-          address: tripRoutePointsSubquery.address,
-          latLng: tripRoutePointsSubquery.latLng,
-          visitOrder: tripRoutePointsSubquery.visitOrder,
-          arrivalTime: tripRoutePointsSubquery.arrivalTime,
-          departureTime: tripRoutePointsSubquery.departureTime,
-        },
       })
       .from(tripsTable)
       .leftJoin(
         tripDaySegmentsTable,
         eq(tripsTable.id, tripDaySegmentsTable.tripId)
       )
-      .leftJoin(
-        tripRoutePointsSubquery,
-        eq(tripDaySegmentsTable.id, tripRoutePointsSubquery.tripDaySegmentId)
-      )
       .where(and(eq(tripsTable.id, tripId), eq(tripsTable.userId, userId)));
+
+    // 結果を整形するための構造を作成
+    const result = tripAndDays.map((item) => ({
+      trip: item.trip,
+      tripDays: item.tripDays,
+      tripRoutePoints:
+        allRoutePoints.find(
+          (point) => point.tripDaySegmentId === item.tripDays?.id
+        ) || null,
+    }));
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const reducedResultSchema = tripForDetailSchema.extend({
@@ -258,11 +313,7 @@ const app = new Hono()
     // tripのデータをレスポンス用に整形
     const trip = result.reduce(
       (acc, cur) => {
-        if (!cur.tripDays) {
-          return acc;
-        }
-
-        return {
+        const tripInfo = {
           id: cur.trip.id,
           title: cur.trip.title,
           startDate: cur.trip.startDate,
@@ -271,30 +322,57 @@ const app = new Hono()
           accommodationIds: accommodationIds ?? undefined,
           destination: cur.trip.destination ?? undefined,
           image: cur.trip.image ?? undefined,
+        };
+
+        if (!cur.tripDays) {
+          return {
+            ...tripInfo,
+            tripDays: { ...acc.tripDays },
+          };
+        }
+
+        // 現在の日付に関連するすべてのルートポイントを取得
+        const dayRoutePoints = cur.tripDays
+          ? allRoutePoints.filter(
+              (point) => point.tripDaySegmentId === cur.tripDays?.id
+            )
+          : [];
+
+        return {
+          ...tripInfo,
           tripDays: {
             ...acc.tripDays,
             [cur.tripDays.id]: {
               dayOrder: cur.tripDays.dayOrder,
               dayDate: cur.tripDays.dayDate,
-              tripRoutePoints: cur.tripRoutePoints
-                ? [
-                    ...(acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? []),
-                    {
-                      name: cur.tripRoutePoints.name,
-                      visitOrder: cur.tripRoutePoints.visitOrder,
-                      arrivalTime: cur.tripRoutePoints.arrivalTime,
-                      departureTime: cur.tripRoutePoints.departureTime,
-                      address: cur.tripRoutePoints.address ?? undefined,
-                      latLng: cur.tripRoutePoints.latLng ?? undefined,
-                    },
-                  ]
-                : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
+              tripDayId: cur.tripDays.id,
+              tripRoutePoints:
+                dayRoutePoints.length > 0
+                  ? dayRoutePoints.map((point) => ({
+                      name: point.name ?? "",
+                      visitOrder: point.visitOrder,
+                      arrivalTime: point.arrivalTime,
+                      departureTime: point.departureTime,
+                      address: point.address ?? undefined,
+                      latLng: point.latLng ?? undefined,
+                      imageUrl: point.imageUrl ?? undefined,
+                      accommodationId: point.accommodationId ?? undefined,
+                    }))
+                  : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
             },
           },
         };
       },
       { tripDays: {} } as ReducedResult
     );
+
+    // tripRoutePointsのvisitOrderの昇順でソート
+    trip.tripDays = Object.values(trip.tripDays).map((tripDay) => ({
+      ...tripDay,
+      tripRoutePoints: tripDay.tripRoutePoints?.sort(
+        (a, b) => a.visitOrder - b.visitOrder
+      ),
+    }));
 
     return c.json<ApiGetOutputType>({
       trip: { ...trip, tripDays: Object.values(trip.tripDays) },

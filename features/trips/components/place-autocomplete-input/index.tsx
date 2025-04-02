@@ -11,6 +11,8 @@ import { Input } from "@/components/shadcn/input";
 
 type PlaceAutocompleteInputProps = ComponentPropsWithoutRef<typeof Input> & {
   onChange: (event: CustomInputEvent) => void;
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchTypes?: string[];
 };
 
 // カスタムイベントの型を定義
@@ -21,9 +23,11 @@ export interface CustomInputEvent extends React.ChangeEvent<HTMLInputElement> {
   };
 }
 
+const DEFAULT_TYPES = ["tourist_attraction", "point_of_interest"];
+
 export const PlaceAutocompleteInput = memo(
   forwardRef<HTMLInputElement, PlaceAutocompleteInputProps>(
-    ({ className, onChange, ...props }, ref) => {
+    ({ className, onChange, onBlur, searchTypes, ...props }, ref) => {
       const placesLibrary = useMapsLibrary("places");
       const inputRef = useRef<HTMLInputElement>(null);
       const [autocomplete, setAutocomplete] =
@@ -36,7 +40,7 @@ export const PlaceAutocompleteInput = memo(
           inputRef.current,
           {
             fields: ["place_id", "geometry", "name", "formatted_address"],
-            types: ["tourist_attraction", "point_of_interest"],
+            types: searchTypes || DEFAULT_TYPES,
           }
         );
 
@@ -76,11 +80,18 @@ export const PlaceAutocompleteInput = memo(
         }
       };
 
+      const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onBlur) {
+          onBlur(e);
+        }
+      };
+
       return (
         <Input
           ref={inputRef}
           className={className}
           onChange={handleInputChange}
+          onBlur={handleInputBlur}
           {...props}
         />
       );

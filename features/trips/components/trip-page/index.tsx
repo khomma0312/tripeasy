@@ -10,14 +10,10 @@ type Props = {
 
 export const TripPage = ({ trip }: Props) => {
   const isDestinationSearchOpen = useIsDestinationSearchOpenAtomValue();
-
   return (
-    <div className="grid grid-cols-[1fr_2fr]">
-      {isDestinationSearchOpen ? (
-        <DestinationSearchSideBar />
-      ) : (
-        <ItinerarySideBar trip={trip} />
-      )}
+    <div className="grid grid-cols-[490px_1fr]">
+      {isDestinationSearchOpen && <DestinationSearchSideBar />}
+      {!isDestinationSearchOpen && <ItinerarySideBar trip={trip} />}
       <ItineraryMap trip={trip} />
     </div>
   );

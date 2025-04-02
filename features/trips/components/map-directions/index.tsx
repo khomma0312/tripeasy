@@ -1,6 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
-import { useEffect, useState } from "react";
-import { useDirectionsLegsSetAtom } from "../../store/direction-legs";
+import { useSelectedDestinationAtomValue } from "../../store/selected-destination";
+import { Point } from "../../hooks/use-itinerary-map";
 
 type Props = {
   origin: { lat: number; lng: number } | string | undefined;
@@ -13,21 +14,40 @@ type Props = {
       }
     | undefined
   )[];
+  validPoints: Point[];
 };
 
 export const MapDirections = ({
   origin,
   destination,
   waypoint_locations,
+  validPoints,
 }: Props) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
+  const selectedDestination = useSelectedDestinationAtomValue();
+  const validPointsRef = useRef([] as Point[]);
 
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer | null>(null);
-  const setLegs = useDirectionsLegsSetAtom();
+
+  // 検索で場所を選択した場合と、目的地に変更があった場合どちらも適切にズーム/パンが行われるよう調整
+  useEffect(() => {
+    if (directionsRenderer && selectedDestination?.latLng) {
+      directionsRenderer.setOptions({ preserveViewport: true });
+    }
+
+    if (
+      directionsRenderer &&
+      validPointsRef.current.length !== validPoints.length
+    ) {
+      directionsRenderer.setOptions({ preserveViewport: false });
+    }
+
+    validPointsRef.current = validPoints;
+  }, [selectedDestination, directionsRenderer, validPoints]);
 
   // ルートのレンダリング
   useEffect(() => {
@@ -57,7 +77,6 @@ export const MapDirections = ({
       })
       .then((result) => {
         directionsRenderer.setDirections(result);
-        setLegs(result.routes[0].legs);
       })
       .catch((error) => {
         console.error(error);
@@ -68,7 +87,6 @@ export const MapDirections = ({
     origin,
     destination,
     waypoint_locations,
-    setLegs,
   ]);
 
   return null;

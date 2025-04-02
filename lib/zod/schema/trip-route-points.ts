@@ -1,8 +1,9 @@
 import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { apiErrorSchema, commonResponseConfig } from "./common";
+import { convertTimeToDate } from "@/features/trips/utils";
 
-export const tripRoutePointFormSchema = z.object({
+const tripRoutePointFormDestinationBaseSchema = z.object({
   name: z.string(),
   address: z.string(),
   latLng: z
@@ -11,15 +12,82 @@ export const tripRoutePointFormSchema = z.object({
       lng: z.number(),
     })
     .optional(),
-  arrivalTime: z.date(),
-  departureTime: z.date(),
+  imageUrl: z.string().optional(),
+  arrivalTime: z.string(),
+  departureTime: z.string(),
   tripDayId: z.number(),
 });
 
-export const tripRoutePointInputSchema = tripRoutePointFormSchema.extend({
+export const tripRoutePointDestinationInputSchema =
+  tripRoutePointFormDestinationBaseSchema;
+
+export const tripRoutePointFormDestinationSchema =
+  tripRoutePointFormDestinationBaseSchema.refine(
+    (data) => {
+      // 時間文字列を比較して、到着時間が出発時間より後になっていないことを確認
+      const arrivalTime = convertTimeToDate(
+        new Date(),
+        `${data.arrivalTime}:00`
+      );
+      const departureTime = convertTimeToDate(
+        new Date(),
+        `${data.departureTime}:00`
+      );
+      return arrivalTime.getTime() <= departureTime.getTime();
+    },
+    {
+      message: "到着時間は出発時間より前である必要があります",
+      path: ["arrivalTime", "departureTime"],
+    }
+  );
+
+const tripRoutePointFormAccommodationBaseSchema = z.object({
+  name: z.string().optional(),
+  address: z.string().optional(),
+  latLng: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .optional(),
+  imageUrl: z.string().optional(),
+  accommodationId: z.string().optional(),
   arrivalTime: z.string(),
   departureTime: z.string(),
+  tripDayId: z.number(),
 });
+
+export const tripRoutePointAccommodationInputSchema =
+  tripRoutePointFormAccommodationBaseSchema.extend({
+    accommodationId: z.number().optional(),
+  });
+
+export const tripRoutePointFormAccommodationSchema =
+  tripRoutePointFormAccommodationBaseSchema.refine(
+    (data) => {
+      // 時間文字列を比較して、到着時間が出発時間より後になっていないことを確認
+      const arrivalTime = convertTimeToDate(
+        new Date(),
+        `${data.arrivalTime}:00`
+      );
+      const departureTime = convertTimeToDate(
+        new Date(),
+        `${data.departureTime}:00`
+      );
+      return arrivalTime.getTime() <= departureTime.getTime();
+    },
+    {
+      message: "到着時間は出発時間より前である必要があります",
+      path: ["arrivalTime", "departureTime"],
+    }
+  );
+
+export const tripRoutePointFormSchema = z.object({
+  destination: tripRoutePointDestinationInputSchema.optional(),
+  accommodation: tripRoutePointAccommodationInputSchema.optional(),
+});
+
+export const tripRoutePointInputSchema = tripRoutePointFormSchema;
 
 export const apiPostInputSchema = z.object({
   tripRoutePoint: tripRoutePointInputSchema,

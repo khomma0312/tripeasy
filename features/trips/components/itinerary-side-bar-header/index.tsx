@@ -20,7 +20,7 @@ export const ItinerarySideBarHeader = ({ trip }: Props) => {
             variant="ghost"
             size="icon"
             className="text-white hover:text-black"
-            onClick={() => router.back()}
+            onClick={() => router.push("/trips")}
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>

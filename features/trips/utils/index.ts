@@ -13,3 +13,7 @@ export const convertTimeToDate = (baseDate: Date, time: string) => {
     baseDate
   );
 };
+
+export const getTripDayIndex = (dayOrder: number | undefined) => {
+  return dayOrder ? dayOrder - 1 : undefined;
+};

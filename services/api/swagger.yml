@@ -1234,6 +1234,8 @@ paths:
                               type: string
                             dayDescription:
                               type: string
+                            tripDayId:
+                              type: number
                             tripRoutePoints:
                               type: array
                               items:
@@ -1259,6 +1261,10 @@ paths:
                                     type: string
                                   departureTime:
                                     type: string
+                                  imageUrl:
+                                    type: string
+                                  accommodationId:
+                                    type: number
                                 required:
                                   - name
                                   - visitOrder
@@ -1267,7 +1273,7 @@ paths:
                           required:
                             - dayOrder
                             - dayDate
-                            - tripRoutePoints
+                            - tripDayId
                       todoIds:
                         type: array
                         items:
@@ -1364,32 +1370,68 @@ paths:
                 tripRoutePoint:
                   type: object
                   properties:
-                    name:
-                      type: string
-                    address:
-                      type: string
-                    latLng:
+                    destination:
                       type: object
                       properties:
-                        lat:
-                          type: number
-                        lng:
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        latLng:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            lng:
+                              type: number
+                          required:
+                            - lat
+                            - lng
+                        imageUrl:
+                          type: string
+                        arrivalTime:
+                          type: string
+                        departureTime:
+                          type: string
+                        tripDayId:
                           type: number
                       required:
-                        - lat
-                        - lng
-                    arrivalTime:
-                      type: string
-                    departureTime:
-                      type: string
-                    tripDayId:
-                      type: number
-                  required:
-                    - name
-                    - address
-                    - arrivalTime
-                    - departureTime
-                    - tripDayId
+                        - name
+                        - address
+                        - arrivalTime
+                        - departureTime
+                        - tripDayId
+                    accommodation:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        latLng:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            lng:
+                              type: number
+                          required:
+                            - lat
+                            - lng
+                        imageUrl:
+                          type: string
+                        accommodationId:
+                          type: number
+                        arrivalTime:
+                          type: string
+                        departureTime:
+                          type: string
+                        tripDayId:
+                          type: number
+                      required:
+                        - arrivalTime
+                        - departureTime
+                        - tripDayId
               required:
                 - tripRoutePoint
       responses:
@@ -1439,9 +1481,32 @@ paths:
           name: searchTerm
           in: query
         - schema:
-            type: boolean
+            type: string
           required: true
           name: searchByPlaceId
+          in: query
+        - schema:
+            type: string
+          required: false
+          name: searchLocationLat
+          in: query
+        - schema:
+            type: string
+          required: false
+          name: searchLocationLng
+          in: query
+        - schema:
+            type: string
+            enum:
+              - accommodation
+              - destination
+          required: false
+          name: searchType
+          in: query
+        - schema:
+            type: string
+          required: false
+          name: nextPageToken
           in: query
       responses:
         "200":

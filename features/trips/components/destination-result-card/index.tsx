@@ -1,10 +1,12 @@
 import { Destination } from "@/features/trips/types";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, MapPin, Plus } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/shadcn/card";
 import { Button } from "@/components/shadcn/button";
+import { ButtonWithTripRoutePointRegisterFormDialog } from "@/features/trips/components/button-with-trip-route-point-register-form-dialog";
 import { useSelectedDestinationSetAtom } from "@/features/trips/store/selected-destination";
+import { useSearchPlaceTypeAtomValue } from "@/features/trips/store/search-place-type";
 
 type Props = {
   destination: Destination;
@@ -12,6 +14,7 @@ type Props = {
 
 export const DestinationResultCard = ({ destination }: Props) => {
   const setSelectedDestination = useSelectedDestinationSetAtom();
+  const searchPlaceType = useSearchPlaceTypeAtomValue();
 
   return (
     <Card className="rounded-sm shadow-md">
@@ -65,16 +68,15 @@ export const DestinationResultCard = ({ destination }: Props) => {
               </Button>
             </li>
             <li>
-              <Button
-                size="sm"
+              <ButtonWithTripRoutePointRegisterFormDialog
+                name={destination.name}
+                address={destination.address}
+                latLng={destination.latLng}
+                imageUrl={destination.imageUrl}
+                buttonSize="sm"
+                placeType={searchPlaceType}
                 className="flex items-center gap-1"
-                onClick={() => {
-                  // 追加ボタンではモーダルを表示して、モーダルの方からdestination, trip route pointを追加する?
-                }}
-              >
-                <Plus className="size-4" />
-                旅程表に追加
-              </Button>
+              />
             </li>
           </ul>
         </div>

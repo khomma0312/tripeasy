@@ -148,6 +148,34 @@
       "when": 1739259148525,
       "tag": "0020_add_tables_for_trip_itinerary_feature",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1740839320229,
+      "tag": "0021_add_image_url_to_destinations",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1740839387043,
+      "tag": "0022_delete_google_location_id_in_destinations",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1742219484224,
+      "tag": "0023_change_imageUrl_to_image_url_destinations",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1742219608208,
+      "tag": "0024_add_accommodation_id_to_trip_route_points",
+      "breakpoints": true
     }
   ]
 }
