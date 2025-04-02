@@ -17,7 +17,7 @@ import {
   todoLists as todoListsTable,
   accommodations as accommodationsTable,
 } from "@/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { getLogger } from "@/lib/logger";
 import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
@@ -222,7 +222,8 @@ const app = new Hono()
       .map((trip) => trip.todoId)
       .filter((id) => id !== null);
 
-    const tripRoutePointsSubquery = db
+    // 目的地のルートポイントを取得
+    const destinationRoutePoints = await db
       .select({
         id: tripRoutePointsTable.id,
         name: destinationsTable.name,
@@ -233,41 +234,74 @@ const app = new Hono()
         departureTime: tripRoutePointsTable.departureTime,
         tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
         imageUrl: destinationsTable.imageUrl,
+        accommodationId: tripRoutePointsTable.accommodationId, // HACK: 必ずnullになる想定だが型を合わせるために取得している
       })
       .from(tripRoutePointsTable)
       .innerJoin(
         destinationsTable,
         eq(tripRoutePointsTable.destinationId, destinationsTable.id)
       )
-      .where(eq(tripRoutePointsTable.userId, userId))
-      .orderBy(desc(tripRoutePointsTable.visitOrder))
-      .as("tripRoutePointsSubquery");
+      .where(
+        and(
+          eq(tripRoutePointsTable.userId, userId),
+          isNotNull(tripRoutePointsTable.destinationId)
+        )
+      );
 
-    // tripとそれに紐づくtripDayとtripRoutePointsを取得
-    const result = await db
+    // 宿泊施設のルートポイントを取得
+    const accommodationRoutePoints = await db
+      .select({
+        id: tripRoutePointsTable.id,
+        name: accommodationsTable.name,
+        address: accommodationsTable.address,
+        latLng: accommodationsTable.latLng,
+        visitOrder: tripRoutePointsTable.visitOrder,
+        arrivalTime: tripRoutePointsTable.arrivalTime,
+        departureTime: tripRoutePointsTable.departureTime,
+        tripDaySegmentId: tripRoutePointsTable.tripDaySegmentId,
+        imageUrl: accommodationsTable.image,
+        accommodationId: tripRoutePointsTable.accommodationId,
+      })
+      .from(tripRoutePointsTable)
+      .innerJoin(
+        accommodationsTable,
+        eq(tripRoutePointsTable.accommodationId, accommodationsTable.id)
+      )
+      .where(
+        and(
+          eq(tripRoutePointsTable.userId, userId),
+          isNotNull(tripRoutePointsTable.accommodationId)
+        )
+      );
+
+    // 両方の結果をマージ
+    const allRoutePoints = [
+      ...destinationRoutePoints,
+      ...accommodationRoutePoints,
+    ];
+
+    // tripとそれに紐づくtripDayを取得
+    const tripAndDays = await db
       .select({
         trip: tripsTable,
         tripDays: tripDaySegmentsTable,
-        tripRoutePoints: {
-          name: tripRoutePointsSubquery.name,
-          address: tripRoutePointsSubquery.address,
-          latLng: tripRoutePointsSubquery.latLng,
-          visitOrder: tripRoutePointsSubquery.visitOrder,
-          arrivalTime: tripRoutePointsSubquery.arrivalTime,
-          departureTime: tripRoutePointsSubquery.departureTime,
-          imageUrl: tripRoutePointsSubquery.imageUrl,
-        },
       })
       .from(tripsTable)
       .leftJoin(
         tripDaySegmentsTable,
         eq(tripsTable.id, tripDaySegmentsTable.tripId)
       )
-      .leftJoin(
-        tripRoutePointsSubquery,
-        eq(tripDaySegmentsTable.id, tripRoutePointsSubquery.tripDaySegmentId)
-      )
       .where(and(eq(tripsTable.id, tripId), eq(tripsTable.userId, userId)));
+
+    // 結果を整形するための構造を作成
+    const result = tripAndDays.map((item) => ({
+      trip: item.trip,
+      tripDays: item.tripDays,
+      tripRoutePoints:
+        allRoutePoints.find(
+          (point) => point.tripDaySegmentId === item.tripDays?.id
+        ) || null,
+    }));
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const reducedResultSchema = tripForDetailSchema.extend({
@@ -297,6 +331,13 @@ const app = new Hono()
           };
         }
 
+        // 現在の日付に関連するすべてのルートポイントを取得
+        const dayRoutePoints = cur.tripDays
+          ? allRoutePoints.filter(
+              (point) => point.tripDaySegmentId === cur.tripDays?.id
+            )
+          : [];
+
         return {
           ...tripInfo,
           tripDays: {
@@ -305,20 +346,19 @@ const app = new Hono()
               dayOrder: cur.tripDays.dayOrder,
               dayDate: cur.tripDays.dayDate,
               tripDayId: cur.tripDays.id,
-              tripRoutePoints: cur.tripRoutePoints
-                ? [
-                    ...(acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? []),
-                    {
-                      name: cur.tripRoutePoints.name,
-                      visitOrder: cur.tripRoutePoints.visitOrder,
-                      arrivalTime: cur.tripRoutePoints.arrivalTime,
-                      departureTime: cur.tripRoutePoints.departureTime,
-                      address: cur.tripRoutePoints.address ?? undefined,
-                      latLng: cur.tripRoutePoints.latLng ?? undefined,
-                      imageUrl: cur.tripRoutePoints.imageUrl ?? undefined,
-                    },
-                  ]
-                : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
+              tripRoutePoints:
+                dayRoutePoints.length > 0
+                  ? dayRoutePoints.map((point) => ({
+                      name: point.name ?? "",
+                      visitOrder: point.visitOrder,
+                      arrivalTime: point.arrivalTime,
+                      departureTime: point.departureTime,
+                      address: point.address ?? undefined,
+                      latLng: point.latLng ?? undefined,
+                      imageUrl: point.imageUrl ?? undefined,
+                      accommodationId: point.accommodationId ?? undefined,
+                    }))
+                  : acc.tripDays?.[cur.tripDays.id]?.tripRoutePoints ?? [],
             },
           },
         };
