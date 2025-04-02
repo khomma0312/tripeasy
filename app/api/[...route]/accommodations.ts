@@ -320,7 +320,8 @@ const app = new Hono()
     const perPage = c.req.query("perPage")
       ? Number(c.req.query("perPage"))
       : undefined;
-    const limit = perPage ?? paginationDefaultLimit;
+    // perPageに-1が指定された場合はすべて取得するので、デフォルト件数の適用から除外する
+    const limit = perPage || perPage === -1 ? perPage : paginationDefaultLimit;
     const offset = limit * (page - 1);
 
     if (!session?.user) {
@@ -333,7 +334,7 @@ const app = new Hono()
 
     const userId = session.user.id ?? "";
 
-    const accommodations = await db
+    const baseQuery = db
       .select({
         id: accommodationsTable.id,
         name: accommodationsTable.name,
@@ -345,10 +346,16 @@ const app = new Hono()
         bookingId: accommodationsTable.bookingId,
       })
       .from(accommodationsTable)
-      .where(eq(accommodationsTable.userId, userId))
-      .offset(offset)
-      .limit(limit)
-      .orderBy(desc(accommodationsTable.id));
+      .where(eq(accommodationsTable.userId, userId));
+
+    // limitが-1の時はユーザーに紐づくtripsを全件取得、それ以外はoffset, limitに合わせて取得
+    const accommodations =
+      limit === -1
+        ? await baseQuery
+        : await baseQuery
+            .offset(offset)
+            .limit(limit)
+            .orderBy(desc(accommodationsTable.id));
 
     const [totalCount] = await db
       .select({
