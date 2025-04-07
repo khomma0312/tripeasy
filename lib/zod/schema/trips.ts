@@ -24,6 +24,7 @@ export const tripForListSchema = z.object({
 });
 
 export const tripRoutePointSchema = z.object({
+  id: z.number(),
   name: z.string(),
   address: z.string().optional(),
   latLng: z.object({ x: z.number(), y: z.number() }).optional(),

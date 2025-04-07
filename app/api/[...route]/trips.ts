@@ -349,6 +349,7 @@ const app = new Hono()
               tripRoutePoints:
                 dayRoutePoints.length > 0
                   ? dayRoutePoints.map((point) => ({
+                      id: point.id,
                       name: point.name ?? "",
                       visitOrder: point.visitOrder,
                       arrivalTime: point.arrivalTime,

@@ -1241,6 +1241,8 @@ paths:
                               items:
                                 type: object
                                 properties:
+                                  id:
+                                    type: number
                                   name:
                                     type: string
                                   address:
@@ -1266,6 +1268,7 @@ paths:
                                   accommodationId:
                                     type: number
                                 required:
+                                  - id
                                   - name
                                   - visitOrder
                                   - arrivalTime
