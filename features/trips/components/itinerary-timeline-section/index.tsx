@@ -2,13 +2,13 @@ import { TripDay } from "@/features/trips/types";
 import { colorNames, getBgColorForTripDay } from "@/features/trips/consts";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import { ItineraryTripRoutePointCard } from "@/features/trips/components/itinerary-trip-route-point-card";
 import { TripRoutePointAddButtonGroup } from "@/features/trips/components/trip-route-point-add-button-group";
 import { cn } from "@/utils/common";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useSelectedTripDayIndexAtom } from "@/features/trips/store/selected-trip-day-index";
 import { getTripDayIndex } from "@/features/trips/utils";
+import { ItineraryTripRoutePointCardArea } from "../itinerary-trip-route-point-card-area";
 
 type Props = {
   tripDay: TripDay;
@@ -68,15 +68,10 @@ export const ItineraryTimelineSection = ({ tripDay, tripDays }: Props) => {
         </p>
       </div>
       {/* コンテンツ部分 */}
-      <div className="flex flex-col gap-3">
-        {tripRoutePoints?.map((tripRoutePoint) => (
-          <ItineraryTripRoutePointCard
-            key={tripRoutePoint.visitOrder}
-            tripRoutePoint={tripRoutePoint}
-            itineraryDayDate={itineraryDayDate}
-          />
-        ))}
-      </div>
+      <ItineraryTripRoutePointCardArea
+        tripRoutePoints={tripRoutePoints}
+        itineraryDayDate={itineraryDayDate}
+      />
       {/* 予定追加ボタン部分 */}
       <TripRoutePointAddButtonGroup tripDayId={tripDayId} />
     </div>
