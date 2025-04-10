@@ -18,14 +18,15 @@ export const SortableItineraryTripRoutePointCard = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    touchAction: "none",
   };
 
   return (
     <ItineraryTripRoutePointCard
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
+      attributes={attributes}
+      listeners={listeners}
       tripRoutePoint={tripRoutePoint}
       itineraryDayDate={itineraryDayDate}
     />

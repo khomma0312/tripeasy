@@ -1,11 +1,14 @@
 import { Card, CardContent } from "@/components/shadcn/card";
 import { TripRoutePoint } from "@/features/trips/types";
 import { differenceInMinutes, format } from "date-fns";
-import { ArrowDownUp, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { convertTimeToDate } from "../../utils";
 import { Button } from "@/components/shadcn/button";
 import { forwardRef } from "react";
+import { DragAndDropButton } from "../drag-and-drop-button";
+import { DraggableAttributes } from "@dnd-kit/core";
+import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 type Props = {
   tripRoutePoint: TripRoutePoint;
@@ -14,10 +17,15 @@ type Props = {
     transform: string | undefined;
     transition: string | undefined;
   };
+  attributes: DraggableAttributes;
+  listeners: SyntheticListenerMap | undefined;
 };
 
 export const ItineraryTripRoutePointCard = forwardRef<HTMLDivElement, Props>(
-  ({ tripRoutePoint, itineraryDayDate, ...props }: Props, ref) => {
+  (
+    { tripRoutePoint, itineraryDayDate, style, attributes, listeners }: Props,
+    ref
+  ) => {
     const { name, address, arrivalTime, departureTime, visitOrder, imageUrl } =
       tripRoutePoint;
 
@@ -37,7 +45,12 @@ export const ItineraryTripRoutePointCard = forwardRef<HTMLDivElement, Props>(
       : `${stayingMinutes}分`;
 
     return (
-      <Card {...props} ref={ref} className="rounded-sm shadow-md relative">
+      <Card
+        className="rounded-sm shadow-md relative cursor-default"
+        ref={ref}
+        style={style}
+        {...attributes}
+      >
         <CardContent className="grid grid-cols-[100px_1fr] p-4">
           <div>
             <div className="relative">
@@ -71,14 +84,7 @@ export const ItineraryTripRoutePointCard = forwardRef<HTMLDivElement, Props>(
             <div>
               <ul className="flex justify-end items-center gap-1 text-sm text-gray-600">
                 <li>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center gap-1"
-                  >
-                    <ArrowDownUp className="size-4" />
-                    移動
-                  </Button>
+                  <DragAndDropButton listeners={listeners} />
                 </li>
                 <li>
                   <Button
