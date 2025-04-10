@@ -69,6 +69,7 @@ export const ItineraryTimelineSection = ({ tripDay, tripDays }: Props) => {
       </div>
       {/* コンテンツ部分 */}
       <ItineraryTripRoutePointCardArea
+        tripDayId={tripDayId}
         tripRoutePoints={tripRoutePoints}
         itineraryDayDate={itineraryDayDate}
       />
