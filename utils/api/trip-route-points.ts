@@ -1,5 +1,5 @@
 import { db } from "@/lib/drizzle/db";
-import { eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   tripRoutePoints as tripRoutePointsTable,
   destinations as destinationsTable,
@@ -7,7 +7,10 @@ import {
   tripDaySegments as tripDaySegmentsTable,
 } from "@/schema";
 import { convertTimeToDate } from "@/features/trips/utils";
-import { TripRoutePointAccommodationInputValues } from "@/features/trips/types";
+import {
+  TripRoutePoint,
+  TripRoutePointAccommodationInputValues,
+} from "@/features/trips/types";
 import {
   getAddressFromLatLng,
   getLatLngFromAddress,
@@ -202,5 +205,52 @@ export const updateTripRoutePointVisitOrder = async (
         visitOrder: caseExpression,
       })
       .where(inArray(tripRoutePointsTable.id, ids));
+  }
+};
+
+type SortedTripRoutePoint = Pick<
+  TripRoutePoint,
+  "id" | "visitOrder" | "arrivalTime" | "departureTime"
+>;
+
+export const updateReorderedTripRoutePoints = async (
+  sortedTripRoutePoints: SortedTripRoutePoint[],
+  userId: string
+) => {
+  if (sortedTripRoutePoints.length > 0) {
+    const ids = sortedTripRoutePoints
+      .map((item) => item.id)
+      .filter((id) => id !== null);
+
+    // 各項目のCASE式を作成
+    let visitOrderCase = sql`CASE `;
+    let arrivalTimeCase = sql`CASE `;
+    let departureTimeCase = sql`CASE `;
+
+    sortedTripRoutePoints.forEach((item) => {
+      visitOrderCase = sql`${visitOrderCase} WHEN ${tripRoutePointsTable.id} = ${item.id} THEN ${item.visitOrder}`;
+      arrivalTimeCase = sql`${arrivalTimeCase} WHEN ${tripRoutePointsTable.id} = ${item.id} THEN ${item.arrivalTime}`;
+      departureTimeCase = sql`${departureTimeCase} WHEN ${tripRoutePointsTable.id} = ${item.id} THEN ${item.departureTime}`;
+    });
+    visitOrderCase = sql`${visitOrderCase} ELSE ${tripRoutePointsTable.visitOrder} END`;
+    arrivalTimeCase = sql`${arrivalTimeCase} ELSE ${tripRoutePointsTable.arrivalTime} END`;
+    departureTimeCase = sql`${departureTimeCase} ELSE ${tripRoutePointsTable.departureTime} END`;
+
+    const updatedTripRoutePoints = await db
+      .update(tripRoutePointsTable)
+      .set({
+        visitOrder: visitOrderCase,
+        arrivalTime: arrivalTimeCase,
+        departureTime: departureTimeCase,
+      })
+      .where(
+        and(
+          inArray(tripRoutePointsTable.id, ids),
+          eq(tripRoutePointsTable.userId, userId)
+        )
+      )
+      .returning({ id: tripRoutePointsTable.id });
+
+    return updatedTripRoutePoints.map((item) => item.id);
   }
 };

@@ -2,6 +2,7 @@ import { RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { apiErrorSchema, commonResponseConfig } from "./common";
 import { convertTimeToDate } from "@/features/trips/utils";
+import { tripRoutePointSchema } from "./trips";
 
 const tripRoutePointFormDestinationBaseSchema = z.object({
   name: z.string(),
@@ -94,11 +95,22 @@ export const apiPostInputSchema = z.object({
 });
 export type ApiPostInputType = z.infer<typeof apiPostInputSchema>;
 
+export const apiPatchInputSchema = z.object({
+  tripRoutePoints: z.array(tripRoutePointSchema),
+});
+export type ApiPatchInputType = z.infer<typeof apiPatchInputSchema>;
+
 // POST APIの成功時に返却されるoutputのスキーマ
 export const apiPostOutputSchema = z.object({
   id: z.number(),
 });
 export type ApiPostOutputType = z.infer<typeof apiPostOutputSchema>;
+
+// PATCH APIの成功時に返却されるoutputのスキーマ
+export const apiPatchOutputSchema = z.object({
+  ids: z.array(z.number()),
+});
+export type ApiPatchOutputType = z.infer<typeof apiPatchOutputSchema>;
 
 // POST APIのスキーマ
 export const tripRoutePointsPostApiSchema: RouteConfig = {
@@ -123,6 +135,48 @@ export const tripRoutePointsPostApiSchema: RouteConfig = {
     },
     500: {
       description: "目的地作成に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+  },
+};
+
+// PATCH APIのスキーマ
+export const tripRoutePointsPatchApiSchema: RouteConfig = {
+  method: "patch",
+  path: "/trip-route-points/reorder",
+  summary: "目的地の訪問順序・時間の一括更新API",
+  tags: ["trip-route-points"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: apiPatchInputSchema },
+      },
+    },
+  },
+  responses: {
+    ...commonResponseConfig,
+    200: {
+      description: "目的地の訪問順序・時間の一括更新成功",
+      content: {
+        "application/json": { schema: apiPatchOutputSchema },
+      },
+    },
+    400: {
+      description: "目的地の訪問順序・時間の一括更新に失敗",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+    404: {
+      description: "更新対象のデータが見つからない",
+      content: {
+        "application/json": { schema: apiErrorSchema },
+      },
+    },
+    500: {
+      description: "目的地の訪問順序・時間の一括更新に失敗",
       content: {
         "application/json": { schema: apiErrorSchema },
       },

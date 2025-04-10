@@ -14,6 +14,12 @@ import type {
   UseMutationResult
 } from '@tanstack/react-query'
 import type {
+  PatchTripRoutePointsReorder200,
+  PatchTripRoutePointsReorder400,
+  PatchTripRoutePointsReorder403,
+  PatchTripRoutePointsReorder404,
+  PatchTripRoutePointsReorder500,
+  PatchTripRoutePointsReorderBody,
   PostTripRoutePoints200,
   PostTripRoutePoints403,
   PostTripRoutePoints500,
@@ -81,6 +87,63 @@ export const usePostTripRoutePoints = <TError = ErrorType<PostTripRoutePoints403
       > => {
 
       const mutationOptions = getPostTripRoutePointsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary 目的地の訪問順序・時間の一括更新API
+ */
+export const patchTripRoutePointsReorder = (
+    patchTripRoutePointsReorderBody: BodyType<PatchTripRoutePointsReorderBody>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PatchTripRoutePointsReorder200>(
+      {url: `/api/trip-route-points/reorder`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchTripRoutePointsReorderBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchTripRoutePointsReorderMutationOptions = <TError = ErrorType<PatchTripRoutePointsReorder400 | PatchTripRoutePointsReorder403 | PatchTripRoutePointsReorder404 | PatchTripRoutePointsReorder500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsReorder>>, TError,{data: BodyType<PatchTripRoutePointsReorderBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsReorder>>, TError,{data: BodyType<PatchTripRoutePointsReorderBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchTripRoutePointsReorder>>, {data: BodyType<PatchTripRoutePointsReorderBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchTripRoutePointsReorder(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchTripRoutePointsReorderMutationResult = NonNullable<Awaited<ReturnType<typeof patchTripRoutePointsReorder>>>
+    export type PatchTripRoutePointsReorderMutationBody = BodyType<PatchTripRoutePointsReorderBody>
+    export type PatchTripRoutePointsReorderMutationError = ErrorType<PatchTripRoutePointsReorder400 | PatchTripRoutePointsReorder403 | PatchTripRoutePointsReorder404 | PatchTripRoutePointsReorder500>
+
+    /**
+ * @summary 目的地の訪問順序・時間の一括更新API
+ */
+export const usePatchTripRoutePointsReorder = <TError = ErrorType<PatchTripRoutePointsReorder400 | PatchTripRoutePointsReorder403 | PatchTripRoutePointsReorder404 | PatchTripRoutePointsReorder500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsReorder>>, TError,{data: BodyType<PatchTripRoutePointsReorderBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchTripRoutePointsReorder>>,
+        TError,
+        {data: BodyType<PatchTripRoutePointsReorderBody>},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchTripRoutePointsReorderMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

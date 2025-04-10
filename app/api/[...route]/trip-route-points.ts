@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { ApiErrorType } from "@/lib/zod/schema/common";
 import { zValidator } from "@hono/zod-validator";
 import {
+  apiPatchInputSchema,
+  ApiPatchOutputType,
   apiPostInputSchema,
   ApiPostOutputType,
 } from "@/lib/zod/schema/trip-route-points";
@@ -13,15 +15,14 @@ import {
   addNewDestination,
   addNewTripRoutePoint,
   calculateNewRoutePointVisitOrder,
+  updateReorderedTripRoutePoints,
   updateTripRoutePointVisitOrder,
 } from "@/utils/api/trip-route-points";
 
 const logger = getLogger("api/trip-route-points");
 
-const app = new Hono().post(
-  "/",
-  zValidator("json", apiPostInputSchema),
-  async (c) => {
+const app = new Hono()
+  .post("/", zValidator("json", apiPostInputSchema), async (c) => {
     const session = await auth();
     const { tripRoutePoint } = c.req.valid("json");
     const { destination, accommodation } = tripRoutePoint;
@@ -155,7 +156,54 @@ const app = new Hono().post(
 
     logger.error("destinationまたはaccommodationが存在しません");
     return c.json<ApiErrorType>({ message: "データの登録に失敗しました" }, 500);
-  }
-);
+  })
+  .patch("/reorder", zValidator("json", apiPatchInputSchema), async (c) => {
+    const session = await auth();
+    const { tripRoutePoints } = c.req.valid("json");
+
+    if (!session?.user) {
+      logger.error("ユーザー認証に失敗しました");
+      return c.json<ApiErrorType>(
+        { message: "ユーザー認証されていません" },
+        403
+      );
+    }
+
+    const userId = session.user.id ?? "";
+
+    // 入力データの基本検証
+    if (!tripRoutePoints || tripRoutePoints.length === 0) {
+      logger.error("並び替えるポイントが指定されていません");
+      return c.json<ApiErrorType>(
+        { message: "並び替えるポイントが指定されていません" },
+        400
+      );
+    }
+
+    try {
+      // データ所有権の確認を含む更新処理
+      const updatedIds = await updateReorderedTripRoutePoints(
+        tripRoutePoints,
+        userId
+      );
+
+      if (!updatedIds || updatedIds.length === 0) {
+        return c.json<ApiErrorType>(
+          { message: "更新対象のデータが見つかりませんでした" },
+          404
+        );
+      }
+
+      return c.json<ApiPatchOutputType>({
+        ids: updatedIds,
+      });
+    } catch (e) {
+      logger.error(`並び順更新中にエラーが発生しました: ${e}`);
+      return c.json<ApiErrorType>(
+        { message: "データの更新に失敗しました" },
+        500
+      );
+    }
+  });
 
 export default app;

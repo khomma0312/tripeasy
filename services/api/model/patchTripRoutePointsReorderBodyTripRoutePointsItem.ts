@@ -5,16 +5,16 @@
  * TripeasyのAPI仕様書
  * OpenAPI spec version: 1.0.0
  */
-import type { GetTripsId200TripTripDaysItemTripRoutePointsItemLatLng } from './getTripsId200TripTripDaysItemTripRoutePointsItemLatLng';
+import type { PatchTripRoutePointsReorderBodyTripRoutePointsItemLatLng } from './patchTripRoutePointsReorderBodyTripRoutePointsItemLatLng';
 
-export type GetTripsId200TripTripDaysItemTripRoutePointsItem = {
+export type PatchTripRoutePointsReorderBodyTripRoutePointsItem = {
   accommodationId?: number;
   address?: string;
   arrivalTime: string;
   departureTime: string;
   id: number;
   imageUrl?: string;
-  latLng?: GetTripsId200TripTripDaysItemTripRoutePointsItemLatLng;
+  latLng?: PatchTripRoutePointsReorderBodyTripRoutePointsItemLatLng;
   name: string;
   visitOrder: number;
 };
