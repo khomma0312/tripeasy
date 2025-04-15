@@ -4,7 +4,7 @@ import { Form } from "@/components/shadcn/form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
 import {
   TripRoutePointFormDestinationFieldValues,
-  TripRoutePointFormFieldValues,
+  TripRoutePointInputValues,
   TripRoutePointPlaceType,
 } from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
@@ -15,7 +15,7 @@ type Props = {
   form: UseFormReturn<TripRoutePointFormDestinationFieldValues>;
   placeType: TripRoutePointPlaceType;
   isPending: boolean;
-  onSubmit: (trip: TripRoutePointFormFieldValues) => void;
+  onSubmit: (trip: TripRoutePointInputValues) => void;
   RegisterButton?: React.ComponentType;
   CloseButton?: React.ComponentType;
 };
@@ -65,8 +65,6 @@ export const TripRoutePointRegisterForm = ({
                 control={form.control}
                 name="arrivalTime"
                 label="到着時間"
-                defaultHour={9}
-                defaultMinute={0}
                 isRequired
                 onChange={(hour, minute) => {
                   form.setValue("arrivalTime", `${hour}:${minute}`);
@@ -76,8 +74,6 @@ export const TripRoutePointRegisterForm = ({
                 control={form.control}
                 name="departureTime"
                 label="出発時間"
-                defaultHour={10}
-                defaultMinute={0}
                 comparedTime={arrivalTimeObj}
                 isRequired
                 onChange={(hour, minute) => {
