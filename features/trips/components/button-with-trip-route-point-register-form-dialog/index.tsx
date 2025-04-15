@@ -8,6 +8,7 @@ import { useTripRoutePointRegisterForm } from "@/features/trips/hooks/use-trip-r
 import { useParams } from "next/navigation";
 import { useSelectedTripDayIdForRegisterAtomValue } from "../../store/selected-tripDayId-for-register";
 import { TripRoutePointPlaceType } from "../../types";
+import { Plus } from "lucide-react";
 
 type Props = {
   className?: string;
@@ -46,6 +47,7 @@ export const ButtonWithTripRoutePointRegisterFormDialog = ({
     <ButtonWithFormDialog
       key={formKey}
       buttonLabel="旅程表に追加"
+      buttonIcon={<Plus />}
       dialogTitle="旅程表に追加"
       dialogDescription="旅行地点に関する情報を入力してください。"
       className={className}
