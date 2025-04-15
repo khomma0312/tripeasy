@@ -22,8 +22,9 @@ import {
   todoListsPatchApiSchema,
 } from "./todo-lists";
 import {
-  tripRoutePointsPatchApiSchema,
+  tripRoutePointsReorderPatchApiSchema,
   tripRoutePointsPostApiSchema,
+  tripRoutePointsPatchApiSchema,
 } from "./trip-route-points";
 import {
   tripsAllGetApiSchema,
@@ -62,6 +63,7 @@ export const pathSchemas = [
   tripsDeleteApiSchema,
   // 旅行情報の目的地用API
   tripRoutePointsPostApiSchema,
+  tripRoutePointsReorderPatchApiSchema,
   tripRoutePointsPatchApiSchema,
   // 目的地用API
   destinationsSearchGetApiSchema,

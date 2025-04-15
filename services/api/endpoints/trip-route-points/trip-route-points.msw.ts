@@ -14,6 +14,7 @@ import {
   http
 } from 'msw'
 import type {
+  PatchTripRoutePointsId200,
   PatchTripRoutePointsReorder200,
   PostTripRoutePoints200
 } from '../../model'
@@ -21,6 +22,8 @@ import type {
 export const getPostTripRoutePointsResponseMock = (overrideResponse: Partial< PostTripRoutePoints200 > = {}): PostTripRoutePoints200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getPatchTripRoutePointsReorderResponseMock = (overrideResponse: Partial< PatchTripRoutePointsReorder200 > = {}): PatchTripRoutePointsReorder200 => ({ids: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => (faker.number.int({min: undefined, max: undefined}))), ...overrideResponse})
+
+export const getPatchTripRoutePointsIdResponseMock = (overrideResponse: Partial< PatchTripRoutePointsId200 > = {}): PatchTripRoutePointsId200 => ({id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 
 export const getPostTripRoutePointsMockHandler = (overrideResponse?: PostTripRoutePoints200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PostTripRoutePoints200> | PostTripRoutePoints200)) => {
@@ -46,7 +49,20 @@ export const getPatchTripRoutePointsReorderMockHandler = (overrideResponse?: Pat
       })
   })
 }
+
+export const getPatchTripRoutePointsIdMockHandler = (overrideResponse?: PatchTripRoutePointsId200 | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<PatchTripRoutePointsId200> | PatchTripRoutePointsId200)) => {
+  return http.patch('*/trip-route-points/:id', async (info) => {await delay(1000);
+  
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse) 
+            : getPatchTripRoutePointsIdResponseMock()),
+      { status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+  })
+}
 export const getTripRoutePointsMock = () => [
   getPostTripRoutePointsMockHandler(),
-  getPatchTripRoutePointsReorderMockHandler()
+  getPatchTripRoutePointsReorderMockHandler(),
+  getPatchTripRoutePointsIdMockHandler()
 ]
