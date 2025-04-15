@@ -14,6 +14,12 @@ import type {
   UseMutationResult
 } from '@tanstack/react-query'
 import type {
+  PatchTripRoutePointsId200,
+  PatchTripRoutePointsId400,
+  PatchTripRoutePointsId403,
+  PatchTripRoutePointsId404,
+  PatchTripRoutePointsId500,
+  PatchTripRoutePointsIdBody,
   PatchTripRoutePointsReorder200,
   PatchTripRoutePointsReorder400,
   PatchTripRoutePointsReorder403,
@@ -144,6 +150,64 @@ export const usePatchTripRoutePointsReorder = <TError = ErrorType<PatchTripRoute
       > => {
 
       const mutationOptions = getPatchTripRoutePointsReorderMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary 単一の旅行地点の更新API
+ */
+export const patchTripRoutePointsId = (
+    id: number,
+    patchTripRoutePointsIdBody: BodyType<PatchTripRoutePointsIdBody>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PatchTripRoutePointsId200>(
+      {url: `/api/trip-route-points/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchTripRoutePointsIdBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchTripRoutePointsIdMutationOptions = <TError = ErrorType<PatchTripRoutePointsId400 | PatchTripRoutePointsId403 | PatchTripRoutePointsId404 | PatchTripRoutePointsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsId>>, TError,{id: number;data: BodyType<PatchTripRoutePointsIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsId>>, TError,{id: number;data: BodyType<PatchTripRoutePointsIdBody>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchTripRoutePointsId>>, {id: number;data: BodyType<PatchTripRoutePointsIdBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchTripRoutePointsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchTripRoutePointsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchTripRoutePointsId>>>
+    export type PatchTripRoutePointsIdMutationBody = BodyType<PatchTripRoutePointsIdBody>
+    export type PatchTripRoutePointsIdMutationError = ErrorType<PatchTripRoutePointsId400 | PatchTripRoutePointsId403 | PatchTripRoutePointsId404 | PatchTripRoutePointsId500>
+
+    /**
+ * @summary 単一の旅行地点の更新API
+ */
+export const usePatchTripRoutePointsId = <TError = ErrorType<PatchTripRoutePointsId400 | PatchTripRoutePointsId403 | PatchTripRoutePointsId404 | PatchTripRoutePointsId500>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTripRoutePointsId>>, TError,{id: number;data: BodyType<PatchTripRoutePointsIdBody>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchTripRoutePointsId>>,
+        TError,
+        {id: number;data: BodyType<PatchTripRoutePointsIdBody>},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchTripRoutePointsIdMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

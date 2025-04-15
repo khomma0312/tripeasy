@@ -1,15 +1,12 @@
-import { Dispatch, SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trip, TripRoutePoint } from "@/features/trips/types";
 import { useErrorToast } from "@/hooks/common/use-error-toast";
 import { useToast } from "@/hooks/shadcn/use-toast";
 import { usePatchTripRoutePointsReorder } from "@/services/api/endpoints/trip-route-points/trip-route-points";
+import { useOptimisticTripRoutePointsSetAtom } from "../store/optimisitic-trip-route-points";
 
-export const useUpdateTripRoutePoints = (
-  tripId: number,
-  tripDayId: number,
-  setSortableItems?: Dispatch<SetStateAction<TripRoutePoint[] | undefined>>
-) => {
+export const useUpdateTripRoutePoints = (tripId: number, tripDayId: number) => {
+  const setOptimisticTripRoutePoints = useOptimisticTripRoutePointsSetAtom();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { errorToast } = useErrorToast();
@@ -49,9 +46,7 @@ export const useUpdateTripRoutePoints = (
         queryClient.setQueryData([`/api/trips/${tripId}`], context?.previous);
 
         // UIの状態も元に戻す
-        if (setSortableItems) {
-          setSortableItems(previousTripDay?.tripRoutePoints);
-        }
+        setOptimisticTripRoutePoints(previousTripDay?.tripRoutePoints);
       },
     },
   });

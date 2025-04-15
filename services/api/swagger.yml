@@ -1579,6 +1579,110 @@ paths:
                     type: string
                 required:
                   - message
+  /trip-route-points/{id}:
+    patch:
+      summary: 単一の旅行地点の更新API
+      tags:
+        - trip-route-points
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tripRoutePoint:
+                  type: object
+                  properties:
+                    destination:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        arrivalTime:
+                          type: string
+                        departureTime:
+                          type: string
+                      required:
+                        - name
+                        - arrivalTime
+                        - departureTime
+                    accommodation:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        arrivalTime:
+                          type: string
+                        departureTime:
+                          type: string
+                      required:
+                        - name
+                        - arrivalTime
+                        - departureTime
+              required:
+                - tripRoutePoint
+      responses:
+        "200":
+          description: 目的地の訪問順序・時間の一括更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                required:
+                  - id
+        "400":
+          description: 目的地の訪問順序・時間の一括更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "403":
+          description: ユーザー検証に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: 更新対象のデータが見つからない
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          description: 目的地の訪問順序・時間の一括更新に失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
   /destinations/search:
     get:
       summary: 外部APIを使用して目的地の検索結果の取得

@@ -9,6 +9,7 @@ import { forwardRef } from "react";
 import { DragAndDropButton } from "../drag-and-drop-button";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import { ButtonWithTripRoutePointUpdateFormDialog } from "../button-with-trip-route-point-update-form-dialog";
 
 type Props = {
   tripRoutePoint: TripRoutePoint;
@@ -26,8 +27,16 @@ export const ItineraryTripRoutePointCard = forwardRef<HTMLDivElement, Props>(
     { tripRoutePoint, itineraryDayDate, style, attributes, listeners }: Props,
     ref
   ) => {
-    const { name, address, arrivalTime, departureTime, visitOrder, imageUrl } =
-      tripRoutePoint;
+    const {
+      id,
+      name,
+      address,
+      arrivalTime,
+      departureTime,
+      visitOrder,
+      imageUrl,
+      accommodationId,
+    } = tripRoutePoint;
 
     const arrivalTimeDate = convertTimeToDate(itineraryDayDate, arrivalTime);
     const departureTimeDate = convertTimeToDate(
@@ -85,6 +94,20 @@ export const ItineraryTripRoutePointCard = forwardRef<HTMLDivElement, Props>(
               <ul className="flex justify-end items-center gap-1 text-sm text-gray-600">
                 <li>
                   <DragAndDropButton listeners={listeners} />
+                </li>
+                <li>
+                  <ButtonWithTripRoutePointUpdateFormDialog
+                    variant="ghost"
+                    size="sm"
+                    tripRoutePointId={id}
+                    name={name}
+                    arrivalTime={arrivalTime}
+                    departureTime={departureTime}
+                    placeType={
+                      accommodationId ? "accommodation" : "destination"
+                    }
+                    className="flex items-center gap-1"
+                  />
                 </li>
                 <li>
                   <Button

@@ -5,7 +5,7 @@ import { usePostTripRoutePoints } from "@/services/api/endpoints/trip-route-poin
 import {
   TripRoutePointFormAccommodationFieldValues,
   TripRoutePointFormDestinationFieldValues,
-  TripRoutePointFormFieldValues,
+  TripRoutePointInputValues,
 } from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
 import { useRef } from "react";
@@ -37,7 +37,7 @@ export const useAddTripRoutePoint = (
     },
   });
 
-  const onSubmit = (tripRoutePoint: TripRoutePointFormFieldValues) => {
+  const onSubmit = (tripRoutePoint: TripRoutePointInputValues) => {
     mutate({
       data: {
         tripRoutePoint,

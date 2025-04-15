@@ -1,4 +1,4 @@
-import { Control, FieldValues, Path } from "react-hook-form";
+import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 import {
   FormControl,
   FormField,
@@ -27,14 +27,13 @@ type Props<T extends FieldValues> = {
     minute: number;
   };
   isRequired?: boolean;
-  defaultHour?: number;
-  defaultMinute?: number;
 };
 
 // セレクトボックスの選択肢の設定
-const MINUTE_STEP = 10;
+const MINUTE_MAX = 60;
+const MINUTE_STEP = 5;
 const MINUTE_OPTION_NUMBERS = Array.from(
-  { length: 6 },
+  { length: MINUTE_MAX / MINUTE_STEP },
   (_, i) => i * MINUTE_STEP
 );
 const HOUR_OPTION_NUMBERS = Array.from({ length: 24 }, (_, i) => i);
@@ -59,12 +58,14 @@ export const RHFTimeSelectField = <T extends FieldValues>({
   label,
   comparedTime,
   isRequired,
-  defaultHour,
-  defaultMinute,
 }: Props<T>) => {
-  const [hour, setHour] = useState<string>(defaultHour?.toString() || "0");
+  const defaultValue = useWatch({ control, name });
+  const [defaultHour, defaultMinute] = defaultValue?.split(":") || [];
+  const [hour, setHour] = useState<string>(
+    isNaN(Number(defaultHour)) ? "0" : Number(defaultHour).toString()
+  );
   const [minute, setMinute] = useState<string>(
-    defaultMinute?.toString() || "0"
+    isNaN(Number(defaultMinute)) ? "0" : Number(defaultMinute).toString()
   );
 
   const { hour: comparedTimeHour, minute: comparedTimeMinute } =
@@ -107,7 +108,16 @@ export const RHFTimeSelectField = <T extends FieldValues>({
     }
 
     onChange(padTime(hour), padTime(minute));
-  }, [comparedTime, hour, minute]);
+  }, [
+    comparedTime,
+    hour,
+    minute,
+    onChange,
+    comparedTimeDate,
+    comparedTimeHour,
+    comparedTimeMinute,
+    fieldTimeDate,
+  ]);
 
   return (
     <FormField
@@ -166,7 +176,10 @@ export const RHFTimeSelectField = <T extends FieldValues>({
               </FormControl>
             </div>
           </div>
-          <FormMessage />
+          {/* 高さを固定してエラーメッセージ表示時にカラム落ちしないようにする */}
+          <div className="h-4">
+            <FormMessage />
+          </div>
         </FormItem>
       )}
     />

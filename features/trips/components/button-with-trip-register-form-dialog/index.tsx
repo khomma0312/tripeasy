@@ -7,6 +7,7 @@ import {
   ButtonWithFormDialog,
   CloseButton,
 } from "@/components/shared/button-with-form-dialog";
+import { Plus } from "lucide-react";
 
 type Props = {
   className?: string;
@@ -19,6 +20,7 @@ export const ButtonWithTripRegisterFormDialog = ({ className }: Props) => {
   return (
     <ButtonWithFormDialog
       buttonLabel="旅程を作成"
+      buttonIcon={<Plus />}
       dialogTitle="スケジュールを作成"
       dialogDescription="旅行の基本情報を入力してください。"
       className={className}

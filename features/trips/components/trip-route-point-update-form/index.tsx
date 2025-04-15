@@ -3,24 +3,24 @@
 import { Form } from "@/components/shadcn/form";
 import { RHFInputField } from "@/components/shared/rhf-input-field";
 import {
-  TripRoutePointFormDestinationFieldValues,
-  TripRoutePointInputValues,
+  TripRoutePointUpdateFormFieldValues,
   TripRoutePointPlaceType,
+  TripRoutePointUpdateInputValues,
 } from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/shadcn/button";
 import { RHFTimeSelectField } from "@/components/shared/rhf-time-select-field";
 
 type Props = {
-  form: UseFormReturn<TripRoutePointFormDestinationFieldValues>;
+  form: UseFormReturn<TripRoutePointUpdateFormFieldValues>;
   placeType: TripRoutePointPlaceType;
   isPending: boolean;
-  onSubmit: (trip: TripRoutePointInputValues) => void;
+  onSubmit: (tripRoutePoint: TripRoutePointUpdateInputValues) => void;
   RegisterButton?: React.ComponentType;
   CloseButton?: React.ComponentType;
 };
 
-export const TripRoutePointRegisterForm = ({
+export const TripRoutePointUpdateForm = ({
   form,
   placeType,
   onSubmit,
@@ -34,7 +34,7 @@ export const TripRoutePointRegisterForm = ({
     minute: arrivalTimeMinute ? parseInt(arrivalTimeMinute, 10) : 0,
   };
 
-  const onValid = (values: TripRoutePointFormDestinationFieldValues) => {
+  const onValid = (values: TripRoutePointUpdateFormFieldValues) => {
     if (placeType === "destination") {
       onSubmit({ destination: values });
     }
@@ -48,7 +48,10 @@ export const TripRoutePointRegisterForm = ({
     <div className="h-full">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onValid)}
+          onSubmit={form.handleSubmit(onValid, (e) => {
+            console.log(form.getValues());
+            console.error(e);
+          })}
           className="space-y-6 bg-white p-6"
         >
           <div className="grid grid-cols-1 gap-6">

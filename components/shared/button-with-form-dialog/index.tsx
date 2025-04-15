@@ -1,7 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
-import { Button } from "@/components/shadcn/button";
+import { Button, buttonVariants } from "@/components/shadcn/button";
 import {
   Dialog,
   DialogClose,
@@ -12,13 +11,16 @@ import {
   DialogTrigger,
 } from "@/components/shadcn/dialog";
 import { cn } from "@/utils/common";
+import { VariantProps } from "class-variance-authority";
 
 type Props = {
   buttonLabel: string;
   dialogTitle: string;
   dialogDescription?: string;
   className?: string;
-  buttonSize?: "sm" | "default" | "lg" | "icon" | null;
+  buttonSize?: VariantProps<typeof buttonVariants>["size"];
+  buttonIcon?: React.ReactNode;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
   Form: React.ReactNode;
 };
 
@@ -28,13 +30,19 @@ export const ButtonWithFormDialog = ({
   dialogDescription,
   className,
   buttonSize,
+  buttonIcon,
+  variant,
   Form,
 }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={cn("", className)} size={buttonSize}>
-          <Plus />
+        <Button
+          className={cn("", className)}
+          size={buttonSize}
+          variant={variant}
+        >
+          {buttonIcon}
           {buttonLabel}
         </Button>
       </DialogTrigger>

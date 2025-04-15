@@ -8,6 +8,8 @@ import {
   ApiPatchOutputType,
   apiPostInputSchema,
   ApiPostOutputType,
+  apiReorderPatchInputSchema,
+  ApiReorderPatchOutputType,
 } from "@/lib/zod/schema/trip-route-points";
 import { getLatLngFromAddress } from "@/services/api/externals/server/google-maps/fetcher";
 import {
@@ -16,10 +18,11 @@ import {
   addNewTripRoutePoint,
   calculateNewRoutePointVisitOrder,
   updateReorderedTripRoutePoints,
+  updateTripRoutePoint,
   updateTripRoutePointVisitOrder,
 } from "@/utils/api/trip-route-points";
 
-const logger = getLogger("api/trip-route-points");
+export const logger = getLogger("api/trip-route-points");
 
 const app = new Hono()
   .post("/", zValidator("json", apiPostInputSchema), async (c) => {
@@ -157,9 +160,62 @@ const app = new Hono()
     logger.error("destinationまたはaccommodationが存在しません");
     return c.json<ApiErrorType>({ message: "データの登録に失敗しました" }, 500);
   })
-  .patch("/reorder", zValidator("json", apiPatchInputSchema), async (c) => {
+  .patch(
+    "/reorder",
+    zValidator("json", apiReorderPatchInputSchema),
+    async (c) => {
+      const session = await auth();
+      const { tripRoutePoints } = c.req.valid("json");
+
+      if (!session?.user) {
+        logger.error("ユーザー認証に失敗しました");
+        return c.json<ApiErrorType>(
+          { message: "ユーザー認証されていません" },
+          403
+        );
+      }
+
+      const userId = session.user.id ?? "";
+
+      // 入力データの基本検証
+      if (!tripRoutePoints || tripRoutePoints.length === 0) {
+        logger.error("並び替えるポイントが指定されていません");
+        return c.json<ApiErrorType>(
+          { message: "並び替えるポイントが指定されていません" },
+          400
+        );
+      }
+
+      try {
+        // データ所有権の確認を含む更新処理
+        const updatedIds = await updateReorderedTripRoutePoints(
+          tripRoutePoints,
+          userId
+        );
+
+        if (!updatedIds || updatedIds.length === 0) {
+          return c.json<ApiErrorType>(
+            { message: "更新対象のデータが見つかりませんでした" },
+            404
+          );
+        }
+
+        return c.json<ApiReorderPatchOutputType>({
+          ids: updatedIds,
+        });
+      } catch (e) {
+        logger.error(`並び順更新中にエラーが発生しました: ${e}`);
+        return c.json<ApiErrorType>(
+          { message: "データの更新に失敗しました" },
+          500
+        );
+      }
+    }
+  )
+  .patch("/:id", zValidator("json", apiPatchInputSchema), async (c) => {
     const session = await auth();
-    const { tripRoutePoints } = c.req.valid("json");
+    const id = Number(c.req.param("id"));
+    const { tripRoutePoint } = c.req.valid("json");
 
     if (!session?.user) {
       logger.error("ユーザー認証に失敗しました");
@@ -169,36 +225,27 @@ const app = new Hono()
       );
     }
 
-    const userId = session.user.id ?? "";
-
-    // 入力データの基本検証
-    if (!tripRoutePoints || tripRoutePoints.length === 0) {
-      logger.error("並び替えるポイントが指定されていません");
-      return c.json<ApiErrorType>(
-        { message: "並び替えるポイントが指定されていません" },
-        400
-      );
+    if (isNaN(id)) {
+      logger.error("無効なIDが指定されました");
+      return c.json<ApiErrorType>({ message: "無効なIDが指定されました" }, 400);
     }
 
+    const userId = session.user.id ?? "";
+
+    console.log("tripRoutePoint", tripRoutePoint);
+
     try {
-      // データ所有権の確認を含む更新処理
-      const updatedIds = await updateReorderedTripRoutePoints(
-        tripRoutePoints,
+      const updatedPointId = await updateTripRoutePoint(
+        id,
+        tripRoutePoint,
         userId
       );
 
-      if (!updatedIds || updatedIds.length === 0) {
-        return c.json<ApiErrorType>(
-          { message: "更新対象のデータが見つかりませんでした" },
-          404
-        );
-      }
-
       return c.json<ApiPatchOutputType>({
-        ids: updatedIds,
+        id: updatedPointId ?? 0,
       });
     } catch (e) {
-      logger.error(`並び順更新中にエラーが発生しました: ${e}`);
+      logger.error(e);
       return c.json<ApiErrorType>(
         { message: "データの更新に失敗しました" },
         500

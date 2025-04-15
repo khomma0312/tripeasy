@@ -7,8 +7,9 @@ import {
   tripRoutePointDestinationInputSchema,
   tripRoutePointFormAccommodationSchema,
   tripRoutePointFormDestinationSchema,
-  tripRoutePointFormSchema,
   tripRoutePointInputSchema,
+  tripRoutePointUpdateFormCommonSchema,
+  tripRoutePointUpdateInputSchema,
 } from "@/lib/zod/schema/trip-route-points";
 import {
   tripDaySchema,
@@ -31,8 +32,8 @@ export type TripFormFieldValues = z.infer<typeof tripFormSchema>;
 
 export type TripFormDefaultValues = Partial<Trip>;
 
-export type TripRoutePointFormFieldValues = z.infer<
-  typeof tripRoutePointFormSchema
+export type TripRoutePointUpdateFormFieldValues = z.infer<
+  typeof tripRoutePointUpdateFormCommonSchema
 >;
 
 export type TripRoutePointFormDestinationFieldValues = z.infer<
@@ -45,6 +46,10 @@ export type TripRoutePointFormAccommodationFieldValues = z.infer<
 
 export type TripRoutePointInputValues = z.infer<
   typeof tripRoutePointInputSchema
+>;
+
+export type TripRoutePointUpdateInputValues = z.infer<
+  typeof tripRoutePointUpdateInputSchema
 >;
 
 export type TripRoutePointAccommodationInputValues = z.infer<

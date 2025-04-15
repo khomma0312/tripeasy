@@ -3,7 +3,7 @@
 import { Form } from "@/components/shadcn/form";
 import {
   TripRoutePointFormAccommodationFieldValues,
-  TripRoutePointFormFieldValues,
+  TripRoutePointInputValues,
 } from "@/features/trips/types";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/shadcn/button";
@@ -14,7 +14,7 @@ import { RHFComboboxField } from "@/components/shared/rhf-combobox-field";
 type Props = {
   form: UseFormReturn<TripRoutePointFormAccommodationFieldValues>;
   isPending: boolean;
-  onSubmit: (trip: TripRoutePointFormFieldValues) => void;
+  onSubmit: (trip: TripRoutePointInputValues) => void;
   RegisterButton?: React.ComponentType;
   CloseButton?: React.ComponentType;
   accommodations: AccommodationForCard[];
@@ -72,8 +72,6 @@ export const TripRoutePointRegisterFromExistingAccommodationForm = ({
                 control={form.control}
                 name="arrivalTime"
                 label="到着時間"
-                defaultHour={9}
-                defaultMinute={0}
                 isRequired
                 onChange={(hour, minute) => {
                   const hourStr = String(hour).padStart(2, "0");
@@ -85,8 +83,6 @@ export const TripRoutePointRegisterFromExistingAccommodationForm = ({
                 control={form.control}
                 name="departureTime"
                 label="出発時間"
-                defaultHour={10}
-                defaultMinute={0}
                 comparedTime={arrivalTimeObj}
                 isRequired
                 onChange={(hour, minute) => {
