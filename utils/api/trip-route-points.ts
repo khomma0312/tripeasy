@@ -10,11 +10,13 @@ import { convertTimeToDate } from "@/features/trips/utils";
 import {
   TripRoutePoint,
   TripRoutePointAccommodationInputValues,
+  TripRoutePointUpdateInputValues,
 } from "@/features/trips/types";
 import {
   getAddressFromLatLng,
   getLatLngFromAddress,
 } from "@/services/api/externals/server/google-maps/fetcher";
+import { logger } from "@/app/api/[...route]/trip-route-points";
 
 type DestinationInputValues = {
   name: string;
@@ -252,5 +254,87 @@ export const updateReorderedTripRoutePoints = async (
       .returning({ id: tripRoutePointsTable.id });
 
     return updatedTripRoutePoints.map((item) => item.id);
+  }
+};
+
+export const updateTripRoutePoint = async (
+  tripRoutePointId: number,
+  tripRoutePoint: TripRoutePointUpdateInputValues,
+  userId: string
+) => {
+  if (tripRoutePoint.accommodation) {
+    const { name, id, ...tripRoutePointUpdateFields } =
+      tripRoutePoint.accommodation;
+
+    const [updatedPoint] = await db
+      .update(tripRoutePointsTable)
+      .set(tripRoutePointUpdateFields)
+      .where(
+        and(
+          eq(tripRoutePointsTable.id, tripRoutePointId),
+          eq(tripRoutePointsTable.userId, userId)
+        )
+      )
+      .returning({
+        id: tripRoutePointsTable.id,
+        accommodationId: tripRoutePointsTable.accommodationId,
+      });
+
+    if (!updatedPoint.accommodationId) {
+      logger.error("更新するための宿泊先が見つかりませんでした");
+      throw new Error("更新するための宿泊先が見つかりませんでした");
+    }
+
+    await db
+      .update(accommodationsTable)
+      .set({
+        name,
+      })
+      .where(
+        and(
+          eq(accommodationsTable.id, updatedPoint.accommodationId),
+          eq(accommodationsTable.userId, userId)
+        )
+      );
+
+    return updatedPoint.id;
+  }
+
+  if (tripRoutePoint.destination) {
+    const { name, id, ...tripRoutePointUpdateFields } =
+      tripRoutePoint.destination;
+
+    const [updatedPoint] = await db
+      .update(tripRoutePointsTable)
+      .set(tripRoutePointUpdateFields)
+      .where(
+        and(
+          eq(tripRoutePointsTable.id, tripRoutePointId),
+          eq(tripRoutePointsTable.userId, userId)
+        )
+      )
+      .returning({
+        id: tripRoutePointsTable.id,
+        destinationId: tripRoutePointsTable.destinationId,
+      });
+
+    if (!updatedPoint.destinationId) {
+      logger.error("更新するための目的地が見つかりませんでした");
+      throw new Error("更新するための目的地が見つかりませんでした");
+    }
+
+    await db
+      .update(destinationsTable)
+      .set({
+        name,
+      })
+      .where(
+        and(
+          eq(destinationsTable.id, updatedPoint.destinationId),
+          eq(destinationsTable.userId, userId)
+        )
+      );
+
+    return updatedPoint.id;
   }
 };
